@@ -1,0 +1,9 @@
+/*
+ *  Den 5.05.2022
+ */
+*					{ margin:0px; padding:0px; }
+html, body			{ width:100%; height:100%; }
+ /* bote.fxml
+  -------------*/
+
+.boteHead           { -fx-background-color: linear-gradient(to top, white, #B0E0E6); color: white; }
