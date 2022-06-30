@@ -1,9 +1,62 @@
 /*
  *  Den 5.05.2022
  */
-*					{ margin:0px; padding:0px; }
-html, body			{ width:100%; height:100%; }
- /* bote.fxml
-  -------------*/
+/**					{ margin:0px; padding:0px; }
+html, body			{ width:100%; height:100%; }*/
+.stageBackground    {   -fx-background-image: url('/static/img/blaugrund.png');
+                        -fx-background-size: cover;
+                    }
 
+ /* home.fxml
+ --------------*/
+.homeFrom           { -fx-letter-spacing: 3em; }
+
+
+ /* maillogin.fxml,
+ ------------------------*/
+.login              {  }
+.loginInfo          { /* Label für Information ausgeben: zurzeit nich benutzt */ }
+.loginMail:focused  { -fx-background-color: #FFFFE6; }
+
+ /* chat.fxml
+ ---------------*/
+.messagescrollpane          { -fx-background-insets: 0; -fx-padding: 0; }
+.messagescrollpane:focused  { -fx-background-insets: 0; }
+
+
+ /* ChatController.java (für Live message)
+ -----------------------------------------*/
+.livebox            { -fx-border-color: #E6E6FF; -fx-border-style: none none solid none;  }
+.livebild           { }
+.livepseudonym      { -fx-font: 15px "Serif"; -fx-font-weight: bold; }
+.livehacken         { }
+.livedatum          { -fx-font: 15px "Serif"; -fx-font-weight: lighter; }
+.livedeletebutton   { }
+.livedeletebox      { }
+.liveradiobutton    { }
+.livetext           { -fx-wrap-text: true; }
+
+
+ /* messenger.fxml
+ ----------------*/
+/*
+.split-pane:horizontal > .split-pane-divider    { -fx-padding: 0; }  ACHTUNG: classen nicht verändern, sind von System festgelegt
+.split-pane:vertical > .split-pane-divider      { -fx-padding: 0; }  ACHTUNG: classen nicht verändern, sind von System festgelegt
+*/
+
+/*@media only screen and (min-width: 650px)  { .leftPane { -fx-background-color: red; } }*/
+
+
+ /* bote.fxml
+ -------------*/
 .boteHead           { -fx-background-color: linear-gradient(to top, white, #B0E0E6); color: white; }
+
+
+ /* Freunde.fxml
+ ---------------*/
+
+/*
+.scroll-pane            { -fx-background-insets: 0; -fx-padding: 0; }
+.scroll-pane:focused    { -fx-background-insets: 0; }
+.scroll-pane .corner    { -fx-background-insets: 0; }
+*/

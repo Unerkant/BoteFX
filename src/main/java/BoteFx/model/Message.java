@@ -20,9 +20,9 @@ public class Message {
 
     private String name;
 
-    private String role;
-
     private String text;
+
+    private String role;
 
 
 

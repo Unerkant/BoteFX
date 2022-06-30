@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="freundeHead" prefHeight="45.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.FreundeHeadController">
+    <GridPane alignment="CENTER" prefHeight="45.0" style="-fx-background-color: #FAFAFF; -fx-border-style: none none solid none; -fx-border-color: #E6E6FF;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" maxWidth="50.0" minWidth="10.0" prefWidth="50.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+            <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" maxWidth="50.0" minWidth="10.0" prefWidth="50.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+        <children>
+            <ImageView fx:id="freundeBearbeiten" fitHeight="30.0" fitWidth="30.0" nodeOrientation="INHERIT" onMouseClicked="#friendBearbeiten" pickOnBounds="true" preserveRatio="true">
+                <GridPane.margin>
+                    <Insets left="10.0" />
+                </GridPane.margin>
+                <image>
+                    <Image url="@../../static/img/personloschen.png" />
+                </image>
+            </ImageView>
+            <ImageView fx:id="neuerFreund" fitHeight="30.0" fitWidth="30.0" layoutX="20.0" layoutY="10.0" nodeOrientation="INHERIT" onMouseClicked="#newFreund" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                <GridPane.margin>
+                    <Insets right="10.0" />
+                </GridPane.margin>
+                <image>
+                    <Image url="@../../static/img/personplus.png" />
+                </image>
+            </ImageView>
+            <Label alignment="BOTTOM_CENTER" prefHeight="30.0" prefWidth="100.0" text="Alle Chats" textFill="#0000cc" GridPane.columnIndex="1" GridPane.valignment="TOP">
+                <font>
+                    <Font size="16.0" />
+                </font>
+            </Label>
+            <Label fx:id="myName" alignment="BOTTOM_CENTER" text="User Name" textFill="#999999" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
+                <font>
+                    <Font size="11.0" />
+                </font>
+            </Label>
+        </children>
+    </GridPane>
+</AnchorPane>
