@@ -1,55 +1,126 @@
 /*
  *  Den 5.05.2022
  */
+
 /**					{ margin:0px; padding:0px; }
 html, body			{ width:100%; height:100%; }*/
-.stageBackground    {   -fx-background-image: url('/static/img/blaugrund.png');
-                        -fx-background-size: cover;
-                    }
+.stageBackground
+{
+    -fx-background-image: url('/static/img/blaugrund.png');
+    -fx-background-size: cover;
+}
+
+ /*  Allgemein */
+
+
+
 
  /* home.fxml
  --------------*/
-.homeFrom           { -fx-letter-spacing: 3em; }
+.homeFrom
+{
+    -fx-letter-spacing: 3em;
+}
 
 
  /* maillogin.fxml,
  ------------------------*/
 .login              {  }
 .loginInfo          { /* Label für Information ausgeben: zurzeit nich benutzt */ }
-.loginMail:focused  { -fx-background-color: #FFFFE6; }
+.loginMail:focused
+{
+    -fx-background-color: #FFFFE6;
+}
 
  /* chat.fxml
  ---------------*/
-.messagescrollpane          { -fx-background-insets: 0; -fx-padding: 0; }
-.messagescrollpane:focused  { -fx-background-insets: 0; }
+
+    /* header */
 
 
- /* ChatController.java (für Live message)
- -----------------------------------------*/
-.livebox            { -fx-border-color: #E6E6FF; -fx-border-style: none none solid none;  }
-.livebild           { }
-.livepseudonym      { -fx-font: 15px "Serif"; -fx-font-weight: bold; }
-.livehacken         { }
-.livedatum          { -fx-font: 15px "Serif"; -fx-font-weight: lighter; }
-.livedeletebutton   { }
-.livedeletebox      { }
-.liveradiobutton    { }
-.livetext           { -fx-wrap-text: true; }
+    /* body */
+.bodyaltmessage         {  }
+.bodylivemessage        {  }
+
+    /*footer*/
 
 
  /* messenger.fxml
  ----------------*/
-/*
-.split-pane:horizontal > .split-pane-divider    { -fx-padding: 0; }  ACHTUNG: classen nicht verändern, sind von System festgelegt
-.split-pane:vertical > .split-pane-divider      { -fx-padding: 0; }  ACHTUNG: classen nicht verändern, sind von System festgelegt
-*/
+
+
+ /* chatFreunde.fxml
+  ------------------*/
+.chatfreundeanchorpane  { }
+.chatfreundefoto        { }
+.chatfreundepseudonym   { }
+.chatfreundehacken      { }
+.chatfreundedatum       { }
+.chatfreundetext
+{
+    -fx-border-color: #CCCCCC;
+    -fx-border-style: none none solid none;
+    -fx-border-width: 0 0 1 0;
+}
+
+ /* ChatController.java (für Live message)
+ -----------------------------------------*/
+
+.livepane
+{
+    -fx-border-color: #E6E6FF;
+    -fx-border-style: none none solid none;
+}
+.livebox            { }
+.livemybox
+{
+    -fx-background-color: #E6FFE6;
+    -fx-padding: 10 10 10 50;
+    -fx-border-insets: 10 10 10 50;
+    -fx-background-insets: 10 10 10 50;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+.livefreundbox
+{
+    -fx-background-color: #FCFFFC;
+    -fx-padding: 10 50 10 10;
+    -fx-border-insets: 10 50 10 10;
+    -fx-background-insets: 10 50 10 10;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-content-display: left;
+}
+.livebild           { }
+.livepseudonym
+{
+    -fx-font: 15px "Serif";
+    -fx-font-weight: bold;
+}
+.livehacken         { }
+.livedatum
+{
+    -fx-font: 15px "Serif";
+    -fx-font-weight: lighter;
+}
+.livedeletebutton   { }
+.livedeletebox      { }
+.liveradiobutton    { }
+.livecloseradio     { }
+
+
+
 
 /*@media only screen and (min-width: 650px)  { .leftPane { -fx-background-color: red; } }*/
 
 
  /* bote.fxml
  -------------*/
-.boteHead           { -fx-background-color: linear-gradient(to top, white, #B0E0E6); color: white; }
+.boteHead
+{
+    -fx-background-color: linear-gradient(to top, white, #B0E0E6);
+    color: white;
+}
 
 
  /* Freunde.fxml

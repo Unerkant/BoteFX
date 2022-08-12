@@ -1,22 +1,30 @@
 package BoteFx.controller;
 
 import BoteFx.configuration.GlobalConfig;
+import de.jensd.fx.glyphs.octicons.OctIcon;
+import de.jensd.fx.glyphs.octicons.OctIconView;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class MessageController implements Initializable {
     private final Logger logger = GlobalConfig.getLogger(this.getClass());
@@ -32,7 +40,20 @@ public class MessageController implements Initializable {
     @FXML private AnchorPane leftPane;
     @FXML private AnchorPane rightPane;
 
-    @FXML private BorderPane freundePane;
+    /* leftPane -> HauptContainer -> header, body & footer  */
+    @FXML private BorderPane chatFreuneBorderPane;
+
+    /* leftPane/chatFreunde/ header */
+
+    /* leftPane/chatFreunde/body */
+    @FXML private ScrollPane chatFreundeScroll;
+    @FXML private VBox chatFreundeVBox;
+    /* leftPane/chatFreunde/footer */
+
+    /* rightPane */
+
+
+    /* zum Ändern, Daten von Header & Footer fehlen noch  */
     @FXML private Label headerLabel;
     @FXML private Label footerLabel;
 
@@ -44,6 +65,40 @@ public class MessageController implements Initializable {
     public AnchorPane getHauptPane() {
         return hauptPane;
     }
+
+
+    /**
+     * Chat-Freunde von Datenbank Laden ins leftPane
+     * Quelle: message.fxml #leftPane -> center -> chatFreundeScroll -> chatFreundeVBox
+     * Daten werden in ChatFreundeController gesammelt & in chatFreunde.fxml ausgegeben
+     */
+    @FXML private AnchorPane chatfreunde;
+    @FXML private ChatFreundeController chatFreundeController;
+    public void chatFreundeLaden(){
+        try {
+            FXMLLoader freundeLoader = new FXMLLoader(getClass().getResource("/templates/chatFreunde.fxml"));
+            chatfreunde = freundeLoader.load();
+            chatFreundeController = freundeLoader.getController();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Platform.runLater(()->{
+            //chatFreundeVBox.prefWidthProperty().bind(chatFreundeScroll.widthProperty());
+            //chatFreundeScroll.setContent(chatfreunde);
+            chatFreundeVBox.getChildren().add(chatfreunde);
+        });
+
+        chatfreunde.applyCss();
+        Object event = null;
+        chatfreunde.setOnKeyPressed((EventHandler<? super KeyEvent>) event);{
+            System.out.println("Freunde Laden" + event);
+        };
+        System.out.println("Chat Freunde von MessageController" + chatFreundeController.getClass());
+    }
+    public MessageController() {
+        chatFreundeLaden();
+    }
+
 
     /**
      * Chat Methode Starten( klick auf den Freund/Linke Teil)
@@ -93,7 +148,7 @@ public class MessageController implements Initializable {
         // für die LeftPane -- später Löschen
         headerLabel.setMaxWidth(650);
         footerLabel.setMaxWidth(650);
-        logger.info("Message Controller: initialize");
+        //logger.info("Message Controller: initialize");
 
         /**
          *  Pane Autoresize(wenn App verkleinert wird)

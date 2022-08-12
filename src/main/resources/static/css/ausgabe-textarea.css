@@ -1,0 +1,48 @@
+/**
+ *  Den 5.8.2022
+ *
+ *  mit transparenten background,
+ *  textarea scroll, background & border ausgesetzt
+ *
+ *  wird Benutzt -> livemessage.fxml #liveAusgabe Zeile: 48,
+ *
+ */
+
+    /* border ausblenden & background anpassen */
+.text-area
+{
+	-fx-background-color: transparent;
+}
+.text-area .content
+{
+	-fx-background-color: transparent;
+	-fx-border-color: transparent ;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+}
+
+.messagetext:focused
+{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.text-area:focused .content
+{
+	-fx-background-color: transparent;
+	-fx-border-color: transparent;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+}
+
+    /* scroll ausblenden */
+.text-area .scroll-bar:vertical {
+    -fx-pref-width: 1;
+    -fx-opacity: 0;
+}
+.text-area .scroll-bar:horizontal {
+    -fx-pref-height: 1;
+    -fx-opacity: 0;
+}

@@ -10,14 +10,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.springframework.messaging.MessageHeaders;
@@ -31,7 +29,6 @@ import org.springframework.web.socket.messaging.WebSocketStompClient;
 import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
-
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.URL;
@@ -50,24 +47,29 @@ public class ChatController implements Initializable {
 
     private final Logger logger = GlobalConfig.getLogger(this.getClass());
 
-    /* Haupt + Header */
-    @FXML private AnchorPane chatMessage;
+    /* chat.fxml */
+    @FXML private AnchorPane chatAnchorpane;
     @FXML private BorderPane chatBorderPane;
-    @FXML private GridPane chatGridPane;
+
+    /* Header */
+    @FXML private GridPane headGridPane;
     @FXML private ColumnConstraints columnSchliessen;
     @FXML private Label chatSchliessen;
+    @FXML private Label chatFreundName;
     @FXML private Label messageFehlerAusgabe;
-    @FXML private Label freundName;
-    private String nameFreund;
-    @FXML private ImageView chatUserBild;
+    @FXML private ImageView chatFreundBild;
 
     /* body */
-    @FXML private ScrollPane messageScrollPane;
-    @FXML private Label textAusgabe;
+    @FXML private ScrollPane bodyScrollpane;
+    @FXML private VBox bodyVbox;
+    @FXML private AnchorPane bodyAltMessage;
+    @FXML private AnchorPane bodyLiveMessage;
 
     /* Footer */
-    @FXML private ImageView otherFooter;
-    @FXML private TextField messageText;
+    @FXML private GridPane footerGridpane;
+    @FXML private ImageView footerOther;
+    @FXML private TextArea messageText;
+    @FXML private ImageView footerSmile;
 
     /* Allgemein */
     private StompSession session;
@@ -77,7 +79,10 @@ public class ChatController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        logger.info("Chat controlller Inint");
+        /**
+         * Init
+         */
+       // logger.info("INIT:" + url);
     }
 
     // Socket Verbindung
@@ -146,17 +151,15 @@ public class ChatController implements Initializable {
 
                 @Override
                 public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-                    logger.info("connection successfully established");
-                    //updateOutput("Verbindung aufgebaut!");
-                    okFehlerAnzeige("OK", "connection successfully established");
+
+                    infoOutput("OK", "connection successfully established...");
                 }
 
                 @Override
                 public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
                     exception.printStackTrace();
-                    logger.info("connection not successfully established");
-                    okFehlerAnzeige("FEHLER","connection not successfully established");
-                    //updateOutput("Fehler!");
+
+                    infoOutput("FEHLER","connection not successfully established...");
                 }
 
                 @Override
@@ -168,9 +171,9 @@ public class ChatController implements Initializable {
             session.subscribe("/messages/receive/" + messageToken, new StompSessionHandler() {
                 @Override
                 public void afterConnected(StompSession stompSession, StompHeaders stompHeaders) {
-                    logger.info("connection successfully established" + messageToken);
-                    okFehlerAnzeige("OK", "connection successfully established");
-                    //updateOutput("Verbindung aufgebaut!");
+
+                    infoOutput("OK", "Verbindung aufgebaut...");
+                    //liveMessageAusgabe("Verbindung aufgebaut!");
                 }
 
                 @Override
@@ -195,33 +198,95 @@ public class ChatController implements Initializable {
                     /**
                      * Nachricht Erhalten
                      */
-                    updateOutput(message);
-                    logger.info("Incoming text: " + message.getMeintoken());
+                    liveMessageAusgabe(message);
+                    //logger.info("Incoming text: " + message.getMeintoken());
                 }
             });
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        logger.info(String.format("Connection id: %s", messageToken));
+        //logger.info(String.format("Connection id: %s", messageToken));
     } // Ende socketConnect
 
     /* Socket Starten */
     public ChatController(){
         socketConnect();
+        if (session == null) {
+            infoOutput("FEHLER", "Es besteht keine Verbindung!");
+            logger.info(" Socket Connect " + session);
+        }
     }
 
     /**
-     * Message Senden & Live Anzeigen
-     * @param event
+     *      Message Wrap
+     *
+     * textarea (#messageText) AutoRow (for schleife)
+     * leider funktioniert nicht Richtig
+     *
+     * ENTER-Drücken: message Sende und textarea leeren
+     * ESC-Drücken: textare leeren & footerGridPane auf 45px Height setzen
+     * variable minHeight: footer GridPane(#footerGridPane) Height 45px festlegen
      */
-    public void sendMessage(ActionEvent event) {
+    final private KeyCombination ENTER      = new KeyCodeCombination(KeyCode.ENTER);
+    final private KeyCombination ESC        = new KeyCodeCombination(KeyCode.ESCAPE);
+    final private KeyCombination BACKSPACE  = new KeyCodeCombination(KeyCode.BACK_SPACE);
+    final private KeyCombination SPACE      = new KeyCodeCombination(KeyCode.SPACE);
+    private KeyCode keycode;
+    private double wrapHeight;
+    private double minHeight = 45; /* footer min-height */
+    @FXML
+    public void messageWrap(KeyEvent event) {
+        keycode     = event.getCode();
+        wrapHeight  = messageText.getScrollTop();
+
+        if (ENTER.match(event)){
+            messageSend();
+            //messageText.clear();
+            return;
+            //System.out.println("ENTER: " + ENTER);
+        } else if (BACKSPACE.match(event)) {
+            //System.out.println("ZURÜCK TASTE: " + BACKSPACE);
+        } else if (SPACE.match(event)) {
+            //System.out.println("LEER TASTE: " + SPACE);
+        } else if (ESC.match(event)) {
+            messageText.clear();
+            footerGridpane.setPrefHeight(minHeight);
+            return;
+            //System.out.println("ESC: " + ESC);
+        } else{
+            //System.out.println("ELSE: ");
+        }
+
+        // textarea scroll
+        for (int y = 0; y <= wrapHeight; y++){
+            //footerGridpane.setMinHeight(45);
+            footerGridpane.setPrefHeight(minHeight + wrapHeight);
+        }
+        //System.out.println("Wrap Height: " + wrapHeight);
+
+    }
+
+    /**
+     * Message Senden
+     * //@param event
+     */
+    public void messageSend() {
+
         if (session == null) {
-            okFehlerAnzeige("FEHLER", "Es besteht keine Verbindung!");
+            infoOutput("FEHLER", "Es besteht keine Verbindung!");
             //messageFehlerAusgabe.setText("Es besteht keine Verbindung!");
+            logger.info("keine Verbindung " );
+            return;
+        }
+        // Text Field auf Leer Prüfen
+        String getText =  messageText.getText();
+        if (getText.isEmpty()) {
+            logger.info("messageText, ist Leer ");
             return;
         }
 
+        // Aktuelle Date
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yy HH:mm");
 
         Message message = new Message();
@@ -235,7 +300,7 @@ public class ChatController implements Initializable {
         message.setPseudonym("Java Client");
 
         session.send("/app/messages", message);
-        messageText.clear(); // messageField
+        messageText.clear();
 
         //textAusgabe.setText("Gesendet: " + messageText.getText());
         logger.info("Message Senden: " + messageText.getText());
@@ -246,130 +311,106 @@ public class ChatController implements Initializable {
      * Message Ausgeben von Zeile 198
      * @param text
      */
-    @FXML private AnchorPane liveBox = new AnchorPane();
-    private void updateOutput(Message text) {
-        String template = "" +
-                "<children>\n" +
-                "   <VBox alignment=\"TOP_CENTER\" prefWidth=\"50.0\" AnchorPane.bottomAnchor=\"0.0\" AnchorPane.leftAnchor=\"0.0\" AnchorPane.topAnchor=\"0.0\">\n" +
-                "       <children>\n" +
-                "           <ImageView fx:id=\"livebild\" styleClass=\"livebild\" fitHeight=\"30.0\" fitWidth=\"30.0\" pickOnBounds=\"true\" preserveRatio=\"true\">\n" +
-                "               <image>\n" +
-                "                   <Image url=\"@/static/img/face.png\" />\n" +
-                "               </image>\n" +
-                "           </ImageView>\n" +
-                "       </children>\n" +
-                "       <opaqueInsets>\n" +
-                "            <Insets />\n" +
-                "       </opaqueInsets>\n" +
-                "       <padding>\n" +
-                "           <Insets top=\"5.0\" />\n" +
-                "       </padding>" +
-                "   </VBox>\n" +
-                "   <Label fx:id=\"livePseudonym\" text=\"%pseudonym%\" styleClass=\"livepseudonym\" alignment=\"TOP_LEFT\" layoutX=\"121.0\" layoutY=\"6.0\" prefHeight=\"20.0\" prefWidth=\"180.0\" AnchorPane.leftAnchor=\"50.0\" AnchorPane.rightAnchor=\"125.0\" AnchorPane.topAnchor=\"5.0\" />\n" +
-                "   <ImageView fx:id=\"liveHacken\" styleClass=\"livehacken\" fitHeight=\"25.0\" fitWidth=\"25.0\" layoutX=\"236.0\" layoutY=\"4.0\" pickOnBounds=\"true\" preserveRatio=\"true\" AnchorPane.rightAnchor=\"95.0\" AnchorPane.topAnchor=\"0.0\">\n" +
-                "       <image>\n" +
-                "           <Image url=\"@static/img/doppeltgrun.png\" />\n" +
-                "       </image>\n" +
-                "   </ImageView>\n" +
-                "   <Label fx:id=\"liveDatum\" text=\"%datum%\" styleClass=\"livedatum\" alignment=\"CENTER\" contentDisplay=\"CENTER\" layoutX=\"306.0\" layoutY=\"6.0\" prefWidth=\"70.0\" AnchorPane.rightAnchor=\"25.0\" AnchorPane.topAnchor=\"5.0\" />\n" +
-                "   <ImageView fx:id=\"liveDeleteButton\" fitHeight=\"15.0\" fitWidth=\"15.0\" onMouseClicked=\"#liveDeleteZeigen\" pickOnBounds=\"true\" preserveRatio=\"true\" AnchorPane.rightAnchor=\"5.0\" AnchorPane.topAnchor=\"5.0\">\n" +
-                "       <image>\n" +
-                "           <Image url=\"@/static/img/delete.png\" />\n" +
-                "       </image>\n" +
-                "   </ImageView>" +
-                "   <Label fx:id=\"liveText\" text=\"%messageAusgabe%\" styleClass=\"livetext\" wrapText=\"true\" alignment=\"TOP_LEFT\" layoutX=\"138.0\" layoutY=\"20.0\" prefHeight=\"30.0\" prefWidth=\"270.0\" AnchorPane.bottomAnchor=\"0.0\" AnchorPane.leftAnchor=\"50.0\" AnchorPane.rightAnchor=\"5.0\" AnchorPane.topAnchor=\"25.0\" />\n" +
-                "   <VBox fx:id=\"liveDeleteBox\" styleClass=\"livedeletebox\" alignment=\"TOP_CENTER\" layoutX=\"288.0\" layoutY=\"-71.0\" prefWidth=\"25.0\" style=\"-fx-border-color: red;\" AnchorPane.bottomAnchor=\"0.0\" AnchorPane.rightAnchor=\"-25.0\" AnchorPane.topAnchor=\"0.0\">\n" +
-                "       <children>\n" +
-                "           <RadioButton fx:id=\"liveRadioButton\" styleClass=\"liveradiobutton\" onAction=\"#liveMessageDelete\" contentDisplay=\"CENTER\" mnemonicParsing=\"false\" />\n" +
-                "       </children>\n" +
-                "       <opaqueInsets>\n" +
-                "           <Insets />\n" +
-                "       </opaqueInsets>\n" +
-                "       <padding>\n" +
-                "           <Insets top=\"5.0\" />\n" +
-                "       </padding>\n" +
-                "   </VBox>\n" +
-                "</children>";
+    @FXML private AnchorPane livePane;
+    @FXML private AnchorPane liveBox;
+    @FXML private ImageView liveBild;
+    @FXML private Label livePseudonym;
+    @FXML private ImageView liveHacken;
+    @FXML private Label liveDatum;
+    @FXML private ImageView liveDeleteButton;
+    @FXML private TextArea liveAusgabe;
+    @FXML private VBox liveDeleteBox;
+    @FXML private RadioButton liveRadioButton;
+    @FXML private ImageView liveCloseRadio;
+    @FXML private AnchorPane altFxml;
+    @FXML private AnchorPane liveFxml;
+    @FXML private ChatController altController;
+    @FXML private ChatController liveController;
 
+    @FXML private double textHoch;
+    private void liveMessageAusgabe(Message text ) {
 
-        StringBuilder sb = new StringBuilder();
-            sb.append(
-                    template
-                            .replaceAll("%messageBild%", text.getName())
-                            .replaceAll("%pseudonym%", text.getPseudonym())
-                            .replaceAll("%datum%", text.getDatum())
-                            .replaceAll("%messageAusgabe%", text.getText()));
-
-        String outer =
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                        "\n" +
-                        "<?import javafx.geometry.Insets?>\n" +
-                        "<?import javafx.scene.control.Label?>\n" +
-                        "<?import javafx.scene.control.RadioButton?>\n" +
-                        "<?import javafx.scene.image.Image?>\n" +
-                        "<?import javafx.scene.image.ImageView?>\n" +
-                        "<?import javafx.scene.layout.AnchorPane?>\n" +
-                        "<?import javafx.scene.layout.VBox?>\n" +
-                        "\n" +
-                        "<AnchorPane    fx:id=\"liveBox\"\n" +
-                        "               styleClass=\"livebox\"\n" +
-                        "               xmlns=\"http://javafx.com/javafx/18\"\n" +
-                        "               xmlns:fx=\"http://javafx.com/fxml/1\"\n" +
-                        "               fx:controller=\"BoteFx.controller.ChatController\"\n" +
-                        "               prefHeight=\"70.0\" prefWidth=\"350.0\" >\n" +
-                        "%content%\n" +
-                        "</AnchorPane>";
-        String done = outer.replaceAll("%content%", sb.toString());
-        FileOutputStream out = null;
         try {
-            out = new FileOutputStream("myfile.fxml");
-            out.write(done.getBytes());
-            out.close();
-            FXMLLoader loader = new FXMLLoader();
-            liveBox = loader.load(new FileInputStream("myfile.fxml"));
-            //final Parent parent = (Parent) loader.load(new FileInputStream("myfile.fxml"));
-            //messageBox = loader.load(new FileInputStream("myfile.fxml"));
-            Platform.runLater(() ->{
-                if (messageScrollPane != null) {
-                    messageScrollPane.setContent(liveBox);
-                    liveBox.prefWidthProperty().bind(messageScrollPane.widthProperty());
-                }
-            });
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            FXMLLoader liveLoader = new FXMLLoader(getClass().getResource("/templates/fragments/livemessage.fxml"));
+            liveFxml = liveLoader.load();
+            liveController = liveLoader.getController();
+
+            FXMLLoader altLoader = new FXMLLoader(getClass().getResource("/templates/fragments/livemessage.fxml"));
+            altFxml = altLoader.load();
+            altController = altLoader.getController();
+
+            //liveFxml = FXMLLoader.load(getClass().getResource("/templates/fragments/livemessage.fxml"));
+           // bodyLiveMessage.getChildren().add(liveFxml);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        logger.info("updateOutput(): " + liveBox);
-        //titleToolbar.getChildren().addAll(ellispsis != null ? ellispsis : new HBox());
-        // messageScrollPane.setContent(messagePane);
+        AnchorPane.setRightAnchor(altFxml, 0.0);
+        AnchorPane.setLeftAnchor(altFxml, 0.0);
+        AnchorPane.setLeftAnchor(liveFxml, 0.0);
+        AnchorPane.setRightAnchor(liveFxml, 0.0);
+
+        // Live Message Anzeigen
+        Platform.runLater(()->{
+            liveController.livePseudonym.setText(text.getPseudonym());
+            liveController.liveDatum.setText(text.getDatum());
+            liveController.liveAusgabe.setText(text.getText());
+
+            if (bodyLiveMessage != null) {
+                bodyLiveMessage.getChildren().add(liveFxml);
+                /* Ausgabe-Message auf 100% width */
+                bodyVbox.prefWidthProperty().bind(bodyScrollpane.widthProperty());
+
+                liveController.liveAusgabe.applyCss();
+                liveController.liveAusgabe.layout();
+                Text t = (Text) liveController.liveAusgabe.lookup(".text");
+
+                //System.out.println("LayoutX "+t.getLayoutX());
+                //System.out.println("LayoutY "+t.getLayoutY());
+                System.out.println("Test: " + t.getCaretPosition());
+                System.out.println("Width: "+t.getBoundsInLocal().getWidth());
+                System.out.println("Height: "+t.getBoundsInLocal().getHeight());
+                //liveController.liveBox.setPrefHeight(t.getBoundsInLocal().getHeight());
+            }
+        });
+
+        Platform.runLater(()->{
+            altController.livePseudonym.setText(text.getPseudonym());
+            altController.liveDatum.setText(text.getDatum());
+            altController.liveAusgabe.setText(text.getText());
+
+            if (bodyAltMessage != null) {
+                bodyAltMessage.getChildren().add(altFxml);
+
+            }
+        });
+
+        logger.info("liveMessageAusgabe(): " + textHoch);
     }
 
 
     /**
      * Fehler/Anzeige Einblenden & Ausblenden (ca. 3 sek.)
      * Message-Text Eingabe Feld in Focus setzen
+     * body-scroll ausblenden
      *
      * @param ok
-     * @param text
+     * @param texten
      */
-    private void okFehlerAnzeige(String ok, String text){
+    private void infoOutput(String ok, String texten){
         Platform.runLater(() ->{
-            logger.info("Text Methode: " + text);
-            if (text != null && text.isBlank()) {
-                messageFehlerAusgabe.setText(text);
-                if (ok.equals("OK")) {
+
+            if (messageFehlerAusgabe != null) {
+                messageFehlerAusgabe.setText(texten);
+                if ("OK".equals(ok)) {
                     messageFehlerAusgabe.setTextFill(Color.GREEN);
-                    freundName.setText(meineToken);
+                    /* Anzeige-Text Ausblenden */
+                    PauseTransition pause = new PauseTransition(Duration.seconds(3));
+                    pause.setOnFinished(e -> messageFehlerAusgabe.setText(null));
+                    pause.play();
                 } else {
                     messageFehlerAusgabe.setTextFill(Color.RED);
                 }
-
-                /* Anzeige-Text Ausblenden */
-                PauseTransition pause = new PauseTransition(Duration.seconds(3));
-                pause.setOnFinished(e -> messageFehlerAusgabe.setText(null));
-                pause.play();
             }
 
             /**
@@ -377,9 +418,14 @@ public class ChatController implements Initializable {
              *  2. ScrollPane Horizontale scroll ausblenden
              */
             if (messageText != null) {
+
                 messageText.requestFocus();
-                messageScrollPane.setFitToWidth(true);
-                //messageScrollPane.getOnScrollFinished();
+                //bodyScrollpane.getOnScrollFinished();
+                //logger.info("Message Focus");
+            }
+
+            if (chatFreundName != null){
+                chatFreundName.setText(meineToken);
             }
         });
     }
@@ -392,9 +438,9 @@ public class ChatController implements Initializable {
      */
     public void chatClose(MouseEvent event) {
 
-        chatMessage.getChildren().clear();
-        ((Pane) chatMessage.getParent()).getChildren().remove(chatMessage);
-        logger.info("Message Schliessen: rechte Teil" + chatMessage);
+        chatAnchorpane.getChildren().clear();
+        ((Pane) chatAnchorpane.getParent()).getChildren().remove(chatAnchorpane);
+        logger.info("Message Schliessen: rechte Teil" + chatAnchorpane);
     }
 
     /**
@@ -406,14 +452,29 @@ public class ChatController implements Initializable {
     }
 
     /**
-     * Message Löschen
+     * Anzeige den radio-button für die message Löschen
      * @param event
      */
     public void liveDeleteZeigen(MouseEvent event) {
+        AnchorPane.setRightAnchor(liveAusgabe, 25.0);
+        AnchorPane.setRightAnchor(liveDeleteBox, 0.0);
+        AnchorPane.setRightAnchor(liveDeleteButton, -100.0);
+
+        liveDeleteBox.setOnMouseClicked(evt -> {
+            AnchorPane.setRightAnchor(liveAusgabe, 5.0);
+            AnchorPane.setRightAnchor(liveDeleteBox, -100.0);
+            AnchorPane.setRightAnchor(liveDeleteButton, 5.0);
+            logger.info(" Meuse click ");
+        });
         logger.info(" Message Delete Box Anzeigen ");
     }
 
+    /**
+     * message Löschen
+     * @param event
+     */
     public void liveMessageDelete(ActionEvent event) {
         logger.info(" Message Löschen ");
     }
+
 }
