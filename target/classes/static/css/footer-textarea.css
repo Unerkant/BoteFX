@@ -1,0 +1,47 @@
+/**
+ *  Den 5.8.2022
+ *
+ *  NUR FÜR DIE TEXTAREA -> chat.fxml #messageText Zeile: 105,
+ *  weil background(#FAFAFF) an footer angepasst ist...
+ *
+ *  Textarea scroll-bar & border ausblenden
+ */
+
+    /* border ausblenden & background anpassen */
+.text-area
+{
+	-fx-background-color: #FAFAFF;
+}
+.text-area .content
+{
+	-fx-background-color: #FAFAFF;
+	-fx-border-color: transparent ;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+}
+
+.messagetext:focused
+{
+    -fx-background-color: #FAFAFF;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.text-area:focused .content
+{
+	-fx-background-color: #FAFAFF;
+	-fx-border-color: transparent;
+	-fx-background-insets: 0;
+	-fx-background-radius: 0;
+}
+
+    /* scroll ausblenden */
+.text-area .scroll-bar:vertical {
+    -fx-pref-width: 1;
+    -fx-opacity: 0;
+}
+.text-area .scroll-bar:horizontal {
+    -fx-pref-height: 1;
+    -fx-opacity: 0;
+}
