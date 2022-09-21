@@ -1,15 +1,18 @@
 package BoteFx;
 
 import BoteFx.configuration.GlobalConfig;
-import BoteFx.configuration.GlobalView;
-import BoteFx.configuration.GlobalViewSwitcher;
+import BoteFx.Enums.GlobalView;
+import BoteFx.service.ViewService;
+
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
      *  Aktuelle Seite wird geladen von GlobalViewSwitcher mit function
@@ -22,16 +25,24 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
      */
 @SpringBootApplication
 public class BoteApp extends Application {
+
+    private ViewService viewService;
+
+    @Override
+    public void init() {
+        ConfigurableApplicationContext springContext = SpringApplication.run(BoteApp.class);
+        viewService = springContext.getBean(ViewService.class);
+        viewService.setSpringContext(springContext);
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
 
         var scene = new Scene(new Pane());
-        //scene.setFill(Color.TRANSPARENT);
-        //stage.initStyle(StageStyle.TRANSPARENT);
 
         /* FXML templates laden */
-        GlobalViewSwitcher.setScene(scene);
-        GlobalViewSwitcher.switchTo(GlobalView.MESSAGE);
+        viewService.setScene(scene);
+        viewService.switchTo(GlobalView.CHATBOX);
 
         /* Stage CSS */
         scene.getStylesheets().add(getClass().getResource(GlobalConfig.FILE_CSS).toExternalForm());
@@ -40,8 +51,8 @@ public class BoteApp extends Application {
         stage.setTitle("Bote");
         stage.setX(0);
         stage.setY(0);
-        stage.setWidth(GlobalConfig.START_WIDTH);
-        stage.setHeight(GlobalConfig.START_HEIGHT); /* Später Löschen, rect.getHeight() benutzen*/
+        stage.setWidth(655);
+             /* Später, rect.getHeight() benutzen*/
         //stage.setHeight(rect.getHeight());
         stage.setMinWidth(GlobalConfig.MIN_WIDTH);
         stage.setMinHeight(GlobalConfig.MIN_HEIGHT);
@@ -50,11 +61,6 @@ public class BoteApp extends Application {
         /* Stage Starten */
         stage.setScene(scene);
         stage.show();
-    }
-
-
-    public static void startBoteApp() {
-        launch();
     }
 
     @Override

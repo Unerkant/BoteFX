@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="livePane" styleClass="livepane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.ChatController">
+<AnchorPane fx:id="livePane" styleClass="livepane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.ChatMessageController">
    <children>
       <AnchorPane fx:id="liveBox" maxHeight="1.7976931348623157E308" styleClass="livebox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>

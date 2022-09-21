@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpbDataSourceConfig">
+    <data-sources>
+      <data-source id="bca5bdde-3c3a-4403-8d96-698c768bab40" name="BoteFX" url="jdbc:h2:file:~/h2database/localBote" driverClass="org.h2.Driver" />
+    </data-sources>
+  </component>
+</project>

@@ -1,92 +1,144 @@
 package BoteFx.controller.login;
 
+import BoteFx.configuration.GlobalApiRequest;
 import BoteFx.configuration.GlobalConfig;
-import BoteFx.configuration.GlobalView;
-import BoteFx.configuration.GlobalViewSwitcher;
+import BoteFx.Enums.GlobalView;
+import BoteFx.service.ViewService;
+
+import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-
+import java.net.URL;
+import java.net.http.HttpResponse;
+import java.util.ResourceBundle;
 
 /**
     *   den 20.05.2022
     */
 @Controller
-public class MailLoginController {
+public class MailLoginController implements Initializable {
     private final Logger logger = GlobalConfig.getLogger(this.getClass());
 
-    /**
-     * Login E-Mail Validate
-     * 1. Mail toLowerCase
-     * 2. Mail auf 50 Zeichen Begrenzen
-     *
-     * @param event
-     */
-    @FXML private Label mailloginfehler;
-    @FXML private TextField maillogininput;
-    @FXML private Button mailloginbutton;
-    private int maxLimit = 50;
-    private String mail;
-    private boolean valid;
+    @Autowired
+    private ViewService viewService;
+
+    @FXML private VBox mailLoginHauptVBox;
+    @FXML private AnchorPane mailLoginAnchorPane;
+    @FXML private VBox mailLoginVBox1;
+    @FXML private Label mailLoginTitle;
+    @FXML private VBox mailLoginVBox2;
+    @FXML private Label mailLoginFehler;
+    @FXML private Label mailLoginInfo;
+    @Value("${maillogininfo}")
+    private String maillogininfo;
+    @FXML private TextField mailLoginInput;
+    @FXML private Button mailLoginButton;
+
 
     private String token = "25052022181457";
 
-    /* Zum Testen */
-    public void allSuchen(ActionEvent event) {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        mailloginfehler.setText("Fehler von Mail Login Controller");
-        logger.info("Methode allSuchen: " + event);
+        // maillogin.fxml -> AnchorPane auf 100% Height ziehen
+        mailLoginAnchorPane.prefHeightProperty().bind(mailLoginHauptVBox.heightProperty());
+
+        // Allgemeine information zu Registrierung oder Einloggen
+        mailLoginInfo.setText(maillogininfo);
+
     }
 
 
-/* 1. validate */
+    /**
+     *  1. Validate: E-Mail Prüfen und versenden an Bote zu Mail-Sender,
+     *  Request senden an, Bote -> apiMailController -> @PostMapping(value = "/mailApi")
+     *  schließlich wird eine Activierungs-Code an diese E-Mail Vesendet
+     *
+     *  Request-response Status 200: weiter zum Code eingabe
+     *  Request-response Status 404: Fehler ausgeben
+     *
+     */
+    private String newUserMail;
+    @FXML
+    public void mailPrufen() {
+
+        boolean valid;
+        newUserMail = mailLoginInput.getText();
+        valid = GlobalConfig.mailValid(newUserMail);
+
+        if (valid){
+
+            String apiUrl = GlobalConfig.FILE_HTTP+"mailApi";
+            String json = "{ \"neuUserMail\":"+newUserMail+" }";
+
+            /* Request Senden an Bote/ApiMailController.java-> @PostMapping(value = "/mailApi") */
+            HttpResponse<String> response = GlobalApiRequest.requestAPI(apiUrl, json);
+
+            if (response != null && response.statusCode() == 200) {
+
+                MailRegisterController mailRegisterController = (MailRegisterController) viewService.switchTo(GlobalView.MAILREGISTER);
+                mailRegisterController.setLoginEmail(mailLoginInput.getText());
+
+                System.out.println("Mail Login Controller Response: " + response.statusCode());
+            } else {
+                mailLoginFehlerAusgabe("nichtversendet", "no");
+            }
+
+        }else{
+            mailLoginFehlerAusgabe("falschemail", "no");
+            return;
+        }
+    }
+
+
+
+    /**
+    *  1. Validate: E-Mail in Kleinbuchstaben konvertieren.
+    */
     public void mailLowerCase(KeyEvent keyEvent) {
-        maillogininput.textProperty().addListener((ov, oldValue, newValue )->{
-            maillogininput.setText(newValue.toLowerCase());
+        mailLoginInput.textProperty().addListener((ov, oldValue, newValue )->{
+            mailLoginInput.setText(newValue.toLowerCase());
             //logger.info(" toLowerCase ");
         });
     }
 
-/* 2. validate */
+
+    /**
+    *  2. Validate: die Maximale Länge einer E-Mail: 254
+    *
+    *  Daraus ergibt sich eine maximale Länge der E-Mail-Adresse
+    *  von 254 Oktetten einschließlich des „@“. Eine längere Adresse kann über
+    *  RFC-konforme SMTP-Server weder E-Mails versenden noch empfangen.
+    */
     public void mailLength(KeyEvent keyEvent) {
-        maillogininput.textProperty().addListener(new ChangeListener<String>() {
+        int maxLimit = 254;
+        mailLoginInput.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> obValue, String oldValue, String newValue) {
-                if (maillogininput.getText().length() > maxLimit){
-                    String s = maillogininput.getText().substring(0, maxLimit);
-                    maillogininput.setText(s);
-                    mailloginfehler.setText("E-Mail ist zu Groß, erlaubt sind nur 50 Zeichen");
+                if (mailLoginInput.getText().length() > maxLimit){
+                    String s = mailLoginInput.getText().substring(0, maxLimit);
+                    mailLoginInput.setText(s);
+
+                    mailLoginFehlerAusgabe("mailzugross", "no");
                 }
             }
         });
-    }
-
-/* 3. validate */
-    @FXML
-    public void mailLoginValidate(ActionEvent event){
-        mail = maillogininput.getText();
-        valid = GlobalConfig.mailValid(mail);
-        try {
-                if (valid){
-                    mailloginfehler.setText(mail);
-                    logger.info("Gultige E-Mail" );
-                }else{
-                    mailloginfehler.setText("Keine gültige E-Mail");
-                }
-        }catch (Exception e){
-            mailloginfehler.setText(String.valueOf(e));
-        }
-        //GlobalViewSwitcher.switchTo(GlobalView.MAILREGISTER);
-        //logger.info("Mail Login Validate");
     }
 
 
@@ -96,9 +148,10 @@ public class MailLoginController {
      */
     @FXML
     public void telefonLoginLinks(ActionEvent event){
-        GlobalViewSwitcher.switchTo(GlobalView.LOGINTELEFON);
+        viewService.switchTo(GlobalView.LOGINTELEFON);
         logger.info("Telefon Login");
     }
+
 
     /**
      * mit der Maus Stage Fenster auf dem Bildschirm frei Bewegen
@@ -116,6 +169,7 @@ public class MailLoginController {
 
     /**
      * Stage Fenster schliessen...
+     * @param event
      */
     @FXML
     public void mailloginClose(ActionEvent event){
@@ -125,5 +179,28 @@ public class MailLoginController {
     }
 
 
+    /**
+     * Fehler Ausgeben
+     */
+    public void mailLoginFehlerAusgabe(String text, String ok){
 
+        mailLoginFehler.setTextFill(ok == "ok" ? Color.GREEN : Color.RED);
+
+        switch (text){
+            case "mailloginbutton": mailLoginFehler.setText("Fehler von Methode allSuchen()");
+                                    break;
+            case "mailzugross":     mailLoginFehler.setText("E-Mail ist zu Groß, erlaubt sind nur 50 Zeichen");
+                                    break;
+            case "gultigemail":     mailLoginFehler.setText(newUserMail);
+                                    break;
+            case "falschemail":     mailLoginFehler.setText("Keine Gültige E-Mail");
+                                    break;
+            case "nichtversendet":  mailLoginFehler.setText("Aktivierungscode wurde nicht versendet ...");
+            default:                break;
+        }
+        //mailLoginFehler.setText(text);
+        PauseTransition pause = new PauseTransition(Duration.seconds(5));
+        pause.setOnFinished(e -> mailLoginFehler.setText(null));
+        pause.play();
+    }
 }
