@@ -1,27 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="470.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.login.TelefonLoginController">
+<VBox fx:id="telefonLoginHauptVBox" style="-fx-background-color: transparent; -fx-border-color: silver;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.login.TelefonLoginController">
     <children>
-        <Label layoutX="254.0" layoutY="190.0" text="Telefon Login">
-            <font>
-                <Font size="16.0" />
-            </font>
-        </Label>
-        <Button layoutX="247.0" layoutY="255.0" mnemonicParsing="false" onAction="#telefonRegister" text="zu Telefon Register">
-            <font>
-                <Font size="16.0" />
-            </font>
-        </Button>
-      <Hyperlink layoutX="29.0" layoutY="363.0" onAction="#mailLogin" text="mit Mail Registrieren">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Hyperlink>
+        <AnchorPane fx:id="telefonLoginAnchorPane" maxHeight="1.7976931348623157E308" onMouseDragged="#telefonloginDragged" onMousePressed="#telefonloginPressed" prefHeight="620.0" prefWidth="480.0">
+            <children>
+                <HBox alignment="CENTER" layoutX="50.0" layoutY="70.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+                    <children>
+                        <VBox maxWidth="650.0" minWidth="300.0" prefWidth="650.0" style="-fx-border-width: 1px; -fx-border-color: silver; -fx-border-radius: 6px;">
+                            <children>
+                                <Label maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="500.0" style="-fx-background-color: #E4E4E4; -fx-background-radius: 6px 6px 0 0; -fx-border-color: transparent transparent silver transparent; -fx-font-weight: 700;" text="Login Register">
+                                    <padding>
+                                        <Insets left="10.0" />
+                                    </padding>
+                                    <font>
+                                        <Font size="16.0" />
+                                    </font>
+                                </Label>
+                                <VBox prefWidth="498.0">
+                                    <children>
+                                        <Label fx:id="telefonLoginFehler" alignment="CENTER" maxWidth="1.7976931348623157E308" prefWidth="500.0" wrapText="true">
+                                            <font>
+                                                <Font size="16.0" />
+                                            </font>
+                                            <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                            </padding>
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" top="25.0" />
+                                            </VBox.margin>
+                                        </Label>
+                                        <Label fx:id="telefonLoginInfo" textFill="#ffbf00" wrapText="true">
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Label>
+                              <HBox>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <TextField fx:id="vorwahlInput" alignment="CENTER" focusTraversable="false" maxWidth="80.0" minWidth="80.0" onKeyPressed="#vorwahlValidate" prefHeight="40.0" prefWidth="80.0" promptText="000" styleClass="loginTelefon">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </TextField>
+                                              <TextField fx:id="telefonInput" maxWidth="1.7976931348623157E308" onKeyPressed="#telefonValidate" prefHeight="40.0" prefWidth="565.0" promptText="Telefon" styleClass="loginTelefon">
+                                                  <font>
+                                                      <Font size="16.0" />
+                                                  </font>
+                                              </TextField>
+                                 </children>
+                              </HBox>
+                                        <Button alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#telefonRequest" prefWidth="480.0" text="Telefonnummer Prüfen">
+                                            <font>
+                                                <Font size="16.0" />
+                                            </font>
+                                            <VBox.margin>
+                                                <Insets top="30.0" />
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets bottom="10.0" top="10.0" />
+                                            </padding>
+                                        </Button>
+                                        <Hyperlink onAction="#mailLoginLinks" text="mit E-Mail Registrieren" textFill="WHITE">
+                                            <VBox.margin>
+                                                <Insets bottom="10.0" top="50.0" />
+                                            </VBox.margin>
+                                            <font>
+                                                <Font size="14.0" />
+                                            </font>
+                                        </Hyperlink>
+                                    </children>
+                                    <padding>
+                                        <Insets left="10.0" right="10.0" />
+                                    </padding>
+                                </VBox>
+                            </children>
+                            <HBox.margin>
+                                <Insets left="5.0" right="5.0" />
+                            </HBox.margin>
+                        </VBox>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" layoutY="430.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                    <children>
+                        <Hyperlink onAction="#telefonloginClose" text="Abbrechen" textFill="#cc2900">
+                            <font>
+                                <Font size="16.0" />
+                            </font>
+                        </Hyperlink>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" layoutX="140.0" layoutY="513.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                    <children>
+                        <Label text="From Bote" textFill="AQUA" />
+                    </children>
+                </HBox>
+            </children>
+            <styleClass>
+                <String fx:value="stageBackground" />
+                <String fx:value="telefonlogin" />
+            </styleClass>
+            <effect>
+                <DropShadow />
+            </effect>
+        </AnchorPane>
     </children>
-</AnchorPane>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+    </padding>
+</VBox>

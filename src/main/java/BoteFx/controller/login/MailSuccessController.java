@@ -25,8 +25,6 @@ import java.util.ResourceBundle;
 public class MailSuccessController implements Initializable {
 
     private final Logger logger = GlobalConfig.getLogger(this.getClass());
-
-
     @Autowired
     private ViewService viewService;
 
@@ -40,9 +38,7 @@ public class MailSuccessController implements Initializable {
     @FXML private Label successMail;
     @FXML private Label successTelefon;
     @FXML private Label successToken;
-    @FXML private Hyperlink successInfo;
 
-   /* registerDatum.substring(0,10).replace('-','.') */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

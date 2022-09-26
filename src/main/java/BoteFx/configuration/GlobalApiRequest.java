@@ -16,16 +16,25 @@ public class GlobalApiRequest {
      * 1. MailLoginController.java -> Methode: mailPrufen
      * 2. MailRegisterController.java -> Methode: codePrufen
      *
-     *      als Parameter zugesendet von Controller:
-     *      a. apiUrl = URL-Adresse: "http://localhost:8080/mailApi"
-     *      b. apiParam = Json-Array (z.b.s, email, code ...)
+     *      bedienengen für Parameter:
+     *      (soll von controller zugesendet sein)
+     *      a. apiUrl = URL-Adresse als String: "http://localhost:8080/mailApi"
+     *                   oder String link = GlobalConfig.FILE_HTTP+"telefonApi";
+     *      b. apiParam = Parameter als Json-Array/object (z.b.s, email, code ...)
+     *
      *         z.b.s String json = "{ \"neuUserMail\":"\richterpaul@mail.de\" }";
      *         z.b.s String json = "{ \"neuUserMail\":"+newUserMail+" }";
      *         z.b.s String apiJson = "{\"code\":"+code+", \"token\":"+neuToken+"}";
      *
+     *  wenn Fehler kommt: apiTelefon(ApiTelefonController.java:37) ~[classes/:na]
+     *         z.b.s String data = "{\"neuUserTelefon\":\""+telefon+"\"}";
+     *
      *          REQUEST EMPFANGEN
      * Benutzt in Bote (Browser version), Request empfangen
      * 1. ApiMailController -> @PostMapping(value = "/mailApi")
+     *                      -> @PostMapping(value = "/codeApi")
+     *
+     * 2. ApiTelefonController ->  @PostMapping(value = "/telefonApi")
      *
      */
     public static HttpResponse<String> requestAPI(String apiUrl, String apiParam){

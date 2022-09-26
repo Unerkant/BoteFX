@@ -5,10 +5,10 @@ package BoteFx.Enums;
  */
 public enum GlobalView {
     HOME("/templates/login/home.fxml"),
-    LOGINMAIL("/templates/login/maillogin.fxml"),
+    MAILLOGIN("/templates/login/maillogin.fxml"),
     MAILREGISTER("/templates/login/mailregister.fxml"),
     MAILSUCCESS("/templates/login/mailsuccess.fxml"),
-    LOGINTELEFON("/templates/login/telefonlogin.fxml"),
+    TELEFONLOGIN("/templates/login/telefonlogin.fxml"),
     TELEFONREGISTER("/templates/login/telefonregister.fxml"),
     TELEFONSUCCESS("/templates/login/telefonsuccess.fxml"),
     CHATBOX("/templates/chatbox.fxml"),

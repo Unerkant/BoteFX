@@ -7,7 +7,6 @@ import BoteFx.model.Token;
 import BoteFx.service.TokenService;
 import BoteFx.service.ViewService;
 
-import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,7 +18,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +43,6 @@ public class MailRegisterController implements Initializable {
 
     @FXML private VBox mailRegisterHauptVBox;
     @FXML private AnchorPane mailLRegisterAnchorPane;
-    @FXML private Label mailRegisterTitle;
-    @FXML private VBox mailRegisterVBox;
     @FXML private Label mailRegisterFehler;
     @FXML  private Label mailRegisterEmail;
     @FXML private TextField codeEins;
@@ -90,14 +86,14 @@ public class MailRegisterController implements Initializable {
      * Aktivierung Code prüfen & weiter
      * an Bote -> ApiMailController.java -> @PostMapping(value = "/codeApi") senden
      *
-     * HttpResponse response (x2):
+     * HttpResponse response (x2) mal:
      *  1. response als status: response.statusCode() == 200
      *  2. response als json:   response.body()
      *
      * @param event
      */
     @FXML
-    public void codePrufen(ActionEvent event) {
+    public void codeRequest(ActionEvent event) {
 
         String code1 = codeEins.getText();
         String code2 = codeZwei.getText();
@@ -178,7 +174,7 @@ public class MailRegisterController implements Initializable {
             JSONObject object = new JSONObject(response.body());
             testerCode = String.valueOf(object.getInt("testerCode"));
             /* Ende später Löschen */
-
+            System.out.println("MailRegisterController Zeile: 180  / " + testerCode);
             mailRegisterFehlerAusgabe("codefalsch", "no");
         }
 
@@ -193,7 +189,7 @@ public class MailRegisterController implements Initializable {
      * @param event
      */
    @FXML
-    public void codeEingabe(KeyEvent event) {
+    public void codeValidate(KeyEvent event) {
         String id = ((Node) event.getSource()).getId();
         TextField txf = null;
         switch (id){
@@ -232,7 +228,7 @@ public class MailRegisterController implements Initializable {
 
            } else {
                /* bei Buchstabe eingabe auf strich ändern, bei leer wird Fehler ausgelöst */
-               codeTxf.setText("-");
+               codeTxf.setText(alt);
                mailRegisterFehlerAusgabe("zahlNO", "no");
            }
 
@@ -274,7 +270,7 @@ public class MailRegisterController implements Initializable {
      */
     @FXML
     public void mailLoginLinks(ActionEvent event) {
-        viewService.switchTo(GlobalView.LOGINMAIL);
+        viewService.switchTo(GlobalView.MAILLOGIN);
     }
 
     /**
@@ -287,13 +283,13 @@ public class MailRegisterController implements Initializable {
     }
 
     /**
-     * Algemeine Fehler Ausgabe
+     * Allgemeine Fehler Ausgabe
      *
      * @param text
      * @param ok
      */
-    @Value("${senderinfo}")
-    private String senderInfo;
+    @Value("${mailsenderinfo}")
+    private String mailSenderInfo;
 
     public void mailRegisterFehlerAusgabe(String text, String ok){
 
@@ -302,7 +298,7 @@ public class MailRegisterController implements Initializable {
         mailRegisterFehler.getStyleClass().add(ok == "ok" ? "mailfehlerOK" : "mailfehlerNO");
 
         switch (text){
-            case "mailsenderinfo":  mailRegisterFehler.setText(senderInfo);
+            case "mailsenderinfo":  mailRegisterFehler.setText(mailSenderInfo);
                                     break;
             case "feldleer":        mailRegisterFehler.setText("Feld ausfüllen");
                                     break;

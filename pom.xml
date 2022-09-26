@@ -12,7 +12,7 @@
 
     <groupId>com.BoteFX</groupId>
     <artifactId>BoteFX</artifactId>
-    <version>0.4</version>
+    <version>0.5</version>
     <name>BoteFX</name>
 
     <properties>

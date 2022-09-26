@@ -1,0 +1,57 @@
+
+    /* Kurze Anleitung BoteFX  */
+
+
+        ***** NICHT REGISTRIERT
+
+    1.  bei ersten App-start wird zuerst die start methode abgeruffen
+        BoteFX.java Methode start/viewService.switchTo(GlobalView.CHATBOX);
+        Zeile: 45
+        a. in der viewService bei abruf die switchTo (siehe hier oben)  zuerst wird
+            in den token.json Datei nach den token(vorgesehen als cookie) gesucht
+            wenn token wird gefunden, weiter zu messenger,
+            keinen token gefunden, weiter zum Home(Login)
+
+    2.  wenn nicht Registriert
+        Home Seite -> welen mit den Mail oder Telefon registrieren
+    3.  MailLoginController: Methoden
+            a. Stage schliessen
+            b. toLowerCase, alles auf kleinbuchstaben umwandeln
+            c. Mail Lenge auf 254 Zeichen setzen
+            e. mailPrufen():
+                mail auf valide prufen(einfach, nach @ & . prufen)
+                e-mail-adresse mit request(GlobalApiRequest) an Bote versenden
+                MailLoginController Zeile: 91
+                ( an GlobalApiRequest wir eine json(http-adresse & e-mail) versendet, von in
+                 wird ab Bote gesendet)
+                Bote: ApiController:  @PostMapping(value = "/mailApi")
+                wird an zugesendet E-Mail-Adresse eine Sicherheits Code gesendet
+            d. nach versenden den e-mail weiter zum code prüfen(MailRegisterControlle)
+    4.  MailRegisterController: Methoden
+        a. erlaubt nur Zahle
+        b. bei Zahl angabe wird automatisch an nächsten feld geleitet
+        c. stage schliessen
+        d. Fehler ausgabe
+        e. codePrufen():
+            die eingegebenen Zahlen als code wird an Bote/ApiController/@PostMapping(value = "/codeApi")
+            versendet und mit dem Code aus E-mail vergleichen
+            Falsche Code; response 404 (Aktuel wird als response die richtige code zurück gesendet, für versuch zwecke )
+            Richtige Code: werden neue Datum, pseudonym und neuer Token generiert und schliesslich
+                            ins Datenbank(MySql:GlobalBote) user & session gespeichert
+                            userService.saveNewUser(neuerUser);
+                            sessionService.saveLogDaten(sessionDaten);
+            zusätzlich werden die Daten zusammen Gstellt und als response an BotxFX/MailRegisterController zurück gesendet
+            return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+            MailRegisterControlller: response 200 Zeile: 137
+                von response-json wird den token ausgelesen und in einen token.json Datei & H2 LocalBote gespeichert
+                nur nach dem erfolgreichen speichernung in token.json wir weiter zu MailSuccessController geleitet,
+                ACHTUND: die speicherung in token.json dient als 'cookie' und wir bei App start immer abgefragt
+                            sihe pos.1 absatzt (a)
+                ACHTUNG: die Mysql/localBote zurzeit wird nich beenutzt abwohl in Service abfrage Methode existiert
+                Service/TokenService/public Token findeToken(String token).... funk. 100%
+
+    5. MailSuccessController: Information Seite, werden alle gespeicherte Daten Angezeigt
+        weiter geht zu messenger als registriert...
+
+        ***** SCHON REGISTRIERT
+    1.

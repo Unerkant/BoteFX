@@ -43,8 +43,8 @@ public class ViewService {
                 case TELEFONSUCCESS:        globalView = GlobalView.TELEFONSUCCESS; break;
                 case MAILREGISTER:          globalView = GlobalView.MAILREGISTER; break;
                 case TELEFONREGISTER:       globalView = GlobalView.TELEFONREGISTER; break;
-                case LOGINMAIL:             globalView = GlobalView.LOGINMAIL; break;
-                case LOGINTELEFON:          globalView = GlobalView.LOGINTELEFON; break;
+                case MAILLOGIN:             globalView = GlobalView.MAILLOGIN; break;
+                case TELEFONLOGIN:          globalView = GlobalView.TELEFONLOGIN; break;
                 default:                    globalView = GlobalView.HOME;
             }
         }

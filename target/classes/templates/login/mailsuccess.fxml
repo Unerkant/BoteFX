@@ -193,7 +193,7 @@
                               <Insets top="20.0" />
                            </VBox.margin>
                         </HBox>
-                        <Hyperlink fx:id="successInfo" alignment="CENTER" maxWidth="650.0" minWidth="300.0" onAction="#successZumSetting" prefWidth="650.0" text="Informationen in meinem Bote-Konto einsehen, anpassen und löschen">
+                        <Hyperlink alignment="CENTER" maxWidth="650.0" minWidth="300.0" onAction="#successZumSetting" prefWidth="650.0" text="Informationen in meinem Bote-Konto einsehen, anpassen und löschen">
                            <font>
                               <Font size="14.0" />
                            </font>

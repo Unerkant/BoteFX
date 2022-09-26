@@ -18,9 +18,9 @@
          <children>
             <HBox alignment="CENTER" layoutX="50.0" layoutY="70.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
                <children>
-                  <VBox fx:id="mailLoginVBox1" maxWidth="650.0" minWidth="300.0" prefWidth="650.0" style="-fx-border-width: 1px; -fx-border-color: silver; -fx-border-radius: 6px;">
+                  <VBox maxWidth="650.0" minWidth="300.0" prefWidth="650.0" style="-fx-border-width: 1px; -fx-border-color: silver; -fx-border-radius: 6px;">
                      <children>
-                        <Label fx:id="mailLoginTitle" maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="500.0" style="-fx-background-color: #E4E4E4; -fx-background-radius: 6px 6px 0 0; -fx-border-color: transparent transparent silver transparent; -fx-font-weight: 700;" text="Login Register">
+                        <Label maxWidth="1.7976931348623157E308" prefHeight="50.0" prefWidth="500.0" style="-fx-background-color: #E4E4E4; -fx-background-radius: 6px 6px 0 0; -fx-border-color: transparent transparent silver transparent; -fx-font-weight: 700;" text="Login Register">
                            <padding>
                               <Insets left="10.0" />
                            </padding>
@@ -28,7 +28,7 @@
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <VBox fx:id="mailLoginVBox2" prefWidth="498.0">
+                        <VBox prefWidth="498.0">
                            <children>
                               <Label fx:id="mailLoginFehler" alignment="CENTER" maxWidth="1.7976931348623157E308" prefWidth="500.0" style="-fx-wrap-text: true;">
                                  <font>
@@ -57,7 +57,7 @@
                                     <Font size="16.0" />
                                  </font>
                               </TextField>
-                              <Button fx:id="mailLoginButton" alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#mailPrufen" prefWidth="480.0" text="E-Mail Adresse Prüfen">
+                              <Button alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#mailPrufen" prefWidth="480.0" text="E-Mail Adresse Prüfen">
                                  <font>
                                     <Font size="16.0" />
                                  </font>

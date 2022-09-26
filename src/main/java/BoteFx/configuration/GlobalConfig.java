@@ -31,6 +31,12 @@ public class GlobalConfig {
     public static final double START_WIDTH      = 480;
     public static final double START_HEIGHT     = 720;
 
+    /* Verschidene Einstellungen */
+    public  static final Integer MAIL_LENGTH     = 254;    /* MailLoginController */
+    public  static final Integer VORWAHL_LENGTH  = 5;    /* TelefonLoginController */
+    public  static final Integer MAX_TEL_LENGTH  = 11;    /* TelefonLoginController */
+    public  static final Integer MIN_TEL_LENGTH  = 6;    /* TelefonLoginController */
+
 
     /**
      * Logger Service
@@ -81,6 +87,18 @@ public class GlobalConfig {
         return matcher.matches();
     }
 
+    /**
+     * Language International
+     */
+    public static String languagen(String landkurzel){
+        switch (landkurzel){
+            case "de":              return "+49";
+            case "en":              return "+44";
+            case "fr":              return "+33";
+            case "it":              return "+39";
+            default:                return "+49";
+        }
+    }
 
     /**
      * Stage Fenster mit Maus frei an Bildschirm Positionieren

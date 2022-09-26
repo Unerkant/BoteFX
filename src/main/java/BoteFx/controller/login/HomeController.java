@@ -73,7 +73,7 @@ public class HomeController implements Initializable {
      */
     @FXML
     public void zumMailLogin(ActionEvent event) {
-        viewService.switchTo(GlobalView.LOGINMAIL);
+        viewService.switchTo(GlobalView.MAILLOGIN);
         //logger.info("Home Controller(von Home stage zum Mail Login wechseln)");
     }
 
@@ -84,7 +84,7 @@ public class HomeController implements Initializable {
      */
     @FXML
     public void zumTelefonLogin(ActionEvent event) {
-        viewService.switchTo(GlobalView.LOGINTELEFON);
+        viewService.switchTo(GlobalView.TELEFONLOGIN);
         //logger.info("Home Controller(von Home stage zum Telefon Login wechseln)");
     }
 

@@ -61,10 +61,10 @@ public class TokenService {
                 return "writeJsonOk";
             } catch (IOException e) {
                 //throw new RuntimeException(e);
-                return "writeJsonNo";
+                return "writeJsonNein";
             }
         } else {
-            return "eintragExistiert";
+            return "eintragExist";
         }
 
     }

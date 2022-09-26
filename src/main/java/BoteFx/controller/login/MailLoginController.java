@@ -40,18 +40,12 @@ public class MailLoginController implements Initializable {
 
     @FXML private VBox mailLoginHauptVBox;
     @FXML private AnchorPane mailLoginAnchorPane;
-    @FXML private VBox mailLoginVBox1;
-    @FXML private Label mailLoginTitle;
-    @FXML private VBox mailLoginVBox2;
     @FXML private Label mailLoginFehler;
     @FXML private Label mailLoginInfo;
     @Value("${maillogininfo}")
     private String maillogininfo;
     @FXML private TextField mailLoginInput;
-    @FXML private Button mailLoginButton;
 
-
-    private String token = "25052022181457";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -95,7 +89,6 @@ public class MailLoginController implements Initializable {
                 MailRegisterController mailRegisterController = (MailRegisterController) viewService.switchTo(GlobalView.MAILREGISTER);
                 mailRegisterController.setLoginEmail(mailLoginInput.getText());
 
-                System.out.println("Mail Login Controller Response: " + response.statusCode());
             } else {
                 mailLoginFehlerAusgabe("nichtversendet", "no");
             }
@@ -127,7 +120,7 @@ public class MailLoginController implements Initializable {
     *  RFC-konforme SMTP-Server weder E-Mails versenden noch empfangen.
     */
     public void mailLength(KeyEvent keyEvent) {
-        int maxLimit = 254;
+        int maxLimit = GlobalConfig.MAIL_LENGTH;
         mailLoginInput.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> obValue, String oldValue, String newValue) {
@@ -148,8 +141,7 @@ public class MailLoginController implements Initializable {
      */
     @FXML
     public void telefonLoginLinks(ActionEvent event){
-        viewService.switchTo(GlobalView.LOGINTELEFON);
-        logger.info("Telefon Login");
+        viewService.switchTo(GlobalView.TELEFONLOGIN);
     }
 
 
@@ -175,7 +167,6 @@ public class MailLoginController implements Initializable {
     public void mailloginClose(ActionEvent event){
 
         GlobalConfig.stageClose(event);
-        logger.info("Mail Login Close");
     }
 
 
