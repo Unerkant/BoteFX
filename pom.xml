@@ -12,7 +12,7 @@
 
     <groupId>com.BoteFX</groupId>
     <artifactId>BoteFX</artifactId>
-    <version>0.5</version>
+    <version>0.6</version>
     <name>BoteFX</name>
 
     <properties>
@@ -122,6 +122,14 @@
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10</version>
+        </dependency>
+
 
         <!-- hibernate-core -->
         <dependency>

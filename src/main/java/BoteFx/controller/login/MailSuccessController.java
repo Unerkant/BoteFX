@@ -1,6 +1,6 @@
 package BoteFx.controller.login;
 
-import BoteFx.configuration.GlobalConfig;
+import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
 import BoteFx.service.ViewService;
 
@@ -8,7 +8,6 @@ import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -24,7 +23,6 @@ import java.util.ResourceBundle;
 @Controller
 public class MailSuccessController implements Initializable {
 
-    private final Logger logger = GlobalConfig.getLogger(this.getClass());
     @Autowired
     private ViewService viewService;
 

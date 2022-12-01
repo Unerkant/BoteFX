@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="freundeAnchorPane" minWidth="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.FreundeController">
+   <children>
+      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <GridPane style="-fx-background-color: #FAFAFF; -fx-border-color: #E6E6FF; -fx-border-style: none none solid none;" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="45.0" prefHeight="45.0" valignment="CENTER" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ImageView fx:id="imgFreundRemove" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#freundRemoveClick" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../static/img/personloschen.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+                  <ImageView fx:id="imgCloseRemove" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#freundRemoveCloseClick" pickOnBounds="true" preserveRatio="true" visible="false">
+                     <image>
+                        <Image url="@../static/img/close.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+                  <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <children>
+                        <StackPane alignment="BOTTOM_CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0">
+                           <children>
+                              <Label text="Chats" textAlignment="CENTER" textFill="NAVY">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </StackPane>
+                        <Label fx:id="meineName" text="Name" textAlignment="CENTER" textFill="#cccccc">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <ImageView fx:id="imgBekanntenEinladen" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#bekanntenEinladenClick" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                     <image>
+                        <Image url="@../static/img/personplus.png" />
+                     </image>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </ImageView>
+               </children>
+            </GridPane>
+         </top>
+         <center>
+             <ScrollPane fx:id="freundeScroll" minWidth="300.0" prefWidth="300.0" stylesheets="@../static/css/scrollpane.css">
+                 <content>
+                     <VBox fx:id="freundeVBox" minWidth="300.0" prefWidth="300.0" />
+                 </content>
+             </ScrollPane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

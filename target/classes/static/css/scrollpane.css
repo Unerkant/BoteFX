@@ -5,18 +5,23 @@
  *
  *  Benutzt: chat.fxml/center ScrollPane #bodyScrollPane
  *
- *  ACHTUNG: diese 2 befell in die .scroll-pane reichen die
+ *  ACHTUNG: Scroll Komplekt ausschalten
+ *  diese 2 befell in die .scroll-pane reichen die
  *  vertikale & horizontale scroll-balken ausblenden, rest ist überflüssig
  *  a. -fx-hbar-policy: never;
  *  b. -fx-vbar-policy: never;
+ *
+ *  ACHTUNG: Scroll Vertical nur 1px dick, unten aus
+ *      1. Zeile: 30 sperren (-fx-vbar-policy: never;)
+ *      2. Zeile: 57+58 entsperren (-fx-background-color: derive(black, 90%);)
  */
 
 
 .scroll-pane
 {
-    /*-fx-background-color: transparent;
+    -fx-background-color: transparent;
     -fx-border-color: transparent;
-    -fx-padding: -1;*/
+    -fx-padding: -1;
 
     /* Blendet Horizontale Scroll-bar aus */
     -fx-hbar-policy: never;
@@ -49,8 +54,8 @@
 .scroll-pane .scroll-bar:vertical .increment-arrow,
 .scroll-pane .scroll-bar:vertical .decrement-arrow
 {
-   /* -fx-background-color: derive(black, 90%);
-    -fx-padding: -1;*/
+    /*-fx-background-color: derive(black, 90%);
+    -fx-padding: -1; */
 }
 
 .scroll-pane .scroll-bar:horizontal .increment-arrow,

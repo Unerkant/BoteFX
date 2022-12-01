@@ -1,7 +1,7 @@
 package BoteFx.controller.login;
 
-import BoteFx.configuration.GlobalApiRequest;
-import BoteFx.configuration.GlobalConfig;
+import BoteFx.service.ApiService;
+import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
 import BoteFx.service.ViewService;
 
@@ -11,7 +11,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -33,10 +32,12 @@ import java.util.ResourceBundle;
     */
 @Controller
 public class MailLoginController implements Initializable {
-    private final Logger logger = GlobalConfig.getLogger(this.getClass());
-
     @Autowired
     private ViewService viewService;
+    @Autowired
+    private ApiService apiService;
+    @Autowired
+    private ConfigService configService;
 
     @FXML private VBox mailLoginHauptVBox;
     @FXML private AnchorPane mailLoginAnchorPane;
@@ -74,15 +75,15 @@ public class MailLoginController implements Initializable {
 
         boolean valid;
         newUserMail = mailLoginInput.getText();
-        valid = GlobalConfig.mailValid(newUserMail);
+        valid = configService.mailValid(newUserMail);
 
         if (valid){
 
-            String apiUrl = GlobalConfig.FILE_HTTP+"mailApi";
+            String apiUrl = configService.FILE_HTTP+"mailApi";
             String json = "{ \"neuUserMail\":"+newUserMail+" }";
 
             /* Request Senden an Bote/ApiMailController.java-> @PostMapping(value = "/mailApi") */
-            HttpResponse<String> response = GlobalApiRequest.requestAPI(apiUrl, json);
+            HttpResponse<String> response = apiService.requestAPI(apiUrl, json);
 
             if (response != null && response.statusCode() == 200) {
 
@@ -120,7 +121,7 @@ public class MailLoginController implements Initializable {
     *  RFC-konforme SMTP-Server weder E-Mails versenden noch empfangen.
     */
     public void mailLength(KeyEvent keyEvent) {
-        int maxLimit = GlobalConfig.MAIL_LENGTH;
+        int maxLimit = configService.MAIL_LENGTH;
         mailLoginInput.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> obValue, String oldValue, String newValue) {
@@ -151,11 +152,11 @@ public class MailLoginController implements Initializable {
      */
     @FXML
     public void mailloginDragged(MouseEvent event) {
-        GlobalConfig.dragget(event);
+        configService.dragget(event);
     }
     @FXML
     public void mailloginPressed(MouseEvent event) {
-        GlobalConfig.pressed(event);
+        configService.pressed(event);
     }
 
 
@@ -166,7 +167,7 @@ public class MailLoginController implements Initializable {
     @FXML
     public void mailloginClose(ActionEvent event){
 
-        GlobalConfig.stageClose(event);
+        configService.stageClose(event);
     }
 
 

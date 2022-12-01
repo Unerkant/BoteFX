@@ -1,7 +1,7 @@
 package BoteFx.controller.login;
 
-import BoteFx.configuration.GlobalApiRequest;
-import BoteFx.configuration.GlobalConfig;
+import BoteFx.service.ApiService;
+import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
 import BoteFx.model.Token;
 import BoteFx.service.TokenService;
@@ -33,11 +33,15 @@ import java.util.ResourceBundle;
 
 @Controller
 public class TelefonRegisterController implements Initializable {
-    private final Logger logger = GlobalConfig.getLogger(this.getClass());
+
     @Autowired
     private ViewService viewService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private ApiService apiService;
+    @Autowired
+    private ConfigService configService;
 
     @FXML private VBox telefonRegisterHauptVBox;
     @FXML private AnchorPane telefonRegisterAnchorPane;
@@ -107,11 +111,11 @@ public class TelefonRegisterController implements Initializable {
         JSONObject obj = new JSONObject(getLoginTelefon());
         String telOnePlus = (String) obj.get("telefonOnePlus");
         String kode = String.valueOf(Integer.parseInt(kode1 + "" + kode2 + "" + kode3 + "" + kode4));
-        String urlApi = GlobalConfig.FILE_HTTP+"kodeApi";
+        String urlApi = configService.FILE_HTTP+"kodeApi";
         String jsonApi = "{\"kode\":\""+kode+"\", \"telefon\":\""+telOnePlus+"\"}";
 
         /* request & response */
-        HttpResponse<String> response = GlobalApiRequest.requestAPI(urlApi, jsonApi);
+        HttpResponse<String> response = apiService.requestAPI(urlApi, jsonApi);
         if (response != null && response.statusCode() == 200) {
 
             /* token ermitteln von response */
@@ -121,7 +125,7 @@ public class TelefonRegisterController implements Initializable {
             /* token in H2 Database speichern (localBote/Token) */
             Token H2Token = tokenService.findeToken(resToken);     // h2token output: null
             if (H2Token == null){
-                String datum = GlobalConfig.deDatum();
+                String datum = configService.deDatum();
                 Token neuToken = new Token();
                 neuToken.setDatum(datum);
                 neuToken.setMytoken(resToken);
@@ -241,7 +245,7 @@ public class TelefonRegisterController implements Initializable {
      * @param event
      */
     public void telefonRegisterClose(ActionEvent event) {
-        GlobalConfig.stageClose(event);
+        configService.stageClose(event);
     }
 
     /**
@@ -249,10 +253,10 @@ public class TelefonRegisterController implements Initializable {
      * @param event
      */
     public void telefonRegisterDragged(MouseEvent event) {
-        GlobalConfig.dragget(event);
+        configService.dragget(event);
     }
     public void telefonRegisterPressed(MouseEvent event) {
-        GlobalConfig.pressed(event);
+        configService.pressed(event);
     }
 
 

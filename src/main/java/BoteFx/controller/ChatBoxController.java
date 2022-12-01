@@ -1,32 +1,40 @@
 package BoteFx.controller;
 
-import BoteFx.configuration.GlobalConfig;
-import BoteFx.model.Message;
-import javafx.application.Platform;
+import BoteFx.Enums.GlobalView;
+import BoteFx.service.ConfigService;
+import BoteFx.service.LayoutService;
+import BoteFx.service.TokenService;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Zeit unbekannt
+ */
 
 @Controller
 public class ChatBoxController implements Initializable {
-    private final Logger logger = GlobalConfig.getLogger(this.getClass());
+    @Autowired
+    private ConfigService configService;
+    @Autowired
+    private LayoutService layoutService;
+    @Autowired
+    private TokenService tokenService;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * die 3 AnchorPane hauptPane, leftPane & rightPane nicht
@@ -39,78 +47,137 @@ public class ChatBoxController implements Initializable {
     @FXML private AnchorPane leftPane;
     @FXML private AnchorPane rightPane;
 
-    /* leftPane -> HauptContainer -> header, body & footer  */
-    @FXML private BorderPane chatFreundeBorderPane;
-
-    /* leftPane/chatFreunde/ header */
-
-    /* leftPane/chatFreunde/body */
-    @FXML private ScrollPane chatFreundeScroll;
-    @FXML private VBox chatFreundeVBox;
-    /* leftPane/chatFreunde/footer */
-
-    /* rightPane */
-
-
-    /* zum Ändern, Daten von Header & Footer fehlen noch  */
-    @FXML private Label headerLabel;
-    @FXML private Label footerLabel;
-
+    @FXML private AnchorPane freundePane;
+    @FXML private ImageView kontakteImg;
+    @FXML private ImageView telefonateImg;
+    @FXML private ImageView chattenImg;
+    @FXML private ImageView settingImg;
+    @FXML private ImageView imgChange;
 
     /**
-     * Chat-Freunde von Datenbank Laden ins leftPane
-     * Quelle: chatbox.fxml #leftPane -> center -> chatFreundeScroll -> chatFreundeVBox
-     * Daten werden in ChatFreundeController gesammelt & in chatfreunde.fxml ausgegeben
+     * die 4 Methoden werden von chatbox(bottom) gesteuert
+     *  1. kontakte
+     *  2. telefonate
+     *  3. chatten (wird Automatisch gestartet(initialize) Zeile: 213)
+     *  4. setting
+     *
+     * @param event
      */
+    public void kontakte(MouseEvent event) {
+        rightPane.getChildren().clear();
+        layoutService.setausgabeLayout(freundePane);
+        KontakteController kontakteController = (KontakteController) layoutService.switchLayout(GlobalView.KONTAKTE);
 
-    @FXML private AnchorPane chatfreunde;
-    public void chatFreundeLaden(){
-        try {
-            FXMLLoader freundeLoader = new FXMLLoader(getClass().getResource("/templates/chatfreunde.fxml"));
-            chatfreunde = freundeLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        Platform.runLater(()->{
-
-             //Freunde Laden(chatbox.fxml/#leftPane -> center)
-            chatFreundeVBox.getChildren().add(chatfreunde);
-
-             //Chat Freunde(chatbox.fxml/#leftPane) width & height auf 100% ziehen
-            chatFreundeVBox.prefHeightProperty().bind(chatFreundeScroll.heightProperty());
-            chatFreundeVBox.prefWidthProperty().bind(chatFreundeScroll.widthProperty());
-            chatfreunde.prefWidthProperty().bind(chatFreundeScroll.widthProperty());
-
-        });
-
-        logger.info("chatfreunde.fxml von ChatBoxController Zeile 87:  " + chatFreundeVBox);
+        // Bild hover setzen
+        String id = ((Node) event.getSource()).getId();
+        changedImg(id);
     }
 
     /**
-     * Chat Methode Starten( klick auf den Freund/Linke Teil)
+     * Telefonate anzeigen
+     * @param event
      */
-    @FXML
-    private AnchorPane chatmessage;
-    public void chatMessageStarten() {
-        try {
-            chatmessage = FXMLLoader.load(getClass().getResource("/templates/chatmessage.fxml"));
-            rightPane.getChildren().add(chatmessage);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void telefonate(MouseEvent event) {
+
+        rightPane.getChildren().clear();
+        layoutService.setausgabeLayout(freundePane);
+        TelefonController telefonController = (TelefonController) layoutService.switchLayout(GlobalView.TELEFON);
+
+        // Bild hover setzen
+        String id = ((Node) event.getSource()).getId();
+        changedImg(id);
+    }
+
+
+    /**
+     * Chat Starten
+     *
+     * Automatische Laden von Chat-Freunde, Bild auf Blau setzen
+     * Token aus TokenService holen & an FreundeController weiter senden
+     *
+     * die Methode wird Automatisch gestartet im public void initialize(){}
+     * Zeile: 203
+     */
+    public void chatten(MouseEvent event) {
+
+        rightPane.getChildren().clear();
+        layoutService.setausgabeLayout(freundePane);
+        FreundeController freundeController = (FreundeController) layoutService.switchLayout(GlobalView.FREUNDE);
+        freundeController.setRechtsPane(rightPane);
+        freundeController.setFreundenPane(freundePane);
+        freundeController.setMeineToken(tokenService.tokenHolen());
+
+        if (event != null) {
+            String id = ((Node) event.getSource()).getId();
+            // Bild hover setzen
+            changedImg(id);
+        }else {
+            Image chatImage = new Image(getClass().getResourceAsStream("/static/img/chatblau.png"));
+            chattenImg.setImage(chatImage);
         }
 
-        AnchorPane.setLeftAnchor(chatmessage, 0.0);
-        AnchorPane.setTopAnchor(chatmessage, 0.0);
-        AnchorPane.setRightAnchor(chatmessage, 0.0);
-        AnchorPane.setBottomAnchor(chatmessage, 0.0);
-        logger.info("Chat Starten Methode: " + chatmessage);
     }
 
-    public ChatBoxController() {
-        //chatFreundeLaden();
-        //chatMessageStarten();
+    /**
+     * Setting Laden
+     * @param event
+     */
+    public void setting(MouseEvent event) {
+
+        rightPane.getChildren().clear();
+        layoutService.setausgabeLayout(freundePane);
+        SettingController settingController = (SettingController) layoutService.switchLayout(GlobalView.SETTING);
+        settingController.setRightPane(rightPane);
+
+
+        // Bild unter in Bottom-Menu hover setzen
+        String id = ((Node) event.getSource()).getId();
+        changedImg(id);
     }
+
+    /**
+     * Menü Bilder(bottom) bei aktiv Blau setzen
+     * @param id
+     */
+    public void changedImg(String id){
+        //System.out.println("changedIMG ID: " + id);
+        Image kontakt       = new Image(getClass().getResourceAsStream("/static/img/user.png"));
+        Image kontaktBlau   = new Image(getClass().getResourceAsStream("/static/img/userblau.png"));
+        Image phone         = new Image(getClass().getResourceAsStream("/static/img/phone.png"));
+        Image phoneBlau     = new Image(getClass().getResourceAsStream("/static/img/phoneblau.png"));
+        Image chat          = new Image(getClass().getResourceAsStream("/static/img/chat.png"));
+        Image chatBlau      = new Image(getClass().getResourceAsStream("/static/img/chatblau.png"));
+        Image setting       = new Image(getClass().getResourceAsStream("/static/img/setting.png"));
+        Image settingBlau   = new Image(getClass().getResourceAsStream("/static/img/settingblau.png"));
+
+        switch (id){
+            case "kontakteImg":                 kontakteImg.setImage(kontaktBlau);
+                                                //kontakteImg.setDisable(true);
+                                                telefonateImg.setImage(phone);
+                                                chattenImg.setImage(chat);
+                                                settingImg.setImage(setting);
+                                                break;
+            case "telefonateImg":               telefonateImg.setImage(phoneBlau);
+                                                kontakteImg.setImage(kontakt);
+                                                chattenImg.setImage(chat);
+                                                settingImg.setImage(setting);
+                                                break;
+            case "chattenImg":                  chattenImg.setImage(chatBlau);
+                                                //kontakteImg.setDisable(false);
+                                                kontakteImg.setImage(kontakt);
+                                                telefonateImg.setImage(phone);
+                                                settingImg.setImage(setting);
+                                                break;
+            case "settingImg":                  settingImg.setImage(settingBlau);
+                                                kontakteImg.setImage(kontakt);
+                                                telefonateImg.setImage(phone);
+                                                chattenImg.setImage(chat);
+                                                break;
+            default:                            break;
+        }
+    }
+
+
 
     /* ******************************* nur für Autoresize(wenn App verkleinert wird) **************************  */
 
@@ -130,23 +197,26 @@ public class ChatBoxController implements Initializable {
     private int sperre2  = 1;
     private int sperre3  = 1;
 
-    private List<Message>   gemeinsameMessage;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        // für die LeftPane -- später Löschen
-        headerLabel.setMaxWidth(650);
-        footerLabel.setMaxWidth(650);
-        //logger.info("Message Controller: initialize");
+        /**
+         * Automatische Laden von Chat-Freunden
+         * die Methode wird gestartet in Zeile: 90
+         */
+        MouseEvent event = null;
+        chatten(event);
 
         /**
+         *  die Methode funktioniert bei eine Große unter 650px
+         *  gemessen wird an AnchorPane (Hauptpane)
+         *
          *  Pane Autoresize(wenn App verkleinert wird)
          *  bei Verkleinerung der Browser wird nur die focusierte Pane
          *  angezeigt, andere wird ausgeblendet.
          *  um ständigen reLoaden zu vermeiden ist eine Sperre eingebaut
          *  mit sperre1...2...3
          */
-
         hauptPane.widthProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> obs, Number altVal, Number newVal) {
@@ -230,23 +300,29 @@ public class ChatBoxController implements Initializable {
 
 
     /**
-     * Change Pane(wenn App bleibt unter 650px verkleinert)
+     * die Methode funktioniert nur unter 650px width
      *
-     * ergänzung zu function chanched(oben) als Mobile version
-     * die function funktioniert bei eine Große unter 650px
-     * gemessen wird an AnchorPane
+     * die Methode wird gestartet nur von anklicken von Freunde(leftPane)
+     * oder der Button "Zurück" oben bei Setting Positionen(rightPane)
      *
-     * anbindung möglichkeit: ID NICHT VERÄNDERN
-     * ACHTUNG: Genau diese ID + onAction angeben.
-     * 1. Hyper link fx:id="openfreunde" onAction="#chanchedPane" text="Zurück"
-     * 2. Hyper link fx:id="openmessage" onAction="#chanchedPane" text="Message"
+     * wenn Haupt-Fenster ist mehr als 650px width, wird die rightPane
+     * geleert Zeile: 365
      *
-     * @param event
+     * anbindung möglichkeit: NICHT VERÄNDERN
+     * 1. nur 2 Parameter sind erlaubt(1 zugesendet)
+     *      a. openfreunde
+     *     ODER
+     *      b. openmessage
+     *
+     * 2. @Autowired
+     *    ChatBoxController chatBoxController;
+     *    chatBoxController.changedPane("openfreunde");
+     *    ODER
+     *    chatBoxController.changedPane("openmessage");
+     *
+     * 3. ...
      */
-
-    private String actionId;
-    public void chanchedPane(ActionEvent event) {
-        actionId = ((Node) event.getSource()).getId();
+    public void changedPane(String actionText) {
         /* app auf verkleinerung prüfen */
         haupWidth = (int) hauptPane.getWidth();
 
@@ -254,7 +330,7 @@ public class ChatBoxController implements Initializable {
         Thread tr = new Thread() {
             @Override
             public void run() {
-                if ("openfreunde".equals(actionId)) {
+                if ("openfreunde".equals(actionText)) {
 
                     for (int i = 0; i <= aktuelleWidth; i++) {
                         try {
@@ -262,13 +338,13 @@ public class ChatBoxController implements Initializable {
                             AnchorPane.setLeftAnchor(rightPane, Double.valueOf(i));
                             leftPane.setVisible(true);
                             leftPane.setMinWidth(i);
-                            //logger.info("oben 650: " + i );
+                            //logger.info("oben: " + aktuelleWidth + " / " + i );
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
                     }
 
-                } else if ("openmessage".equals(actionId)) {
+                } else if ("openmessage".equals(actionText)) {
                     
                     for (int z = aktuelleWidth; z >= 0; z--) {
                         try {
@@ -276,23 +352,23 @@ public class ChatBoxController implements Initializable {
                             leftPane.setMinWidth(z);
                             rightPane.setVisible(true);
                             AnchorPane.setLeftAnchor(rightPane, Double.valueOf(z));
-                            //logger.info("unten null: " + z);
+                            //logger.info("unten null: " + aktuelleWidth + " / " + z);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
                     }
 
                 } else {
-                    logger.info("Unerwartete Fehler bei MessengerController: Zeile 155 ");
+
+                    System.out.println("Unerwartete Fehler bei ChatBoxController: Zeile 307 + 321 + 336 ");
                     //Leer
                 }
             }
         }; tr.start();
 
     } else {
-        //rightPane.getChildren().clear();
-        logger.info("Das Hauptfenster ist mehr als 650px Groß" + hauptPane.getChildren());
+        rightPane.getChildren().clear();
+       // System.out.println("ChatBoxController: Das Hauptfenster ist mehr als 650px Groß" + hauptPane.getChildren());
     }/* Ende if hauptWidth */
     }/* Ende chanchedPane */
-
 }

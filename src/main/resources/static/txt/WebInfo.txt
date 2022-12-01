@@ -1,8 +1,179 @@
 
     /* Kurze Anleitung BoteFX  */
 
+    ***************************** ALLGEMEIN *********************************************
 
-        ***** NICHT REGISTRIERT
+    1. *** Allgemein zur fxml Load
+        a. login fxml + chatbox.fxml werden nur von ViewService abgerufen,
+           ViewService = zuerst wird auf vorhandenen token* geprüft, wenn nicht vorhanden
+           ist dann login seite anzeigen.
+           wenn token da ist dann die chatbox.fxml anzeigen (BoteApp Zeile: 53)
+           *token = wird bei registrierung in einem token.json gespeichert
+
+        b. alles was wird in chatbox.fxml (leftPane & rightPane) angezeigt wird von
+           LayoutService abgerufen...
+           die unter 4 buttons (kontakte, telefon, chat und setting) werden nur in
+           leftPane angezeigt..
+           message & setting daten werden in rightPane angezeigt
+
+    ****************************** BILDER ***********************************************
+    1. Bild an Freunde-Cell laden & anzeigen, FreundeCellCotroller/setProperties Zeile 122
+       Bild wird einfach per URL von der Bote datei 'profilbild' geladen/angezeigt
+       // Image freundImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+freundBild+".png", false);
+       // ImageView imageView = new ImageView(freundImg);
+
+    2
+
+
+    *************************** PANE SLIDER ( APP/VERKLEINERN/VERGRßERN) ****************
+
+    ChatBoxController/public void initialize....
+
+    Bei Verkleinerung der Haupt Pane(Stage) unter 650px (leftPane = 300px fest, rightPane = 350px )
+    wird eine von beiden Pane schliessen.
+        a. wenn im rightPane wird was angezeigt dann leftPane schliessen
+        b. wenn rightPane ist Leer dann wird sie geschlossen, leftPane wird angezeigt
+    weitere Infomation in ChatBoxController Zeile: ab 206
+
+    wenn Haupt Pane(Stage) unter 650px dauert haft bleibt.
+    die schliessung und Zeigen von leftPane oder rightPane wird in der Methode
+    changedPane() gesteuert... ChatBoxController/ changedPane() Zeile: 330
+    beim Zusenden an die Methode parameter 'openfreunde' werde die rightPane schliessen,
+    bei 'openmessage' wird die rightPane angezeigt...
+
+        * anbindung möglichkeit: NICHT VERÄNDERN
+         * 1. nur 2 Parameter sind erlaubt(1 zugesendet)
+         *      a. openfreunde
+         *     ODER
+         *      b. openmessage
+         *
+         * 2. @Autowired
+         *    ChatBoxController chatBoxController;
+         *    chatBoxController.changedPane("openfreunde");
+         *    ODER
+         *    chatBoxController.changedPane("openmessage");
+    Weiter Informationen sind auf dem ChatBoxController Zeile: ab 200
+
+    *** der Link 'Zurück'
+    *************************** ENDE SLIEDER *******************************************
+
+
+
+
+
+    **************************** Token **************************************************
+    Neuer Token wird nur bei Neun Registrierung angelegt
+
+     konfiguriert: in Bote/konfiguration/GlobalConfig/ IdentifikationToken
+     Gespeichert in MySql Database: globalBote, Tabelle: usern
+
+     mit E-Mail oder Telefon registrieren von BoteFX:
+
+        Gespeichert(BoteFX):    als response von ApiMailController(Bote)* bekommen: Zeile: 159
+                                return ResponseEntity.status(HttpStatus.OK).body(userResponse);
+                                                +
+                                als response von ApiTelefonController(Bote)* bekommen: Zeile: 154
+                                 return ResponseEntity.status(HttpStatus.OK).body(dataResponse);
+                                                Weiter in BoteFX
+                                gespeichert in BoteFX/h2database/localBoteFx/TOKEN
+                                MailRegisterController(BoteFX) Zeile: 148
+                                tokenService.saveToken(newToken);
+                                        und
+                                BoteFX/resources/static/json/token.json
+                                Benutzt von ViewService/ Zeile: 49
+                                String myToken = tokenService.tokenHolen();
+        Gespeichert(Bote)
+        * mit E_Mail
+        Benutzt(Bote):          ApiMailController Zeile: 94
+                                neuerToken = GlobalConfig.IdentifikationToken();
+        Gespeichert(mysql):     ApiMailController Zeile: 127
+                                userService.saveNewUser(neuerUser);
+        * mit Telefon
+        Benutzt(Bote):          ApiTelefonController Zeile: 89
+                                neuToken = GlobalConfig.IdentifikationToken();
+        Gespeichert(mysql):     ApiTelefonController Zeile: 122
+                                userService.saveNewUser(neuUser);
+
+
+
+
+
+    **************************** Database: h2database/localBoteFx ***********************
+
+    1. Quelle: BoteFX/h2database/localBoteFx, model: Token
+       nach erfolgreichen Registrierung wird nur Token gespeichert:
+       a. MailRegisterController: Zeile: 142
+       b. TelefonRegisterController Zeile: 132
+
+    *********************** Freunde Anzeigen ******************************************
+
+    alle meine Chat-Freunde werden in leftPane angezeigt..
+    Kurze Beschribung:
+        1. in der chatbox.fxml/<AnchorPane fx:id="leftPane"> wird eine
+            BorderPane integriert mit Center & Bottom,
+            in Center(#freundePane) werden Freunde geladen(beschreibung unter punkt a)
+            in Bottom 4 IMG (Kontakte, Telefon, Chat & Setting)
+
+            a.  im Center <AnchorPane fx:id="freundePane" wird eine
+                freunde.fxml geladen mit dem Borderpane (tot & center),
+                im top werden Freunde Remove & Freunde Einladen integriert
+                im Center zuerts ist eine scrollpane und da drinn ist einen VBox
+                mit dem #freundeVBox und hier werden schon die alle meine Freunde geladen
+
+        2. Reihe folge geladene fxml dateien:
+            chatbox.fxml/#leftPane/freundePane ->(ChatBoxController Zeile:105) ->
+            // wird geleden
+           freunde.fxml/center/scrollPane/freundeVBox (FreundeController Zeile: 162) ->
+            // wird geladen
+           freundecell.fxml (hier sind die Daten von einem Freunde)
+           a. freundecell.fxml wird durch eine for schleife() geladen(array mit dem freunden daten),
+              für jeder Freunde-daten wir einen controller erstellt,
+
+              @Controller
+              @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+              public class FreundeCellController implements Initializable {
+                   /*
+                      hier wird den array ausgewertet ausgegeben
+                      public void setProperties(Freunde frienden) {
+                              this.friend = frienden;
+                         }
+                      zugeschickt per setProperties()
+                      FreundeController Zeile: 168
+                   */
+              }
+
+    *********************** Click auf dem Freunde Oberfläche **************************
+
+    eine click auf die Freunde-Oberfläche wird in FreundeCellController Zeile: 173 gemacht
+    @FXML
+    public void cellClick() { ... }
+    alle offene Lösch-icons werden automatisch geschlossen
+    chat wird in der rechte Pane geladen
+    FreundeCellCotroller Zeile: 181
+
+     1. Click auf dem icon links oben (männchen mit minus)
+        wird rotes button zum Freunde Löschen angezeigt
+     2. Click auf den icon links oben (rundes mit Kreuz)
+        wird den Löschen-Button versteckt
+     3. Click auf den Rechtes icon (männchen mit plus)
+        alle Lösch-Buttons & hover-effect wird versteckt & ausgesetzt
+     4. FreundeCellController ab Zeile: 217
+            sind Methoden für:
+            hover effect + anzeige von freunde remove-button + prüfen ob remove-button angezeigt ist
+     5. FreundeController
+            sind Methoden für:
+            Zeile: 190
+            hover effect setzen und merken( activeCellController = currentCellController;)
+            Zeile: ab 210
+            Freunde remove (alle: Bilder tauschen, pane verstecken, hover aussetzen)
+            Zeile: 170
+            Bekanten einladen
+
+
+
+
+
+    ****************************** NICHT REGISTRIERT ************************************
 
     1.  bei ersten App-start wird zuerst die start methode abgeruffen
         BoteFX.java Methode start/viewService.switchTo(GlobalView.CHATBOX);
@@ -53,5 +224,51 @@
     5. MailSuccessController: Information Seite, werden alle gespeicherte Daten Angezeigt
         weiter geht zu messenger als registriert...
 
-        ***** SCHON REGISTRIERT
-    1.
+    ********************************* SCHON REGISTRIERT *********************************
+
+    1. ********** ChatBoxController + chatbox.fxml **********
+    Zusammen Gefasst:
+    Haupt Container(chatbox.fxml) besteht aus 2 Teilen:
+            1. Linke Seite mit Freunde
+                a. integriert: Footer mit menü Panel (Kontakte + Telefonate + Chatten + Setting)
+            2. Rechte Seite Chat
+
+    Erste schritte: nach erfolgreichen Registrierung wir die chatbox.fxml mit ChatBoxController geladen
+
+        1. ChatBoxController:
+            a. von anfang werden die 4 Methoden gesteuert
+                kontakte(),
+                telefonate(),
+                chatten(), wird automatisch gestartet in public void initialize(...){} Zeile: 197
+                setting()
+                bei Starten die Methode wird ausgeführt:
+                    1. die rightPane geleert
+                    2. freundePane an abgerufen Controller gesendet
+                    3. fxml datei geleden
+                    4. Bild auf BLAU ungeändert
+
+            b.  die Methode changedImg(...) Zeile: 118
+                dien nur für die Bilder verändern in der Menü
+                (bottom), bei Aktiv = blau, nicht Aktiv = grau
+
+            c. Verkleinerung/Vergrößerung die Seite ab Zeile: 181 ( public void initialize(...){} ),
+               die changed() Methode steuert nur die Zwei AnchorPane (leftPane & rightPane), wenn der HauptFenster
+               mit der Maus wird verkleinert oder vergrößert,
+               die Methode changedPane() Zeile: 315, ist eine Slider-Funktion, functioniert nur unter 650px, gesteuer wird
+               über den hyperlink von rightPane oben "Zurück" und in SettingCotroller Zeile: 104
+               z.b.s  @Autowired
+                      private ChatBoxController chatBoxController;
+                      chatBoxController.changedPane("openmessage");
+               ...sind erlaubt nur Zwei Parameter("openfreunde" & "openmessage").
+
+    2. ********** SettingController.java + setting.fxml **********
+        a. in die Methode initialize() wird der Setting Box auf 100% width gezogen.
+        b. an Die Getter & Setter Methode wird von der ChatBoxControlller(die setting gestartet) eine ID von rightPane
+            zugesendet(da werder alle setting Positionen geladen: Zeile: 127, layoutService.setausgabeLayout(RightPane);)
+            gleichzeitig wir die Methode settingBearbeiten() gestartet um die Allgemein-Position gleich anzeigen, als
+            Parameter wir einen NULL gesendet.
+            in der Methode settingBearbeiten: wenn zugesendeten Parameter null ist dann bleib die Id als: "allgemein"
+            weiter in switch werden die position allgemein ausgeführt
+        c. ....
+
+    3. **********

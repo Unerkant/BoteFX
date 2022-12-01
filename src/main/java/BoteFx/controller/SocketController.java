@@ -1,10 +1,11 @@
 package BoteFx.controller;
 
-import BoteFx.configuration.GlobalConfig;
+import BoteFx.service.ConfigService;
 import BoteFx.model.Message;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.converter.AbstractMessageConverter;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -35,9 +36,6 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class SocketController {
-
-    private final Logger logger = GlobalConfig.getLogger(this.getClass());
-
     @FXML private Label       textAusgabe;
     @FXML private Label       fehlerAusgabe;
     @FXML private TextField   messageTokenField;
@@ -111,14 +109,14 @@ public class SocketController {
 
                 @Override
                 public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-                    logger.info("connection successfully established");
+                    System.out.println("connection successfully established");
                     updateOutput("Verbindung aufgebaut!");
                 }
 
                 @Override
                 public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
                     exception.printStackTrace();
-                    logger.info("connection not successfully established");
+                    System.out.println("connection not successfully established");
                     fehlerAusgabe.setText("connection not successfully established");
                     //updateOutput("Fehler!");
                 }
@@ -132,7 +130,7 @@ public class SocketController {
             session.subscribe("/messages/receive/" + messageToken, new StompSessionHandler() {
                 @Override
                 public void afterConnected(StompSession stompSession, StompHeaders stompHeaders) {
-                    logger.info("connection successfully established");
+                    System.out.println("connection successfully established");
                     updateOutput("Verbindung aufgebaut!");
                 }
 
@@ -154,7 +152,7 @@ public class SocketController {
                 @Override
                 public void handleFrame(StompHeaders stompHeaders, Object object) {
                     Message message = (Message) object;
-                    logger.info("Incoming text " + message.getText());
+                    System.out.println("Incoming text " + message.getText());
 
                     updateOutput("Nachricht erhalten: " + message.getText());
                 }
@@ -163,7 +161,7 @@ public class SocketController {
             ex.printStackTrace();
         }
 
-        logger.info(String.format("Connection id: %s", value));
+        System.out.println(String.format("Connection id: %s", value));
 
     } // Ende socketConnect
 

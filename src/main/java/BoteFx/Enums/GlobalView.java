@@ -12,8 +12,26 @@ public enum GlobalView {
     TELEFONREGISTER("/templates/login/telefonregister.fxml"),
     TELEFONSUCCESS("/templates/login/telefonsuccess.fxml"),
     CHATBOX("/templates/chatbox.fxml"),
-    CHATMESSAGE("/templates/chatmessage.fxml"),
-    CHATFREUNDE("/templates/chatfreunde.fxml");
+    EINLADEN("/templates/einladen.fxml"),
+    MESSAGE("/templates/message.fxml"),
+    FREUNDE("/templates/freunde.fxml"),
+    SETTING("/templates/setting.fxml"),
+    KONTAKTE("/templates/kontakte.fxml"),
+    TELEFON("/templates/telefon.fxml"),
+    PROFIL("/templates/setting/profil.fxml"),
+    ALLGEMEIN("/templates/setting/allgemein.fxml"),
+    DARSTELLUNG("/templates/setting/darstellung.fxml"),
+    SICHERHEIT("/templates/setting/sicherheit.fxml"),
+    TOENE("/templates/setting/toene.fxml"),
+    SPRACHE("/templates/setting/sprache.fxml"),
+    STICKER("/templates/setting/sticker.fxml"),
+    FAQ("/templates/setting/faq.fxml"),
+    SUPPORT("/templates/setting/support.fxml"),
+    SITZUNG("/templates/setting/sitzung.fxml"),
+
+    FREUNDECELL("/templates/fragments/freundecell.fxml"),
+    FREUNDELEER("/templates/fragments/freundeleer.fxml"),
+    MESSAGELEER("/templates/fragments/messageleer.fxml");
 
     private String fxmlName;
     GlobalView(String fxmlName){

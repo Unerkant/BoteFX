@@ -1,6 +1,6 @@
 package BoteFx.controller.login;
 
-import BoteFx.configuration.GlobalConfig;
+import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
 import BoteFx.service.ViewService;
 
@@ -23,7 +23,6 @@ import java.util.ResourceBundle;
 @Controller
 public class TelefonSuccessController implements Initializable {
 
-    private final Logger logger = GlobalConfig.getLogger(this.getClass());
     @Autowired
     private ViewService viewService;
 

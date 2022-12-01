@@ -1,7 +1,7 @@
 package BoteFx.controller.login;
 
-import BoteFx.configuration.GlobalApiRequest;
-import BoteFx.configuration.GlobalConfig;
+import BoteFx.service.ApiService;
+import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
 import BoteFx.model.Token;
 import BoteFx.service.TokenService;
@@ -34,12 +34,14 @@ import java.util.ResourceBundle;
 @Controller
 public class MailRegisterController implements Initializable {
 
-    private final Logger logger = GlobalConfig.getLogger(this.getClass());
-
     @Autowired
     private ViewService viewService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private ApiService apiService;
+    @Autowired
+    private ConfigService configService;
 
     @FXML private VBox mailRegisterHauptVBox;
     @FXML private AnchorPane mailLRegisterAnchorPane;
@@ -112,12 +114,12 @@ public class MailRegisterController implements Initializable {
 
         /* Daten für request sammeln: Bote -> ApiMailController.java Methode: @PostMapping(value = "/codeApi") */
         String code = String.valueOf(Integer.parseInt(code1 + "" + code2 + "" + code3 + "" + code4));
-        String apiUrl = GlobalConfig.FILE_HTTP+"codeApi";
+        String apiUrl = configService.FILE_HTTP+"codeApi";
         String apiMail = mailRegisterEmail.getText();
         String apiJson = "{\"code\":"+code+", \"mail\":"+apiMail+"}";
 
         /* request & response */
-        HttpResponse<String> response = GlobalApiRequest.requestAPI(apiUrl, apiJson);
+        HttpResponse<String> response = apiService.requestAPI(apiUrl, apiJson);
 
         /**
          *  Response von Bote -> ApiMailController.java Methode: @PostMapping(value = "/codeApi")
@@ -139,7 +141,7 @@ public class MailRegisterController implements Initializable {
             /* token in H2 Database speichern (localBote/Token) */
             Token h2token = tokenService.findeToken(token);     // h2token output: null
             if (h2token == null){
-                String datum = GlobalConfig.deDatum();
+                String datum = configService.deDatum();
                 Token newToken = new Token();
                 newToken.setDatum(datum);
                 newToken.setMytoken(token);
@@ -157,7 +159,7 @@ public class MailRegisterController implements Initializable {
                                         break;
                 case "writeJsonNo":     mailRegisterFehlerAusgabe(txttoken, "no");
                                         return;
-                case "eintragExistiert":mailRegisterFehlerAusgabe(txttoken, "no");
+                case "eintragExist":    mailRegisterFehlerAusgabe(txttoken, "no");
                                         return;
                 default:                mailRegisterFehlerAusgabe("writeFehler", "no");
                                         return;
@@ -252,7 +254,7 @@ public class MailRegisterController implements Initializable {
      */
     @FXML
     public void mailRegisterPressed(MouseEvent event) {
-        GlobalConfig.pressed(event);
+        configService.pressed(event);
     }
 
     /**
@@ -261,7 +263,7 @@ public class MailRegisterController implements Initializable {
      */
     @FXML
     public void mailRegisterDragged(MouseEvent event) {
-        GlobalConfig.dragget(event);
+        configService.dragget(event);
     }
 
     /**
@@ -279,7 +281,7 @@ public class MailRegisterController implements Initializable {
      */
     @FXML
     public void mailRegisterClose(ActionEvent event) {
-        GlobalConfig.stageClose(event);
+        configService.stageClose(event);
     }
 
     /**
@@ -313,7 +315,7 @@ public class MailRegisterController implements Initializable {
                                     break;
             case "writeJsonNo":     mailRegisterFehler.setText("token.json datei kann nicht beschrieben werden");
                                     break;
-            case "eintragExistiert":mailRegisterFehler.setText("token.json: Eintrag existiert schon");
+            case "eintragExist":mailRegisterFehler.setText("token.json: Eintrag existiert schon");
                                     break;
             case "writeFehler":     mailRegisterFehler.setText("token.json: Allgemeine write Fehler");
                                     break;

@@ -1,7 +1,8 @@
 package BoteFx;
 
-import BoteFx.configuration.GlobalConfig;
+import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
+import BoteFx.service.LayoutService;
 import BoteFx.service.ViewService;
 
 import javafx.application.Application;
@@ -15,24 +16,31 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
 /**
-     *  Aktuelle Seite wird geladen von GlobalViewSwitcher mit function
+     *  Aktuelle Seite wird geladen von ViewService mit function
      *  switchTo, die fxml-name-constance(was soll geladen sein) wird durch function
-     *  von GlobelView bestimmt. z.b.s
+     *  von GlobelView(Enums) bestimmt. z.b.s
      *   @FXML
      *     public void zumMailLogin(ActionEvent event) {
-     *         GlobalViewSwitcher.switchTo(GlobalView.LOGINMAIL);
+     *         ViewService.switchTo(GlobalView.CHATBOX);
      *     }
      */
 @SpringBootApplication
 public class BoteApp extends Application {
 
     private ViewService viewService;
+    private LayoutService layoutService;
 
+    /**
+     * Benutzt: von ViewService + LayoutService
+     */
     @Override
     public void init() {
+
         ConfigurableApplicationContext springContext = SpringApplication.run(BoteApp.class);
         viewService = springContext.getBean(ViewService.class);
         viewService.setSpringContext(springContext);
+        layoutService = springContext.getBean(LayoutService.class);
+        layoutService.setLayoutContext(springContext);
     }
 
     @Override
@@ -45,7 +53,7 @@ public class BoteApp extends Application {
         viewService.switchTo(GlobalView.CHATBOX);
 
         /* Stage CSS */
-        scene.getStylesheets().add(getClass().getResource(GlobalConfig.FILE_CSS).toExternalForm());
+        scene.getStylesheets().add(getClass().getResource(ConfigService.FILE_CSS).toExternalForm());
         Screen screen = Screen.getPrimary();
         Rectangle2D rect = screen.getVisualBounds(); /* height auf 100% ziehen */
         stage.setTitle("Bote");
@@ -54,8 +62,8 @@ public class BoteApp extends Application {
         stage.setWidth(655);
              /* Später, rect.getHeight() benutzen*/
         //stage.setHeight(rect.getHeight());
-        stage.setMinWidth(GlobalConfig.MIN_WIDTH);
-        stage.setMinHeight(GlobalConfig.MIN_HEIGHT);
+        stage.setMinWidth(ConfigService.MIN_WIDTH);
+        stage.setMinHeight(ConfigService.MIN_HEIGHT);
        // stage.setResizable(false);
 
         /* Stage Starten */

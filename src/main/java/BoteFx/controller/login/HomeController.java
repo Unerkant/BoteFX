@@ -1,6 +1,6 @@
 package BoteFx.controller.login;
 
-import BoteFx.configuration.GlobalConfig;
+import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
 import BoteFx.service.ViewService;
 import javafx.animation.AnimationTimer;
@@ -14,21 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 
-import java.io.File;
-import java.io.FileReader;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
-import java.util.Scanner;
 
 @Controller
 public class HomeController implements Initializable {
 
-    private final Logger logger = GlobalConfig.getLogger(this.getClass());
-
     @Autowired
     private ViewService viewService;
+    @Autowired
+    private ConfigService configService;
 
     @FXML private Label homeDatum;
     @Value("${homeagbtext}")
@@ -95,7 +92,7 @@ public class HomeController implements Initializable {
      */
     @FXML
     public void homeClose(ActionEvent event) {
-        GlobalConfig.stageClose(event);
+        configService.stageClose(event);
         //logger.info("Home Close");
     }
 

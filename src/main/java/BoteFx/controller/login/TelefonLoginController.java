@@ -1,7 +1,7 @@
 package BoteFx.controller.login;
 
-import BoteFx.configuration.GlobalApiRequest;
-import BoteFx.configuration.GlobalConfig;
+import BoteFx.service.ApiService;
+import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
 import BoteFx.service.ViewService;
 
@@ -9,7 +9,6 @@ import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -30,9 +29,12 @@ import java.util.ResourceBundle;
 @Controller
 public class TelefonLoginController implements Initializable {
 
-    private final Logger logger = GlobalConfig.getLogger(this.getClass());
     @Autowired
     private ViewService viewService;
+    @Autowired
+    private ApiService apiService;
+    @Autowired
+    private ConfigService configService;
 
     @FXML private VBox telefonLoginHauptVBox;
     @FXML private AnchorPane telefonLoginAnchorPane;
@@ -60,7 +62,7 @@ public class TelefonLoginController implements Initializable {
          *  änderungen in GlobalConfig Zeile: 90 vornehmen
          */
         String language = System.getProperty("user.language");
-        String land = GlobalConfig.languagen(language);
+        String land = configService.languagen(language);
         vorwahlInput.setText(land);
 
     }
@@ -83,7 +85,7 @@ public class TelefonLoginController implements Initializable {
          */
         String tel = vorwahlInput.getText()+" "+telefonInput.getText().substring(0, 3)+" "+telefonInput.getText().substring(3);
         String telefon = tel.replace("+", "").replace(" ", "");
-        String link = GlobalConfig.FILE_HTTP+"telefonApi";
+        String link = configService.FILE_HTTP+"telefonApi";
         String data = "{\"neuUserTelefon\":\""+telefon+"\"}";
         String zuRegisterSenden = "{\"telefonMitPlus\":\""+tel+"\", \"telefonOnePlus\":\""+telefon+"\"}";
 
@@ -97,7 +99,7 @@ public class TelefonLoginController implements Initializable {
          * VORAUSSETZUNG: haben Sie genug 'Text Credits' bei Englischen arbiter
          * die MSM zu versenden, link: https://control.txtlocal.co.uk
          */
-        HttpResponse<String> response = GlobalApiRequest.requestAPI(link, data);
+        HttpResponse<String> response = apiService.requestAPI(link, data);
 
         if (response != null && response.statusCode() == 200){
 
@@ -116,8 +118,8 @@ public class TelefonLoginController implements Initializable {
      * @param event
      */
     public void telefonValidate(KeyEvent event) {
-        int maxTelLength = GlobalConfig.MAX_TEL_LENGTH;
-        int minTelLength = GlobalConfig.MIN_TEL_LENGTH;
+        int maxTelLength = configService.MAX_TEL_LENGTH;
+        int minTelLength = configService.MIN_TEL_LENGTH;
 
         /* 1. nur Zahlen erlaubt */
         telefonInput.setTextFormatter(new TextFormatter<>(change -> {
@@ -158,7 +160,7 @@ public class TelefonLoginController implements Initializable {
      * @param event
      */
     public void vorwahlValidate(KeyEvent event) {
-        int vorwahlLength = GlobalConfig.VORWAHL_LENGTH;
+        int vorwahlLength = configService.VORWAHL_LENGTH;
 
         /* 1. nur Zahlen Erlaubt */
         vorwahlInput.setTextFormatter(new TextFormatter<>(change -> {
@@ -214,7 +216,7 @@ public class TelefonLoginController implements Initializable {
      * @param event
      */
     public void telefonloginClose(ActionEvent event) {
-        GlobalConfig.stageClose(event);
+        configService.stageClose(event);
     }
 
     /**
@@ -222,10 +224,10 @@ public class TelefonLoginController implements Initializable {
      * @param event
      */
     public void telefonloginDragged(MouseEvent event) {
-        GlobalConfig.dragget(event);
+        configService.dragget(event);
     }
     public void telefonloginPressed(MouseEvent event) {
-        GlobalConfig.pressed(event);
+        configService.pressed(event);
     }
 
 

@@ -1,7 +1,6 @@
 package BoteFx.service;
 
 import BoteFx.Enums.GlobalView;
-import BoteFx.configuration.GlobalConfig;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,7 +8,6 @@ import javafx.scene.Scene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
-import java.io.File;
 import java.io.IOException;
 
 @Service
@@ -17,9 +15,17 @@ public class ViewService {
 
     @Autowired
     private TokenService tokenService;
+    public ViewService(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
+    /**
+     * springContent konfiguriert in BoteApp Zeile 37 (init)
+     */
     private ConfigurableApplicationContext springContext;
 
     private Scene scene;
+
 
     public Scene getScene() {
         return scene;
@@ -29,15 +35,19 @@ public class ViewService {
         this.scene = scene;
     }
 
+    /**
+     * QUELLE: BoteApp.java Zeile: 38
+     * @param springContext
+     */
     public void setSpringContext(ConfigurableApplicationContext springContext) {
         this.springContext = springContext;
     }
 
     public Object switchTo(GlobalView globalView) {
 
-        /* prüfen ob token vorhanden ist wenn Leer: HOME Starten */
-        File datei = new File(GlobalConfig.FILE_URL+"src/main/resources/static/json/token.json");
-        if (datei.length() == 0){
+        /* prüfen ob token vorhanden ist, wenn Leer: HOME Starten */
+        String myToken = tokenService.tokenHolen();
+        if (myToken == null){
             switch (globalView){
                 case MAILSUCCESS:           globalView = GlobalView.MAILSUCCESS; break;
                 case TELEFONSUCCESS:        globalView = GlobalView.TELEFONSUCCESS; break;
