@@ -1,6 +1,5 @@
 package BoteFx.controller.login;
 
-import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
 import BoteFx.service.ViewService;
 
@@ -12,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import java.net.URL;
@@ -54,6 +52,7 @@ public class TelefonSuccessController implements Initializable {
         timer.start();
     }
 
+
     /**
      * Getter & Setter
      * ein json-object mit registriert/Einloggen Daten von
@@ -68,6 +67,7 @@ public class TelefonSuccessController implements Initializable {
         this.userDaten = jsonDaten;
         anzeigeDaten();
     }
+
 
     /**
      * Personliche Daten
@@ -140,6 +140,7 @@ public class TelefonSuccessController implements Initializable {
     public void telSuccessZumMessenger(ActionEvent event) {
         viewService.switchTo(GlobalView.CHATBOX);
     }
+
 
     /**
      * zu der Messenger

@@ -1,6 +1,5 @@
 package BoteFx.controller.login;
 
-import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
 import BoteFx.service.ViewService;
 
@@ -12,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import java.net.URL;
@@ -54,6 +52,7 @@ public class MailSuccessController implements Initializable {
         };
         timer.start();
     }
+
 
     /**
      * Getter & Setter
@@ -134,6 +133,7 @@ public class MailSuccessController implements Initializable {
 
     }
 
+
     /**
      * Zum Messenger
      *
@@ -142,6 +142,7 @@ public class MailSuccessController implements Initializable {
     public void successZumMessenger(ActionEvent event) {
         viewService.switchTo(GlobalView.CHATBOX);
     }
+
 
     /**
      * Zum Setting

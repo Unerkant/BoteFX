@@ -3,6 +3,7 @@ package BoteFx.controller.login;
 import BoteFx.service.ApiService;
 import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
+import BoteFx.service.MethodenService;
 import BoteFx.service.ViewService;
 
 import javafx.animation.PauseTransition;
@@ -19,7 +20,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -38,6 +38,8 @@ public class MailLoginController implements Initializable {
     private ApiService apiService;
     @Autowired
     private ConfigService configService;
+    @Autowired
+    private MethodenService methodenService;
 
     @FXML private VBox mailLoginHauptVBox;
     @FXML private AnchorPane mailLoginAnchorPane;
@@ -75,7 +77,7 @@ public class MailLoginController implements Initializable {
 
         boolean valid;
         newUserMail = mailLoginInput.getText();
-        valid = configService.mailValid(newUserMail);
+        valid = methodenService.mailValid(newUserMail);
 
         if (valid){
 
@@ -108,7 +110,6 @@ public class MailLoginController implements Initializable {
     public void mailLowerCase(KeyEvent keyEvent) {
         mailLoginInput.textProperty().addListener((ov, oldValue, newValue )->{
             mailLoginInput.setText(newValue.toLowerCase());
-            //logger.info(" toLowerCase ");
         });
     }
 
@@ -152,11 +153,11 @@ public class MailLoginController implements Initializable {
      */
     @FXML
     public void mailloginDragged(MouseEvent event) {
-        configService.dragget(event);
+        methodenService.dragget(event);
     }
     @FXML
     public void mailloginPressed(MouseEvent event) {
-        configService.pressed(event);
+        methodenService.pressed(event);
     }
 
 
@@ -166,8 +167,7 @@ public class MailLoginController implements Initializable {
      */
     @FXML
     public void mailloginClose(ActionEvent event){
-
-        configService.stageClose(event);
+        methodenService.stageClose(event);
     }
 
 

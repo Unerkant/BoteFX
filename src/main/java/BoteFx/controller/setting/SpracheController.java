@@ -72,6 +72,6 @@ public class SpracheController implements Initializable {
      */
     public void spracheZuruck(ActionEvent event) {
         chatBoxController.changedPane("openfreunde");
-        sprachehover.getStyleClass().remove("paneAktiv");
+        sprachehover.getStyleClass().remove("settingAktiv");
     }
 }

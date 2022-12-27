@@ -71,7 +71,7 @@ public class ToeneController implements Initializable {
      */
     @FXML
     public void toeneZuruck(ActionEvent event) {
-        //chatBoxController.changedPane("openfreunde");
-        toenehover.getStyleClass().remove("paneAktiv");
+        chatBoxController.changedPane("openfreunde");
+        toenehover.getStyleClass().remove("settingAktiv");
     }
 }

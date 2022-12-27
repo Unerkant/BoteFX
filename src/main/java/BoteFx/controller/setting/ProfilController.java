@@ -71,7 +71,7 @@ public class ProfilController implements Initializable {
      */
     public void profilZuruck() {
         chatBoxController.changedPane("openfreunde");
-        profilhover.getStyleClass().remove("paneAktiv");
+        profilhover.getStyleClass().remove("settingAktiv");
     }
 
     /**

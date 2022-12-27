@@ -70,6 +70,6 @@ public class StickerController implements Initializable {
      */
     public void stickerZuruck(ActionEvent event) {
         chatBoxController.changedPane("openfreunde");
-        stickerhover.getStyleClass().remove("paneAktiv");
+        stickerhover.getStyleClass().remove("settingAktiv");
     }
 }

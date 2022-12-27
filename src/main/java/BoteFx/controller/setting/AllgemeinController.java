@@ -68,7 +68,7 @@ public class AllgemeinController implements Initializable {
     @FXML
     void allgemeinZuruck() {
         chatBoxController.changedPane("openfreunde");
-        allgemeinhover.getStyleClass().remove("paneAktiv");
+        allgemeinhover.getStyleClass().remove("settingAktiv");
     }
 
 }

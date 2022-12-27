@@ -68,6 +68,6 @@ public class SupportController implements Initializable {
      */
     public void supportZuruck(ActionEvent event) {
         chatBoxController.changedPane("openfreunde");
-        supporthover.getStyleClass().remove("paneAktiv");
+        supporthover.getStyleClass().remove("settingAktiv");
     }
 }

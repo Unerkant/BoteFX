@@ -1,11 +1,8 @@
 package BoteFx.controller.login;
 
-import BoteFx.service.ApiService;
-import BoteFx.service.ConfigService;
+import BoteFx.service.*;
 import BoteFx.Enums.GlobalView;
 import BoteFx.model.Token;
-import BoteFx.service.TokenService;
-import BoteFx.service.ViewService;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +16,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -42,6 +38,8 @@ public class MailRegisterController implements Initializable {
     private ApiService apiService;
     @Autowired
     private ConfigService configService;
+    @Autowired
+    private MethodenService methodenService;
 
     @FXML private VBox mailRegisterHauptVBox;
     @FXML private AnchorPane mailLRegisterAnchorPane;
@@ -62,10 +60,11 @@ public class MailRegisterController implements Initializable {
         // Mail Register Height auf 100% ziehen
         mailLRegisterAnchorPane.prefHeightProperty().bind(mailRegisterHauptVBox.heightProperty());
 
-        // Information zu Verschickte E-Mail
+        // Information zu verschickte E-Mail
         mailRegisterFehlerAusgabe("mailsenderinfo", "ok");
 
     }
+
 
     /**
      * Getter & Setter von E-Mail
@@ -117,7 +116,6 @@ public class MailRegisterController implements Initializable {
         String apiUrl = configService.FILE_HTTP+"codeApi";
         String apiMail = mailRegisterEmail.getText();
         String apiJson = "{\"code\":"+code+", \"mail\":"+apiMail+"}";
-
         /* request & response */
         HttpResponse<String> response = apiService.requestAPI(apiUrl, apiJson);
 
@@ -141,7 +139,7 @@ public class MailRegisterController implements Initializable {
             /* token in H2 Database speichern (localBote/Token) */
             Token h2token = tokenService.findeToken(token);     // h2token output: null
             if (h2token == null){
-                String datum = configService.deDatum();
+                String datum = methodenService.deDatum();
                 Token newToken = new Token();
                 newToken.setDatum(datum);
                 newToken.setMytoken(token);
@@ -254,8 +252,9 @@ public class MailRegisterController implements Initializable {
      */
     @FXML
     public void mailRegisterPressed(MouseEvent event) {
-        configService.pressed(event);
+        methodenService.pressed(event);
     }
+
 
     /**
      * mit der Maus Stage Fenster auf dem Bildschirm frei Bewegen
@@ -263,8 +262,9 @@ public class MailRegisterController implements Initializable {
      */
     @FXML
     public void mailRegisterDragged(MouseEvent event) {
-        configService.dragget(event);
+        methodenService.dragget(event);
     }
+
 
     /**
      * Wechseln zu maillogin.fxml
@@ -275,14 +275,16 @@ public class MailRegisterController implements Initializable {
         viewService.switchTo(GlobalView.MAILLOGIN);
     }
 
+
     /**
      * Stage Schliessen
      * @param event
      */
     @FXML
     public void mailRegisterClose(ActionEvent event) {
-        configService.stageClose(event);
+        methodenService.stageClose(event);
     }
+
 
     /**
      * Allgemeine Fehler Ausgabe
@@ -293,6 +295,12 @@ public class MailRegisterController implements Initializable {
     @Value("${mailsenderinfo}")
     private String mailSenderInfo;
 
+
+    /**
+     * Allgemeine Fehler Ausgabe
+     * @param text
+     * @param ok
+     */
     public void mailRegisterFehlerAusgabe(String text, String ok){
 
        // mailRegisterFehler.setTextFill(ok == "ok" ? Color.GREEN : Color.RED);

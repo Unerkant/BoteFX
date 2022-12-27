@@ -12,12 +12,24 @@ import java.net.http.HttpResponse;
 public class ApiService {
 
     /**
-     * Request Api für den registrierung oder neu Anmelden
+     * Request Api  an Bote jegliche Art
+     * für den registrierung oder neu Anmelden oder Mail+SMS versenden
+     *
+     * ACHTUNG: kurze Anleitung
+     *          // Request & response an/von Bote
+     *         String urlApi = configService.FILE_HTTP+"freundeApi";
+     *         String paramApi = "{ \"sendToken\":\""+ myToken +"\" }";
+     *         HttpResponse<String> response = apiService.requestAPI(urlApi, paramApi);
+     *
+     *
+     * ACHTUNG: Detaillierte Anleitung (senden+empfangen)
      *
      *          REQUEST SENDEN
-     * Benutzt in BoteFX (App version)
+     * benutzt in BoteFX (App version)
      * 1. MailLoginController.java -> Methode: mailPrufen
      * 2. MailRegisterController.java -> Methode: codePrufen
+     * 3. FreundeController -> Methode: freundeLaden
+     * 4. FreundeCellController -> Methode: freundRemove
      *
      *      bedienengen für Parameter:
      *      (soll von controller zugesendet sein)
@@ -33,12 +45,20 @@ public class ApiService {
      *         z.b.s String data = "{\"neuUserTelefon\":\""+telefon+"\"}";
      *
      *          REQUEST EMPFANGEN
-     * Benutzt in Bote (Browser version), Request empfangen
+     * benutzt in Bote (Browser version), Request empfangen
      * 1. ApiMailController -> @PostMapping(value = "/mailApi")
      *                      -> @PostMapping(value = "/codeApi")
      *
      * 2. ApiTelefonController  ->  @PostMapping(value = "/telefonApi")
      *                          ->  @PostMapping(value = "/kodeApi")
+     *
+     * 3.  ApiFreundeController: (zugesendeten token auslesen)
+     *     ...@PostMapping(value = "/freundeRemoveApi")
+     *     public ResponseEntity apiFreundeRemove(@RequestBody String sendMessageToken){
+     *
+     *         JSONObject ob = new JSONObject(sendMessageToken);
+     *         String zugesandtMessageToken = (String) ob.get("sendmessagetoken");
+     *     }
      *
      */
     public HttpResponse<String> requestAPI(String apiUrl, String apiParam){

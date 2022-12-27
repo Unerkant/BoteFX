@@ -8,7 +8,6 @@ import javax.persistence.*;
  * Created by Paul Richter on Sat 5/5/2022
  */
 
-//@Entity(name = "MESSAGES")
 public class Message {
 
     @Id

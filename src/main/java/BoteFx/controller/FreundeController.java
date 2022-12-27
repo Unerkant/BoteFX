@@ -2,7 +2,6 @@ package BoteFx.controller;
 
 import BoteFx.Enums.GlobalView;
 import BoteFx.controller.fragments.FreundeCellController;
-import BoteFx.controller.fragments.FreundeLeerController;
 import BoteFx.model.Freunde;
 import BoteFx.service.ApiService;
 import BoteFx.service.ConfigService;
@@ -12,6 +11,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class FreundeController implements Initializable {
+
     @Autowired
     private ConfigService configService;
     @Autowired
@@ -48,7 +50,7 @@ public class FreundeController implements Initializable {
     @FXML private AnchorPane freundeAnchorPane;
     @FXML private ImageView imgFreundRemove;
     @FXML private ImageView imgCloseRemove;
-    @FXML private Label meineName;
+    @FXML private Label freundeAnzeiger;
     @FXML private ImageView imgBekanntenEinladen;
     @FXML private ScrollPane freundeScroll;
     @FXML private VBox freundeVBox;
@@ -83,10 +85,10 @@ public class FreundeController implements Initializable {
      *  a. token: wird von request benutzt, meine alle freunde von den Datenbank(MySql)
      *     holen(Bote/ApiFreundeController), response als json-array mit allem Freunde
      *
-     *  b. rechtsPane: benutzt von die Methode freundEinladen() Zeile: 152(hier)
+     *  b. rechtsPane: benutzt von der Methode freundEinladen() Zeile: 152(hier)
      *
-     *  c. freundenPane: benutzt von die Methode freundeLaden()/ else: wenn keine
-     *     freunde vorhanden sind, Zeile: 135(hier)
+     *  c. freundenPane: (von chatbox.fxml) benutzt von der Methode freundeLaden()/ else: wenn keine
+     *     freunde vorhanden sind, Zeile: 176(hier)
      *
      *  Methode freundeLaden() starten & token als parameter übergeben
      */
@@ -128,13 +130,13 @@ public class FreundeController implements Initializable {
      *     response.body().length() = Ausgabe: 2 (zählt die 2 eckigen klammern [])
      *
      *  b. IF{}: mit der schleife, wird jeder einzelne Freund geladen und in
-     *  freundecell.fxml angezeigt mit dem eigenen Controller..
+     *  freundecell.fxml angezeigt mit dem eigenen Controller...
      *  die Freunde-Daten werden mit setProperties (Setter) an den FreundeCellController
      *  weiter geleitet für weiteren verarbeitung
      *  weitere Informationen: FreundeCellController/setProperties
      *
      *  c. rootAndControllerPairs: Array mit allem Freunden, für die Methode:
-     *     freundeRemoveClick(), Zeile: 200 (hier unten)
+     *     freundRemoveClick(), Zeile: 200 (hier unten)
      *     ...anzeige von dem Remove-Button alle Freunde
      *
      * @param myToken
@@ -142,8 +144,8 @@ public class FreundeController implements Initializable {
     private final ArrayList<LayoutService.LayoutControllerPair> rootAndControllerPairs = new ArrayList<>();
     public void freundeLaden(String myToken) {
 
-        // Meine Name Anzeigen
-        meineName.setText("richterpaul@mail.de");
+        // Nachricht oder Aktualisierung Anzeigen
+        freundeAnzeiger.setText("Aktualisierung ausgabe");
 
         // Request & response an/von Bote
         String urlApi = configService.FILE_HTTP+"freundeApi";
@@ -156,7 +158,8 @@ public class FreundeController implements Initializable {
             Gson gson = new Gson();
             Type listType = new TypeToken<ArrayList<Freunde>>(){}.getType();
             ArrayList<Freunde> friends = gson.fromJson(response.body(), listType);
-
+            // vor der Freunde Laden, box leeren
+            freundeVBox.getChildren().clear();
             for (Freunde fried : friends){
 
                 LayoutService.LayoutControllerPair pair = layoutService.createLayoutController(GlobalView.FREUNDECELL);
@@ -169,10 +172,17 @@ public class FreundeController implements Initializable {
             }
 
         } else {
-            // Keine Freunde
-            layoutService.setausgabeLayout(freundenPane);
-            FreundeLeerController fragmentController = (FreundeLeerController) layoutService.switchLayout(GlobalView.FREUNDELEER);
-            fragmentController.setRechtePane(rechtsPane);
+            /**
+             * Keine Freunde
+             * 1. click auf den remove Freunde: disable setzen
+             * 2. Label erstellen, style mit css(style.css/freunde.fxml)
+             */
+            imgFreundRemove.setOnMouseClicked(null);
+            imgFreundRemove.setCursor(Cursor.DISAPPEAR);
+            Label freundeLeer = new Label("sind keine Chat-Freunde vorhanden");
+            freundeLeer.getStyleClass().add("freundeleer");
+            freundeVBox.getChildren().add(freundeLeer);
+            freundeVBox.setAlignment(Pos.TOP_CENTER);
         }
 
     }
@@ -276,15 +286,16 @@ public class FreundeController implements Initializable {
      */
     public void bekanntenEinladenClick(){
 
-        // Freunden Hover effekt ausschalten
         if (activeCellController != null){
-            activeCellController.resetHover();
-        }
 
-        // remove-Pane schliessen
-        double removeOff = cellController.paneONPrufen();
-        if (removeOff == 0.0){
-            freundeRemoveSchliessen();
+            // Freunden Hover effekt ausschalten
+            activeCellController.resetHover();
+
+            // remove-Pane(den roter buttons) schliessen
+            double removeOff = cellController.paneONPrufen();
+            if (removeOff == 0.0) {
+                freundeRemoveSchliessen();
+            }
         }
 
         // einlade.fxml in der rightPane anzeigen
@@ -293,13 +304,30 @@ public class FreundeController implements Initializable {
     }
 
     /**
+     * SPÄTER LÖSCHEN ODER ÄNDERN
+     *
      * Click auf den rechten icon, mit plus zeichen
      * Freunde Einladen, zeigt die einladen.fxml Seite
+     *
+     * Alle User Daten von Bote/Mysql/Tabelle/usern holen und
+     * weiter an EinladenController senden & bearbeiten
+     *
+     * der mitgesendeten Token dient nur für den Request aufzubauen, zurzeit keine benutzung,
+     * weil die request-methode wird benutzt von mehreren Controllern und brauch 2 parameter
      */
     private void bekanntenEinladen() {
         chatBoxController.changedPane("openmessage");
+
+        // Request & response an/von Bote
+        String apiUrl = configService.FILE_HTTP+"alleUserApi";
+        String jsonSend = "{ \"sendeToken\":\""+ meinToken +"\" }";
+        HttpResponse<String> response = apiService.requestAPI(apiUrl, jsonSend);
+
+        // Alle User-Array an EinladenController senden
         layoutService.setausgabeLayout(rechtsPane);
         EinladenController einladenController = (EinladenController) layoutService.switchLayout(GlobalView.EINLADEN);
+        einladenController.setMeinerToken(meinToken);
+        einladenController.setUserdaten(response.body());
     }
 
 }

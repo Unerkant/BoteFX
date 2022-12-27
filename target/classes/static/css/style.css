@@ -2,6 +2,12 @@
  *  Den 5.05.2022
  */
 
+ /*
+  * -fx-font: "Rockwell", "Microsoft Sans Serif"
+  * :link { color: #0000EE; }
+  * :visited { color: #551A8B; }
+  */
+
 /* Allgemein*/
 .stageBackground
 {
@@ -34,6 +40,25 @@
     -fx-background-color: #CCE0FF;
 }
 
+/* Input Feld border & background transparent */
+.inputStyle
+{
+    -fx-background-color: transparent;
+    -fx-border-color: #E6E6E6;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10;
+    -fx-line-spacing: 3em;
+}
+
+.globalFehler
+{
+    -fx-background-color: #FFCCCC;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-padding: 15;
+    -fx-border-insets: 5;
+    -fx-background-insets: 5;
+}
 
 
  /* home.fxml
@@ -92,23 +117,75 @@
 
  /* freunde.fxml
   ------------------*/
-.chatfreundeanchorpane  { }
-.chatfreundefoto        { }
-.chatfreundepseudonym   { }
-.chatfreundehacken      { }
-.chatfreundedatum       { }
-.chatfreundetext
-{
-    -fx-border-color: #CCCCCC;
-    -fx-border-style: none none solid none;
-    -fx-border-width: 0 0 1 0;
-}
 
- /* Fragment: freundeleer.fxml
-  ----------------------------*/
 .freundeleer
 {
+    /* FreundeController/freundeLaden/else Zeile: 175*/
+    -fx-background-color: #E6FFE6;
+    -fx-background-radius: 25;
+    -fx-border-color: #CCFFCC;
+    -fx-border-width: 2px;
+    -fx-border-radius: 25;
+    -fx-padding: 15;
+    -fx-border-insets: 20 5 0 5;
+    -fx-background-insets: 20 5 0 5;
+    -fx-font-size: 1.3em;
+    -fx-font-weight:bold;
+    -fx-cursor: none;
+}
 
+/* freundecell
+_______________*/
+
+/* zurzeit leer */
+
+/* FreundeCellController
+-------------------------*/
+.cellText
+{
+    -fx-font-family: "Courier New";
+    -fx-font-size: 1.0em;
+    -fx-text-fill: #000080;
+}
+.cellAdresse
+{
+    -fx-font-family: "Courier New";
+    -fx-font-size: 0.9em;
+    -fx-text-fill: #808080;
+    -fx-padding: 0 0 10 0;
+}
+.cellInfo
+{
+    -fx-font-size: 1.1em;
+    -fx-text-fill: #FF8080;
+}
+.cellNein
+{
+    -fx-pref-width: 150;
+    -fx-background-color: #CC2900;
+    -fx-background-radius: 6, 5;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+
+    -fx-padding: 15 0 15 0;
+    -fx-border-insets: 5;
+    -fx-background-insets: 5;
+
+    -fx-text-fill: #fff;
+    -fx-font-size: 1.3em;
+}
+.cellJa
+{
+    -fx-pref-width: 150;
+    -fx-background-color: #008020;
+    -fx-background-radius: 6, 5;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+
+    -fx-padding: 15 0 15 0;
+    -fx-border-insets: 5;
+    -fx-background-insets: 5;
+
+    -fx-text-fill: #fff;
+    -fx-font-size: 1.3em;
 }
 
  /* setting.fxml

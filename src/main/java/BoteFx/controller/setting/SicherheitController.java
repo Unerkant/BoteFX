@@ -72,7 +72,7 @@ public class SicherheitController implements Initializable {
      */
     public void sicherheitZuruck(ActionEvent event) {
         chatBoxController.changedPane("openfreunde");
-        sicherheithover.getStyleClass().remove("paneAktiv");
+        sicherheithover.getStyleClass().remove("settingAktiv");
     }
 
 

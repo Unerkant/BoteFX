@@ -28,9 +28,7 @@ public enum GlobalView {
     FAQ("/templates/setting/faq.fxml"),
     SUPPORT("/templates/setting/support.fxml"),
     SITZUNG("/templates/setting/sitzung.fxml"),
-
     FREUNDECELL("/templates/fragments/freundecell.fxml"),
-    FREUNDELEER("/templates/fragments/freundeleer.fxml"),
     MESSAGELEER("/templates/fragments/messageleer.fxml");
 
     private String fxmlName;

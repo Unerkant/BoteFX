@@ -72,6 +72,6 @@ public class SitzungController implements Initializable {
      */
     public void sitzungZuruck(ActionEvent event) {
         chatBoxController.changedPane("openfreunde");
-        sitzunghover.getStyleClass().remove("paneAktiv");
+        sitzunghover.getStyleClass().remove("settingAktiv");
     }
 }

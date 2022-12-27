@@ -1,11 +1,8 @@
 package BoteFx.controller.login;
 
-import BoteFx.service.ApiService;
-import BoteFx.service.ConfigService;
+import BoteFx.service.*;
 import BoteFx.Enums.GlobalView;
 import BoteFx.model.Token;
-import BoteFx.service.TokenService;
-import BoteFx.service.ViewService;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +16,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -42,6 +38,8 @@ public class TelefonRegisterController implements Initializable {
     private ApiService apiService;
     @Autowired
     private ConfigService configService;
+    @Autowired
+    private MethodenService methodenService;
 
     @FXML private VBox telefonRegisterHauptVBox;
     @FXML private AnchorPane telefonRegisterAnchorPane;
@@ -70,6 +68,7 @@ public class TelefonRegisterController implements Initializable {
         String telMitPlus = (String) object.get("telefonMitPlus");
         telefonRegisterNummer.setText(telMitPlus);
     }
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -125,7 +124,7 @@ public class TelefonRegisterController implements Initializable {
             /* token in H2 Database speichern (localBote/Token) */
             Token H2Token = tokenService.findeToken(resToken);     // h2token output: null
             if (H2Token == null){
-                String datum = configService.deDatum();
+                String datum = methodenService.deDatum();
                 Token neuToken = new Token();
                 neuToken.setDatum(datum);
                 neuToken.setMytoken(resToken);
@@ -165,6 +164,7 @@ public class TelefonRegisterController implements Initializable {
             telefonRegisterFehlerAusgabe("falscheCode", "no");
         }
     }
+
 
     /**
      * Code Validate
@@ -232,6 +232,7 @@ public class TelefonRegisterController implements Initializable {
         });
     }
 
+
     /**
      * Link zu Mail Login
      * @param event
@@ -240,25 +241,26 @@ public class TelefonRegisterController implements Initializable {
         viewService.switchTo(GlobalView.MAILLOGIN);
     }
 
+
     /**
      * Stage Fenster schliessen
      * @param event
      */
     public void telefonRegisterClose(ActionEvent event) {
-        configService.stageClose(event);
+        methodenService.stageClose(event);
     }
+
 
     /**
      * mit der Maus Stage Fenster auf dem Bildschirm frei Bewegen
      * @param event
      */
     public void telefonRegisterDragged(MouseEvent event) {
-        configService.dragget(event);
+        methodenService.dragget(event);
     }
     public void telefonRegisterPressed(MouseEvent event) {
-        configService.pressed(event);
+        methodenService.pressed(event);
     }
-
 
 
     /**

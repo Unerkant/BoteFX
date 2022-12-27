@@ -1,6 +1,18 @@
 
     /* Kurze Anleitung BoteFX  */
 
+    ********************** WAS mus gemacht sein *****************************************
+
+    1. FreundeCellController: Zeile 273 (globalFehler)
+        a. Globale Fehler function fertigstellen(bis jetzt noch nicht gemacht, außer diese methode)
+        a. in Bote/mysql Datenbank für globale Fehler anlegen
+        b. von BoteFx eine Request Api aufbauen
+        c. ......
+    2.FreundeCellControlller Zeile: 407 (neu anlegen)
+
+    3. Bekannten Einladen (ändern oder löschen oder begrenzen auf 20 ),
+        EinladenController Zeile: 270
+
     ***************************** ALLGEMEIN *********************************************
 
     1. *** Allgemein zur fxml Load
@@ -15,6 +27,15 @@
            die unter 4 buttons (kontakte, telefon, chat und setting) werden nur in
            leftPane angezeigt..
            message & setting daten werden in rightPane angezeigt
+
+    ****************************** BILDER ***********************************************
+    1. Bild an Freunde-Cell laden & anzeigen, FreundeCellCotroller/setProperties Zeile 122
+       Bild wird einfach per URL von der Bote datei 'profilbild' geladen/angezeigt
+       // Image freundImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+freundBild+".png", false);
+       // ImageView imageView = new ImageView(freundImg);
+
+    2
+
 
     *************************** PANE SLIDER ( APP/VERKLEINERN/VERGRßERN) ****************
 
@@ -132,6 +153,58 @@
                       FreundeController Zeile: 168
                    */
               }
+    ******************* Bekannten Einladen (unten einladung annehmen) ***************************
+
+    mit einem click auf den icon(männchen mit plus) werden alle(aktuell) gespeicherte
+    user angezeigt, mit dem doppelklick auf die adresse wird die mail/telefonnummer in das Feld übernommen
+        1. mail/telefon nicht gefunden = wird anderer Button(Bekannten zu Bote Einladen) aktiviert,
+            den 'OK' button wird deaktiviert, bei versuch die mail/telefon zu korrigieren werden die Buttons
+            auf die vorherige einstellung zurückgesetzt...
+        2. eigenes mail/telefonnummer oder schon als Freund vorhanden sind auch nicht erlaubt
+
+        3. CSS-Einstellungen: Ausblenden von Scrollbalken von Table-View (wo sind alle user gelistet)
+           sind in EinladenController Zeile: ab 325 gemacht
+                    // TableView Autoresize + scroll ausblenden
+                   einladenTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+                   einladenCount.prefWidthProperty().bind(einladenTable.widthProperty().divide(4)); // w * 1/4
+                   einladenName.prefWidthProperty().bind(einladenTable.widthProperty().divide(4)); // w * 1/4
+                   einladenMail.prefWidthProperty().bind(einladenTable.widthProperty().divide(2)); // w * 1/2
+        4. .....Später Löschen oder ändern oder begrenzen
+
+
+    ******************* Eingeladung annehmen oder ablehnen ***********
+
+    unter die haup-archorpane in der freundecell.fxml ist einen VBox mit #freundeInfo/visible=false
+      angelegt, in dieser VBox werde die 2 Buttons für die Annehmen Oder Ablehnen hinterlegt,
+      a. bei Einladung eines Chat-Freund werden gleich die Daten von Beiden in der Tabelle/freunde
+        unter neue generiertes messageToken angelegt mit der ausname:
+        in die spalte role werden keys gespechert: 'werdeeingeladen' und 'warteaufok'
+        Bote/ApiEinlderController/
+        private void neuerChatSave(Usern meinData, Usern freundData){
+                                          String      werdeEingeladen     = "werdeeingeladen";
+                                          String      wartenAufOk         = "wartenaufok";
+                                          String unsereMessageToken = GlobalConfig.IdentifikationToken();
+                                          ..........
+                                                  Freunde meinChatSave = new Freunde();
+                                                  ...............
+                                                  meinChatSave.setMessagetoken(unsereMessageToken);
+                                                  meinChatSave.setRole(werdeEingeladen);
+                                          }
+       b. Angezeigte information mit den 2 BUTTONS von Eingeladenen:
+        bei FreundeCellController/setProperties Zeile: 180  String einladenInfo = friend.getRole();
+        werde aus dem getRole information ausgelesen und entspechende methoden gestartet.
+        1. wen getRole leer ist wird nichts gemacht
+        2. getRole= warteaufok, wird die methode: warteAufOk() gestartet und info ausgegeben und
+            warten von eingeldenen annehmen oder ablenen
+        3. getRole = werdeeingeladen, wird die methode werdeEingeladen gestartet und 2 Buttons angezeigt
+            a. rotes Button drücken: wird einen request an
+                Bote/ApiEinladenController/@PostMapping(value = "/einladungPrufenApi") mit messageToken + false
+                gesendet, schliesslich werden aus die Tabelle freunde die einträge mit dem gleiche messageToken
+                unwiderruflich gelöscht
+            b. grünes Button drücken: werden auch per request die messageToken + true gesendet, entsprechend
+                in spalt role werden die einträge gelöscht...
+        4....
+
 
     *********************** Click auf dem Freunde Oberfläche **************************
 
@@ -161,7 +234,19 @@
             Bekanten einladen
 
 
+    * *************************** Freund Remove(click auf dem roten Button) ************* *
 
+     FreundeCellController Zeile: 110:
+     an die Methode setProperties(), werden alle Freund-Daten als array von den FreundeController
+     Zeile: 170 zugesendet (auch messageToken)
+
+     FreundeCellController Zele: 285 Methode freundRemove(){...}
+     eine messageToken werde ermiteln(von setProperties), per request an Bote/@PostMapping(value = "/freundeRemoveApi")
+     gesendet, da werden alle Freund-Daten von der tabelle 'freunde' & 'messages' unwiderruflich gelöscht,
+     als response wird die anzahl gelöschte einträge von Bote zurüchgesendet,
+     hier in FreundeCellController Zeile: 300 wird die Celle-Freund geleert & geschlossen...
+     FEHLER: aus welchen gründen auch immer, bei leeren token oder was anderes als response wird 0
+     gesendet, für 5 sekunden wird einen warnung angezeigt....
 
 
     ****************************** NICHT REGISTRIERT ************************************

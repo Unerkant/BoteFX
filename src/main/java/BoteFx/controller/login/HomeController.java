@@ -2,18 +2,17 @@ package BoteFx.controller.login;
 
 import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
+import BoteFx.service.MethodenService;
 import BoteFx.service.ViewService;
+
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import lombok.SneakyThrows;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,6 +25,8 @@ public class HomeController implements Initializable {
     private ViewService viewService;
     @Autowired
     private ConfigService configService;
+    @Autowired
+    private MethodenService methodenService;
 
     @FXML private Label homeDatum;
     @Value("${homeagbtext}")
@@ -35,13 +36,12 @@ public class HomeController implements Initializable {
     private String homeCopyrightText;
     @FXML private Label homeCopyright;
 
+
     /**
      * Live Uhr
      * @param url
      * @param resourceBundle
      */
-
-    @SneakyThrows
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -71,7 +71,6 @@ public class HomeController implements Initializable {
     @FXML
     public void zumMailLogin(ActionEvent event) {
         viewService.switchTo(GlobalView.MAILLOGIN);
-        //logger.info("Home Controller(von Home stage zum Mail Login wechseln)");
     }
 
 
@@ -82,7 +81,6 @@ public class HomeController implements Initializable {
     @FXML
     public void zumTelefonLogin(ActionEvent event) {
         viewService.switchTo(GlobalView.TELEFONLOGIN);
-        //logger.info("Home Controller(von Home stage zum Telefon Login wechseln)");
     }
 
 
@@ -92,8 +90,7 @@ public class HomeController implements Initializable {
      */
     @FXML
     public void homeClose(ActionEvent event) {
-        configService.stageClose(event);
-        //logger.info("Home Close");
+        methodenService.stageClose(event);
     }
 
 

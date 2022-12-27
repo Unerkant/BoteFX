@@ -3,6 +3,7 @@ package BoteFx.controller.login;
 import BoteFx.service.ApiService;
 import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
+import BoteFx.service.MethodenService;
 import BoteFx.service.ViewService;
 
 import javafx.animation.PauseTransition;
@@ -18,7 +19,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -35,6 +35,8 @@ public class TelefonLoginController implements Initializable {
     private ApiService apiService;
     @Autowired
     private ConfigService configService;
+    @Autowired
+    private MethodenService methodenService;
 
     @FXML private VBox telefonLoginHauptVBox;
     @FXML private AnchorPane telefonLoginAnchorPane;
@@ -59,13 +61,14 @@ public class TelefonLoginController implements Initializable {
         /**
          *  Automatische Internationale Language erkennen
          *
-         *  änderungen in GlobalConfig Zeile: 90 vornehmen
+         *  änderungen in MethodeService Zeile: 53 vornehmen
          */
         String language = System.getProperty("user.language");
-        String land = configService.languagen(language);
+        String land = methodenService.languagen(language);
         vorwahlInput.setText(land);
 
     }
+
 
     /**
      * Request ab Bote/ApiTelefonController/@PostMapping(value = "/telefonApi")
@@ -111,6 +114,7 @@ public class TelefonLoginController implements Initializable {
         }
     }
 
+
     /**
      * Telefon Field Validieren
      * 1. prüfen auf Zahl, ansonsten return null
@@ -147,6 +151,7 @@ public class TelefonLoginController implements Initializable {
             }
         });
     }
+
 
     /**
      * Vorwahl Field Validieren
@@ -211,23 +216,25 @@ public class TelefonLoginController implements Initializable {
         viewService.switchTo(GlobalView.MAILLOGIN);
     }
 
+
     /**
      * Stage Fenster schliessen
      * @param event
      */
     public void telefonloginClose(ActionEvent event) {
-        configService.stageClose(event);
+        methodenService.stageClose(event);
     }
+
 
     /**
      * mit der Maus Stage Fenster auf dem Bildschirm frei Bewegen
      * @param event
      */
     public void telefonloginDragged(MouseEvent event) {
-        configService.dragget(event);
+        methodenService.dragget(event);
     }
     public void telefonloginPressed(MouseEvent event) {
-        configService.pressed(event);
+        methodenService.pressed(event);
     }
 
 

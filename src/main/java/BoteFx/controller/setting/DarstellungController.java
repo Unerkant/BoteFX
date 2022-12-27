@@ -65,7 +65,7 @@ public class DarstellungController implements Initializable {
      */
     public void darstellungZuruck(ActionEvent event) {
         chatBoxController.changedPane("openfreunde");
-        darstellunghover.getStyleClass().remove("paneAktiv");
+        darstellunghover.getStyleClass().remove("settingAktiv");
     }
 
     public void erscheinungsbildMenu(MouseEvent event) {

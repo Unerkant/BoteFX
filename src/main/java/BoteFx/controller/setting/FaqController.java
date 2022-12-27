@@ -70,7 +70,7 @@ public class FaqController implements Initializable {
   */
  public void faqZuruck(ActionEvent event) {
     chatBoxController.changedPane("openfreunde");
-    faqhover.getStyleClass().remove("paneAktiv");
+    faqhover.getStyleClass().remove("settingAktiv");
  }
 
 }

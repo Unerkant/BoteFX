@@ -27,9 +27,9 @@ public class TokenService {
     private ConfigService configService;
     @Autowired
     private TokenRepository tokenRepository;
-    public TokenService(TokenRepository tokenRepository) {
+/*    public TokenService(TokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
-    }
+    }*/
 
     /**
      * Neue User Token generieren
