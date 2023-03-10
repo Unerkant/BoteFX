@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import java.util.ResourceBundle;
 
 @Controller
 public class ChatBoxController implements Initializable {
+
     @Autowired
     private ConfigService configService;
     @Autowired
@@ -37,11 +39,21 @@ public class ChatBoxController implements Initializable {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
+     * die 3 StackPane nicht verändern
+     *
+     * sind gedacht für die anzeige globale Pop-up-Fenster
+     *
+     */
+    @FXML private StackPane hauptStackPane;
+/*    @FXML private StackPane leftStackPane;
+    @FXML private StackPane rightStackPane;*/
+
+    /**
      * die 3 AnchorPane hauptPane, leftPane & rightPane nicht
+     *
      * verändern oder Löschen, werden in Initialize & für weitere
      * Methoden benutzt
      * 1. initialize Zeile: 43 + 89
-     *
      */
     @FXML private AnchorPane hauptPane;
     @FXML private AnchorPane leftPane;
@@ -52,10 +64,41 @@ public class ChatBoxController implements Initializable {
     @FXML private ImageView telefonateImg;
     @FXML private ImageView chattenImg;
     @FXML private ImageView settingImg;
-    @FXML private ImageView imgChange;
 
     /**
-     * die 4 Methoden werden von chatbox(bottom) gesteuert
+     *  Getter & Setter von 3 StackPane für den globalen Zugriff...
+     *
+     *  wird benutzt:
+     *  1. MessageController/messageBearbeiten() Zeile: 725
+     *   kurze beschreibung: über die ganze stage(haupStackPane) wird eine pane(transparent)
+     *   gesetzt mit einem Pop-up-Fenster, da sind die hyperlink für die
+     *   Methoden zu starten, um das Pop-up-Fenster wieder zu schliessen wird dann
+     *   die StackPane als click-Methode benutzt....
+     *   (einen click an beliebige stelle in die ganze Stage bereich)
+     *
+     *   die MessageController ist hier als Beispiel genutzt,
+     *   da können anderer Pop-up-Fenster angezeigt werden
+     *
+     * @return
+     */
+    public StackPane getHauptStackPane() {
+        return hauptStackPane;
+    }
+    public void setHauptStackPane(StackPane hauptstackpane) {
+        this.hauptStackPane = hauptstackpane;
+    }
+/*
+    public StackPane getLeftStackPane() { return leftStackPane; }
+    public void setLeftStackPane(StackPane leftStackPane) { this.leftStackPane = leftStackPane;}
+
+    public StackPane getRightStackPane() { return rightStackPane; }
+    public void setRightStackPane(StackPane rightStackPane) { this.rightStackPane = rightStackPane; }*/
+
+    /* ***************************** Methoden *********************************  */
+
+
+    /**
+     *  die 4 Methoden werden von chatbox(bottom) gesteuert
      *  1. kontakte
      *  2. telefonate
      *  3. chatten (wird Automatisch gestartet(initialize) Zeile: 213)
@@ -206,6 +249,7 @@ public class ChatBoxController implements Initializable {
          */
         MouseEvent event = null;
         chatten(event);
+
 
         /**
          *  die Methode funktioniert bei eine Große unter 650px

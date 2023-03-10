@@ -22,7 +22,8 @@ public class ConfigService {
     public static final double START_HEIGHT     = 720;
 
     /* Verschidene Einstellungen */
-    public  final Integer MESSAGE_LENGTH        = 500;   /* MessageController */
+    public  final Integer MESSAGE_LENGTH        = 1000;  /* MessageController */
+    public  final Integer TEXTAREA_HEIGHT       = 350;  /* MessageController/Textarea: eingabe text, senden */
     public  final Integer MAIL_LENGTH           = 254;  /* MailLoginController */
     public  final Integer VORWAHL_LENGTH        = 5;    /* TelefonLoginController */
     public  final Integer MAX_TEL_LENGTH        = 15;   /* TelefonLoginController */

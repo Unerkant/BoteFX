@@ -1,0 +1,55 @@
+/*
+ * den 30.01.2023
+ */
+            ALLGEMEINE FEHLER NACH NUMMER & CONTROLLER
+
+ 1. ChatBoxController
+    //noch Leer
+
+ 2. EinladenController
+    //noch Leer
+
+ 3. FreundeController
+    //noch Leer
+
+ 4. KontakteController
+    //noch Leer
+
+ 5. MessageController
+
+    125:    Fehler:     konnte keine fxml laden
+            Methode:    private void bottomLoschenDisabled() {}
+            Quelle:     root = FXMLLoader.load(getClass().getResource("/templates/messageLoschenDisabled.fxml"));
+
+    126:    Fehler:     konnte keine fxml laden
+            Methode:    private void bottomLoschenAktiv() {}
+            Quelle:     root = FXMLLoader.load(getClass().getResource("/templates/messageLoschenAktiv.fxml"));
+
+    127:    Fehler:     message kann nicht gelöscht werden
+            Methode:    messageLoschen(... Zeile: ab 1000
+            Quelle:     HttpResponse<String> response = apiService.requestAPI(.....
+                        Kurze Beschreibung:
+                        angeklickte message zum Löschen werden per Request
+                        als List<Long> [261, 275, 287,356, 360] an Bote/ApiMessage/messageLoschenApi(...
+                        gesendet, in MessageService/ListMessageLoschen werde der List<Long> gezählt und
+                        als count zurückgesendet zu BoteFX/MessageController/messageLoschen als response
+                        empfangen und bearbeitet...
+                        Fazit: ???
+
+
+
+ 6. SettingController
+    //noch Leer
+
+ 7. TelefonController
+    //noch Leer
+
+
+    *****    FRAGMENTS
+
+ 1. FreundeCellController
+    //noch Leer
+
+ 2. MessageLeerController
+    //noch Leer
+

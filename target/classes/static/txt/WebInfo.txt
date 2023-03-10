@@ -13,6 +13,9 @@
     3. Bekannten Einladen (ändern oder löschen oder begrenzen auf 20 ),
         EinladenController Zeile: 270
 
+    4. MessageController: freunde Online Zeit, das label für die anzeige, befindet
+        sich in die message-header, methode: headerFreundeDaten Zeile: 316
+
     ***************************** ALLGEMEIN *********************************************
 
     1. *** Allgemein zur fxml Load
@@ -36,6 +39,53 @@
 
     2
 
+    **************************** CSS STYLE **********************************************
+    1. MessageController
+        a. messageLoschenDisabled + messageLoschenAktiv.fxml: Zeile ab 850
+        background: #FFF5F5;
+        Bilder: 25x25
+        Text Color: Red, Blau, #333333, #999999
+
+
+    ************************** Pop-Up-Fenster über die Ganze Stage(APP) ************************
+
+       ACHTUNG: für die globale Pop-upFenster anzuzeigen stehen zu Verfügund insgesammt 4 StackPane
+                in chatbox.fxml + ChatBoxController( als Setter & Getter)
+                    @FXML private StackPane hauptStackPane;
+                    @FXML private StackPane leftStackPane;
+                    @FXML private StackPane rightStackPane;
+
+
+       * ChatBoxController.java
+       * auf dem ganzen Haupt Stage(StackPane) wir eine AnchorPane draufgesetzt mit der
+       * click function 'setOnMouseClicked' um der angezeigte Pop-up-Fenster zu schliessen.
+       * Beispiel: MessageController/messageBearbeiten(..
+                //aufbaue eine pane über die ganze Stage, und ober Rechts das Pop-up-Fenster
+                StackPane hauptStage = chatBoxController.getHauptStackPane();
+                AnchorPane bearPane = new AnchorPane();
+
+                // click auf die AnchorPane(bearPane), um Pop-Up-Fester auszublenden
+                        bearPane.setOnMouseClicked(mouseEvent -> {
+                                popUpFensterClose(bearPane);
+                        });
+
+       Benutzen Beispiel:
+        Controller:
+            @Autowired
+            private ChatBoxController chatBoxController;
+
+        // aufbaue eine pane über die ganze Stage
+           StackPane hauptStage = chatBoxController.getHauptStackPane();
+
+               // neue AnchorPan erstellen + style + 100% width ziehen
+               AnchorPane bearPane = new AnchorPane();
+               bearPane.setStyle("-fx-background-color: transparent;");
+               bearPane.prefWidthProperty().bind(hauptStage.widthProperty());
+               bearPane.prefHeightProperty().bind(hauptStage.heightProperty());
+
+               // einbinden
+               bearPane.getChildren().add(Pop-up-Fenster);
+               hauptStage.getChildren().add(bearPane);
 
     *************************** PANE SLIDER ( APP/VERKLEINERN/VERGRßERN) ****************
 
@@ -248,8 +298,69 @@
      FEHLER: aus welchen gründen auch immer, bei leeren token oder was anderes als response wird 0
      gesendet, für 5 sekunden wird einen warnung angezeigt....
 
+    ***************** MessageController.java + message.fxml *****************************
 
-    ****************************** NICHT REGISTRIERT ************************************
+    1. message.fxml: kurze beschreibung
+        ArchorPane -> BorderPane: Top, Center und Bottom sind benutzt
+        A. Top: besteht aus eine GridPane mit 5 column
+            1. column 0: pfeil zurück, ist eine imageView (25x25)
+            2. column 1: anzeige von User-Bild ist eine Label 30x30, das selber Bild
+                wird in die Methode: haederFreundeDaten (MessageController, Zeile: 316)
+                in das Label mit der [messageProfilBild.setGraphic(imageView);] integriert
+                geStylt wird gleich auch da...
+            3. column 2: ist ienen Vbox mit der Label(Name ausgegeben) und HBox.
+                in der HBox sind 2 Label (1: fehler info ausgabe, 2: freund Online Zeit anzeigen)
+            4. column 3:  ImageView(Telefon), nur methode abrufbar, keine weiter function
+            5. column 4:  ImageView(...), Methode: messageBearbeiten + 4 zusetlichen Methoden
+                            a. radioPaneZeigen
+                            b. userInfo
+                            c. verlaufLeeren
+                            d. bearbeitenClose
+        B.  Center: besteht von einer ScrollPane + VBox für die Message ausgaben
+                    MessageController/altMessage() Zeile: 350
+        C.  Bottom: bestet von einer GridPane mit dem 3 column
+            a. column 0: ImageView mit der Methode: otherZeigen ( noch nicht fertig)
+            b. column 1: TextArea mit der Methode: messageSenden() Zeile: 440
+                         gesendet wird mit 'ENTER'
+            c. column 2: ImageView mit der Methode: smileZeigen(), (noch keine smile)
+
+    2. MessageController: kurze beschreibung
+
+        1. Anzeige von Radios Buttons (message löschen) + message Löschen
+           von Anfang, wenn wird auf Freunde-Chat geclick werden Automatisch alle altere
+           messages aus der Datenbank geladen, das macht die Methode: altMessage() Zeile: 365
+           gestartet wird sie in der Setter methode SetMessageToken() Zeile: 138,
+           hier werden alle messages(mit zugesendete messageToken) von Datenbank abgeruffen
+           und weiter an die methode altMessage(allMessages) gesendet..
+            a.  in der methode altMessage() wid der Radios Buttons dynamisch erstellt
+                            RadioButton altRadioButton = new RadioButton();
+                            altRadioButton.setStyle("-fx-font-size: 0.1px;");
+                und in einem VBox gepackt, der VBox befindet sich in einer BorderPane/Right
+                die alle Radios Buttons werden in der schleife in einen ToggleGroup
+                'final ToggleGroup group = new ToggleGroup();' zusammen gefasst,
+                die 'group' array-variable ist Global angelegt... Zeile:470
+            b.  für die löschen eine oder mehreren messages clicken sie auf die 3 Punkte(...)
+                Header oben Rechts(nur bei gestarteten Chat mit Freunden), da Offnet sich einem
+                Pop-up-Fenster, clicken sie auf 'bearbeiten', da aktivieren sie die Methode
+                altRadioGroup(), in der methode werde gleich die Globale variable 'group'
+                abgeruffen: ungefer so siht sie aus..
+                ToggleGroup array-variable group:
+                Radio Zeigen: [RadioButton[id=246, styleClass=radio-button]'',
+                               RadioButton[id=247, styleClass=radio-button]'',
+                               RadioButton[id=248, styleClass=radio-button]'',
+                               RadioButton[id=253, styleClass=radio-button]'',
+                               RadioButton[id=254, styleClass=radio-button]'']
+                in der for schleife werden alle Radios Buttons eine nach der anderer
+                die css.style geendert:
+                        int groupCount = group.getToggles().size();
+                                for (int i = 0; i < groupCount; i++) {
+                                    RadioButton name = (RadioButton) group.getToggles().get(i);
+                                    name.setStyle("-fx-font-size: 1.0em;");
+                                }
+            c.
+
+
+    ****************************** NICHT REGISTRIERT ***********************************
 
     1.  bei ersten App-start wird zuerst die start methode abgeruffen
         BoteFX.java Methode start/viewService.switchTo(GlobalView.CHATBOX);

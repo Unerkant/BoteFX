@@ -20,7 +20,7 @@
 	-fx-background-radius: 0;
 }
 
-.messagetext:focused
+.textareatext:focused
 {
     -fx-background-color: #FAFAFF;
     -fx-border-color: transparent;

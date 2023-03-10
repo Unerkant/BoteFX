@@ -3,9 +3,12 @@
  */
 
  /*
-  * -fx-font: "Rockwell", "Microsoft Sans Serif"
+  *
+  *"Rockwell", "Microsoft Sans Serif", "Courier", "Times", "Tahoma", "Sans-Serif", "Helvetica" "Courier New" = *schmall*
+
   * :link { color: #0000EE; }
   * :visited { color: #551A8B; }
+  * Label: -fx-wrap-text: true;
   */
 
 /* Allgemein*/
@@ -117,7 +120,6 @@
 
  /* freunde.fxml
   ------------------*/
-
 .freundeleer
 {
     /* FreundeController/freundeLaden/else Zeile: 175*/
@@ -130,7 +132,8 @@
     -fx-border-insets: 20 5 0 5;
     -fx-background-insets: 20 5 0 5;
     -fx-font-size: 1.3em;
-    -fx-font-weight:bold;
+    -fx-font-family: "Courier New";
+    -fx-font-weight: bold;
     -fx-cursor: none;
 }
 
@@ -138,6 +141,7 @@
 _______________*/
 
 /* zurzeit leer */
+
 
 /* FreundeCellController
 -------------------------*/
@@ -163,8 +167,8 @@ _______________*/
 {
     -fx-pref-width: 150;
     -fx-background-color: #CC2900;
-    -fx-background-radius: 6, 5;
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow( three-pass-box, rgba(0, 0, 0, 0.4), 5, 0.0, 0, 1 );
 
     -fx-padding: 15 0 15 0;
     -fx-border-insets: 5;
@@ -177,8 +181,8 @@ _______________*/
 {
     -fx-pref-width: 150;
     -fx-background-color: #008020;
-    -fx-background-radius: 6, 5;
-    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow( three-pass-box, rgba(0,0,0,0.4), 5, 0.0, 0, 1 );
 
     -fx-padding: 15 0 15 0;
     -fx-border-insets: 5;
@@ -186,6 +190,142 @@ _______________*/
 
     -fx-text-fill: #fff;
     -fx-font-size: 1.3em;
+}
+
+ /* message.fxml
+ ----------------*/
+ /* zurzeit leer */
+
+
+ /* MessageController
+ --------------------*/
+        /* Header */
+.headFreundsName
+{
+    -fx-font-family: "Courier New";
+    -fx-font-size: 1.0em;
+    -fx-font-weight: 700;
+    -fx-text-fill: #000080;
+}
+
+        /* AltMessage ausgeben */
+.altMessageHover
+{
+    -fx-background-color: #E6E6E6;
+}
+
+.altBildsLabel
+{
+    /* nicht ändern: nur für die rund aussehen, kein Text style, wird direkt geStylt  */
+     -fx-background-color: transparent;
+     -fx-background-radius: 15;
+     -fx-border-color: transparent;
+     -fx-border-radius: 15;
+     -fx-min-width: 30;
+     -fx-pref-width: 30;
+     -fx-max-width: 30;
+     -fx-min-height: 30;
+     -fx-pref-height: 30;
+     -fx-max-height: 30;
+     -fx-alignment: center;
+}
+
+.altLinksVBox
+{
+    -fx-pref-width: 40;
+    -fx-alignment: TOP_CENTER;
+}
+
+.altFreundsName
+{
+    -fx-font-family: "Courier New";
+    -fx-font-size: 1.0em;
+    -fx-font-weight: 700;
+    -fx-text-fill: #000080;
+}
+
+.altMessagesZeit
+{
+    -fx-font-size: 0.9em;
+    -fx-text-fill: #999;
+}
+
+.altMessagesBilder
+{
+  /*  -fx-border-color: #E6FFE6;
+    -fx-border-width: 5;
+    -fx-padding: 5;*/
+}
+
+.altTextsFlow
+{
+
+}
+
+.altMittesVBox
+{
+
+}
+    /* CheckBox */
+.checksBox .box {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+.checksBox:selected .mark {
+    -fx-background-color: white;
+}
+
+.checksBox:selected .box {
+    -fx-background-color: #28a3f4;
+}
+
+
+.altBordersPane
+{
+    -fx-padding: 10 5 10 0;
+}
+
+    /* separate Fenster, message bearbeiten(message: rechts oben die 3 blaue punkten '...') */
+.messagesBearbeiten
+{
+    -fx-background-color: #FFF;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-border-radius: 6;
+    -fx-padding: 10;
+    -fx-pref-width: 250;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 15, 0, 0, 0);
+}
+.hypersLink
+{
+    -fx-font-size: 1.0em;
+    -fx-text-fill: #000000;
+    -fx-padding: 5;
+}
+.hypersLink:hover
+{
+   -fx-background-color: #F2F2F2;
+}
+
+    /* Separate Fenster Loschen */
+.logoShadow
+{
+    -fx-effect: dropshadow(three-pass-box, rgb(26, 26, 26), 50, 0.6, 0, 0);
+}
+
+    /* Methode: löschenInfo */
+.loschInfo
+{
+    -fx-background-color: #858585;
+    -fx-border-color: #606060;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 10 20;
+    -fx-font-size: 1.0em;
+    -fx-text-fill: #FFF;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.7), 10, 0, 0, 0);
 }
 
  /* setting.fxml
@@ -203,7 +343,7 @@ _______________*/
 
 
 
- /* ChatController.java (für Live message)
+ /* ??????? ChatController.java (für Live message)
  -----------------------------------------*/
 
 .livepane

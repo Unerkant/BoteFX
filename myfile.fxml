@@ -1,55 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane    fx:id="liveBox"
-               styleClass="livebox"
-               xmlns="http://javafx.com/javafx/18"
-               xmlns:fx="http://javafx.com/fxml/1"
-               fx:controller="BoteFx.controller.ErsteMessageController">
-<children>
-   <VBox alignment="TOP_CENTER" prefWidth="50.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-       <children>
-           <ImageView fx:id="livebild" styleClass="livebild" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                   <Image url="@/static/img/face.png" />
-               </image>
-           </ImageView>
-       </children>
-       <opaqueInsets>
-            <Insets />
-       </opaqueInsets>
-       <padding>
-           <Insets top="5.0" />
-       </padding>   </VBox>
-   <Label fx:id="livePseudonym" text="Java Client" styleClass="livepseudonym" alignment="TOP_LEFT" layoutX="121.0" layoutY="6.0" prefHeight="20.0" prefWidth="180.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="125.0" AnchorPane.topAnchor="5.0" />
-   <ImageView fx:id="liveHacken" styleClass="livehacken" fitHeight="20.0" fitWidth="20.0" layoutX="236.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="95.0" AnchorPane.topAnchor="2.0">
-       <image>
-           <Image url="@static/img/doppeltgrun.png" />
-       </image>
-   </ImageView>
-   <Label fx:id="liveDatum" text="09.07.22 22:03" styleClass="livedatum" alignment="CENTER" contentDisplay="CENTER" layoutX="306.0" layoutY="6.0" prefWidth="70.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="5.0" />
-   <ImageView fx:id="liveDeleteButton" fitHeight="15.0" fitWidth="15.0" onMouseClicked="#liveDeleteZeigen" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
-       <image>
-           <Image url="@/static/img/delete.png" />
-       </image>
-   </ImageView>   <Label fx:id="liveText" text="ndgfndfnbdf ndf nbfdcn bfdbd fnbdfn  dfnbdfcbn  dgfnb dgfbh d ngdfnb dgfn gdncb dfg nb gdcfn dgf n dfgn" styleClass="livetext" wrapText="true" alignment="TOP_LEFT" layoutX="138.0" layoutY="20.0" prefHeight="35.0" prefWidth="270.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="25.0" />
-   <VBox fx:id="liveDeleteBox" styleClass="livedeletebox" alignment="TOP_CENTER" layoutX="288.0" layoutY="-71.0" prefWidth="25.0" style="-fx-border-color: red;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="-25.0" AnchorPane.topAnchor="0.0">
-       <children>
-           <RadioButton fx:id="liveRadioButton" styleClass="liveradiobutton" onAction="#liveMessageDelete" contentDisplay="CENTER" mnemonicParsing="false" />
-       </children>
-       <opaqueInsets>
-           <Insets />
-       </opaqueInsets>
-       <padding>
-           <Insets top="5.0" />
-       </padding>
-   </VBox>
-</children>
+<AnchorPane xmlns="http://javafx.com/javafx/18"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="BoteFx.controller.MyFile"
+            prefHeight="400.0" prefWidth="600.0">
+<AnchorPane id="AnchorPane">
+    <VBox layoutY="170.0" prefWidth="557.0">
+        // Start Loop
+          <Pane>
+             <children>
+                  <Label text="89" />
+                <Label text="27.12.22 16:23" />
+                <TextArea text="Hallo Apple "/>
+             </children>
+          </Pane>
+       // End Loop
+    </VBox>
+</AnchorPane><AnchorPane id="AnchorPane">
+    <VBox layoutY="170.0" prefWidth="557.0">
+        // Start Loop
+          <Pane>
+             <children>
+                  <Label text="Java Client" />
+                <Label text="27.12.22 16:23" />
+                <TextArea text="functioniert
+"/>
+             </children>
+          </Pane>
+       // End Loop
+    </VBox>
+</AnchorPane><AnchorPane id="AnchorPane">
+    <VBox layoutY="170.0" prefWidth="557.0">
+        // Start Loop
+          <Pane>
+             <children>
+                  <Label text="89" />
+                <Label text="27.12.22 16:23" />
+                <TextArea text="Unglaubliche Probleme "/>
+             </children>
+          </Pane>
+       // End Loop
+    </VBox>
+</AnchorPane><AnchorPane id="AnchorPane">
+    <VBox layoutY="170.0" prefWidth="557.0">
+        // Start Loop
+          <Pane>
+             <children>
+                  <Label text="Java Client" />
+                <Label text="27.12.22 16:31" />
+                <TextArea text="Test Senden
+"/>
+             </children>
+          </Pane>
+       // End Loop
+    </VBox>
+</AnchorPane>
 </AnchorPane>
