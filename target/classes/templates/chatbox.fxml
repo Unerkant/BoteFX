@@ -9,21 +9,21 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-
-<StackPane fx:id="hauptStackPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.ChatBoxController">
+<StackPane fx:id="hauptPane" alignment="TOP_LEFT" minHeight="550.0" minWidth="380.0" prefHeight="700.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.ChatBoxController">
    <children>
-      <AnchorPane fx:id="hauptPane" focusTraversable="true" prefHeight="700.0" prefWidth="670.0" stylesheets="@../static/css/style.css">
+      <AnchorPane>
          <children>
-            <AnchorPane fx:id="leftPane" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+            <StackPane fx:id="leftPane" alignment="TOP_LEFT" minWidth="300.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <BorderPane minWidth="300.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-      
+
                      <center>
                         <AnchorPane fx:id="freundePane" BorderPane.alignment="CENTER">
-
+                           <!-- Freude anzeigen -->
                         </AnchorPane>
                      </center>
-      
+
                      <bottom>
                         <GridPane minWidth="300.0" prefHeight="50.0" prefWidth="300.0" style="-fx-background-color: #FAFAFF; -fx-border-style: solid none none none; -fx-border-color: #E6E6FF;" BorderPane.alignment="CENTER">
                            <columnConstraints>
@@ -59,16 +59,21 @@
                            </children>
                         </GridPane>
                      </bottom>
-      
+
                   </BorderPane>
                </children>
-            </AnchorPane>
-            <!-- Ende LeftPane(linke Seite-freunde) -->
-      
-            <!-- rightPane(Rechte Chat-Seite, message ausgabe) -->
-            <AnchorPane fx:id="rightPane" style="-fx-border-color: #E6E6FF; -fx-border-style: solid; -fx-border-width: 0 0 0 1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            </StackPane>
 
-            </AnchorPane>
+            <StackPane fx:id="rightPane" style="-fx-border-color: #E6E6FF; -fx-border-style: solid; -fx-border-width: 0 0 0 1;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <AnchorPane fx:id="tippPane">
+                    <!-- /* include tipp.fxml.... */ -->
+                     <fx:include source="fragments/tipp.fxml" fx:id="tippHauptPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"></fx:include>
+
+                  </AnchorPane>
+               </children>
+            </StackPane>
+
          </children>
       </AnchorPane>
    </children>

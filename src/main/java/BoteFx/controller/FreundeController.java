@@ -22,6 +22,8 @@ import java.net.URL;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +44,7 @@ public class FreundeController implements Initializable {
     private LayoutService layoutService;
     @Autowired
     private ChatBoxController chatBoxController;
+
     private FreundeCellController cellController;
     private FreundeCellController activeCellController;
 
@@ -92,28 +95,30 @@ public class FreundeController implements Initializable {
      *
      *  Methode freundeLaden() starten & token als parameter übergeben
      */
-    private String meinToken;
-    private AnchorPane rechtsPane;
-    private AnchorPane freundenPane;
-    public AnchorPane getRechtsPane() {
+    private StackPane rechtsPane;
+    public StackPane getRechtsPane() {
         return rechtsPane;
     }
-    public void setRechtsPane(AnchorPane rightZugesendet) {
-        this.rechtsPane = rightZugesendet;
+    public void setRechtsPane(StackPane rightpane) {
+        this.rechtsPane = rightpane;
     }
+
+    private AnchorPane freundenPane;
     public AnchorPane getFreundenPane() {
         return freundenPane;
     }
-    public void setFreundenPane(AnchorPane paneZugesendet) {
-        this.freundenPane = paneZugesendet;
+    public void setFreundenPane(AnchorPane freundpane) {
+        this.freundenPane = freundpane;
     }
+
+    private String meinToken;
     public String getMeineToken() {
         return meinToken;
     }
-    public void setMeineToken(String tokenZugesendet) {
-        this.meinToken = tokenZugesendet;
+    public void setMeineToken(String meintoken) {
+        this.meinToken = meintoken;
         // Freunde Laden
-        freundeLaden(tokenZugesendet);
+        freundeLaden(meinToken);
     }
 
     /* ******************* Freunde Laden/Anzeigen ************************ */
@@ -316,7 +321,7 @@ public class FreundeController implements Initializable {
      * weil die request-methode wird benutzt von mehreren Controllern und brauch 2 parameter
      */
     private void bekanntenEinladen() {
-        chatBoxController.changedPane("openmessage");
+        //chatBoxController.changedPane("openmessage");
 
         // Request & response an/von Bote
         String apiUrl = configService.FILE_HTTP+"alleUserApi";
@@ -329,5 +334,6 @@ public class FreundeController implements Initializable {
         einladenController.setMeinerToken(meinToken);
         einladenController.setUserdaten(response.body());
     }
+
 
 }

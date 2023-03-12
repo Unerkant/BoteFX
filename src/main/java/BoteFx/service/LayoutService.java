@@ -4,7 +4,7 @@ import BoteFx.Enums.GlobalView;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
@@ -25,11 +25,11 @@ public class LayoutService {
      * Getter & Setter von AnchorPane
      * zugesendete AnchorPane ID:
      */
-    private AnchorPane ausgabeLayout;
-    public AnchorPane getausgabeLayout() {
+    private Pane ausgabeLayout;
+    public Pane getausgabeLayout() {
         return ausgabeLayout;
     }
-    public void setausgabeLayout(AnchorPane ausgabeLayout1) {
+    public void setausgabeLayout(Pane ausgabeLayout1) {
         this.ausgabeLayout = ausgabeLayout1;
     }
 
@@ -43,7 +43,7 @@ public class LayoutService {
     public Object switchLayout(GlobalView globalView){
 
         // vor dem Laden, zuerst in Element/Pane alles Löschen
-        ausgabeLayout.getChildren().clear();
+        //ausgabeLayout.getChildren().clear();
         LayoutControllerPair layoutControllerPair = createLayoutController(globalView);
         ausgabeLayout.getChildren().add(layoutControllerPair.getView());
         //scene.setRoot(layoutControllerPair.getView());

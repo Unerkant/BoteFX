@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<GridPane fx:id="loschenDisableGridPane" maxHeight="50.0" minHeight="50.0" prefHeight="50.0" style="-fx-background-color: #FFF5F5;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+    <columnConstraints>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
+    </rowConstraints>
+    <children>
+        <HBox fx:id="loschenHBox" alignment="CENTER_LEFT">
+            <children>
+                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../static/img/deletered.png" />
+                    </image>
+                    <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                    </HBox.margin>
+                </ImageView>
+            <Label text="Löschen" textFill="RED">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            </children>
+            <opaqueInsets>
+                <Insets />
+            </opaqueInsets>
+        </HBox>
+        <HBox alignment="CENTER" GridPane.columnIndex="1">
+            <children>
+            <Label fx:id="messageLoschenCount" text="0" textFill="RED">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+                <Label text="ausgewählt" textFill="#333333">
+                    <padding>
+                        <Insets left="5.0" />
+                    </padding>
+                    <font>
+                        <Font size="15.0" />
+                    </font>
+                </Label>
+            </children>
+        </HBox>
+        <HBox fx:id="weiterHBox" alignment="CENTER_RIGHT" GridPane.columnIndex="2">
+            <children>
+            <Label text="Weiterleiten" textFill="BLUE">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                    <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                    </HBox.margin>
+                    <image>
+                        <Image url="@../../static/img/forwardblau.png" />
+                    </image>
+                </ImageView>
+            </children>
+        </HBox>
+    </children>
+</GridPane>

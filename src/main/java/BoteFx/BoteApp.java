@@ -59,7 +59,8 @@ public class BoteApp extends Application {
         stage.setTitle("Bote");
         stage.setX(0);
         stage.setY(0);
-        stage.setWidth(650);
+        stage.setWidth(ConfigService.START_WIDTH);
+        stage.setHeight(ConfigService.START_HEIGHT);
              /* Später, rect.getHeight() benutzen*/
         //stage.setHeight(rect.getHeight());
         stage.setMinWidth(ConfigService.MIN_WIDTH);

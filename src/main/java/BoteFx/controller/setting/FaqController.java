@@ -3,6 +3,7 @@ package BoteFx.controller.setting;
 import BoteFx.controller.ChatBoxController;
 import BoteFx.service.ConfigService;
 
+import BoteFx.service.TranslateService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,6 +24,8 @@ import java.util.ResourceBundle;
 @Controller
 public class FaqController implements Initializable {
 
+    @Autowired
+    private TranslateService translate;
  @Autowired
  ChatBoxController chatBoxController;
 
@@ -69,7 +72,7 @@ public class FaqController implements Initializable {
   *  3. der hover effect an die Positionen wird gelöscht
   */
  public void faqZuruck(ActionEvent event) {
-    chatBoxController.changedPane("openfreunde");
+    translate.closeStackPane();
     faqhover.getStyleClass().remove("settingAktiv");
  }
 

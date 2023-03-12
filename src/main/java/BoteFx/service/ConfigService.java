@@ -15,11 +15,12 @@ public class ConfigService {
     /* Bild Adresse BEI BOTE:  http://localhost:8080/profilbild/03052022103644.png */
     public static final double DEFAULT_WIDTH    = 480;
     public static final double DEFAUL_HEIGHT    = 620;
+    public static final double START_WIDTH      = 680;  /* BoteApp */
+    public static final double START_HEIGHT     = 700;  /* BoteApp */
     public static final double MIN_WIDTH        = 380;  /* BoteApp */
-    public static final double MIN_HEIGHT       = 700;  /* BoteApp */
-    public static final double MAX_WIDTH        = 650;
-    public static final double START_WIDTH      = 480;
-    public static final double START_HEIGHT     = 720;
+    public static final double MIN_HEIGHT       = 550;
+    public static final double MAX_WIDTH        = 3456; /* Liquid Retina XDR-Display 16-Zoll (3456 × 2234) */
+    public static final double MAX_HEIGHT       = 2234; /* Liquid Retina XDR-Display 16-Zoll (3456 × 2234) */
 
     /* Verschidene Einstellungen */
     public  final Integer MESSAGE_LENGTH        = 1000;  /* MessageController */

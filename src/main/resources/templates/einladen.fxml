@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="einladenAnchorPane" prefHeight="770.0" stylesheets="@../static/css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.EinladenController">
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <top>
+                <GridPane prefHeight="45.0" style="-fx-background-color: #FAFAFF; -fx-border-color: #E6E6FF; -fx-border-width: 0 0 1 0;" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="45.0" minHeight="45.0" prefHeight="45.0" valignment="CENTER" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <GridPane prefHeight="40.0" prefWidth="100.0">
+                            <columnConstraints>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="25.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../static/img/links.png" />
+                                    </image>
+                                </ImageView>
+                                <Hyperlink onAction="#einladenZuruck" text="Zurück" textFill="BLUE" GridPane.columnIndex="1">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Hyperlink>
+                            </children>
+                        </GridPane>
+                        <Label text="Bekante Einladen" textFill="NAVY" GridPane.columnIndex="1">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                        </Label>
+                        <Label textFill="BLUE" GridPane.columnIndex="2">
+                            <font>
+                                <Font name="System Bold" size="15.0" />
+                            </font>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Label>
+                    </children>
+                </GridPane>
+            </top>
+            <center>
+                <ScrollPane fx:id="einladenScrollPane" minWidth="350.0" prefWidth="650.0" stylesheets="@../static/css/scrollpane.css" BorderPane.alignment="CENTER">
+                    <content>
+                        <VBox fx:id="einladenVBox" alignment="TOP_CENTER">
+                     <children>
+                         <BorderPane maxWidth="640.0" minWidth="340.0" prefWidth="350.0" style="-fx-background-radius: 10; -fx-border-color: #999999; -fx-border-radius: 10;">
+                             <top>
+                                 <GridPane BorderPane.alignment="CENTER">
+                                     <columnConstraints>
+                                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                                     </columnConstraints>
+                                     <rowConstraints>
+                                         <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                     </rowConstraints>
+                                     <children>
+                                         <ImageView fx:id="einladenBildClose" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#einladenClose" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                 <Image url="@../static/img/closeblau.png" />
+                                             </image>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                         </ImageView>
+                                         <Label text="Bekanten  Einladen" GridPane.columnIndex="1">
+                                       <font>
+                                          <Font name="System Bold" size="16.0" />
+                                       </font></Label>
+                                     </children>
+                                 </GridPane>
+                             </top>
+
+                             <center>
+                              <VBox alignment="CENTER" prefHeight="150.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <TextField fx:id="einladenTextField" onKeyPressed="#inhaltLange" onKeyReleased="#inhaltLowerCase" onKeyTyped="#okButtonZurucksetzen" prefHeight="30.0" promptText="E-Mail oder Telefonnummer" styleClass="inputStyle">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets left="10.0" right="10.0" top="20.0" />
+                                       </VBox.margin>
+                                    </TextField>
+                                    <Label fx:id="einladenFehler" alignment="CENTER" textFill="#333333" wrapText="true">
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                 </children>
+                                 <BorderPane.margin>
+                                    <Insets />
+                                 </BorderPane.margin>
+                              </VBox>
+                           </center>
+
+                           <bottom>
+                              <HBox alignment="CENTER" prefHeight="50.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0 0 10 10; -fx-border-radius: 0 0 10 10;" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Hyperlink fx:id="einladungOk" alignment="CENTER" onAction="#inhaltValidate" text="OK" textFill="BLUE">
+                                       <font>
+                                          <Font name="System Bold" size="16.0" />
+                                       </font>
+                                    </Hyperlink>
+                                    <Hyperlink fx:id="einladungSenden" alignment="CENTER" onAction="#einladungPerMail" textFill="#0000ee" visible="false">
+                                       <font>
+                                          <Font name="System Bold" size="16.0" />
+                                       </font>
+                                    </Hyperlink>
+                                 </children>
+                              </HBox>
+                           </bottom>
+                           <VBox.margin>
+                              <Insets bottom="30.0" left="5.0" right="5.0" top="50.0" />
+                           </VBox.margin>
+                        </BorderPane>
+
+                        <Label maxWidth="640.0" styleClass="globalFehler" text="die untere Ausgabe von allen Usern ist nur für die Test zwecke gedacht. später wurde sie gelöscht." wrapText="true">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font></Label>
+
+                        <BorderPane maxWidth="640.0" minWidth="340.0" prefHeight="250.0" prefWidth="350.0" style="-fx-background-radius: 10; -fx-border-color: #999999; -fx-border-radius: 10;">
+                           <VBox.margin>
+                              <Insets bottom="20.0" left="5.0" right="5.0" top="10.0" />
+                           </VBox.margin>
+                            <top>
+                                <VBox alignment="CENTER" prefHeight="50.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 10 10 0 0; -fx-border-radius: 10 10 0 0;" BorderPane.alignment="CENTER">
+                                    <children>
+                                        <Label text="Alle  Nutzer aus der Datenbank">
+                                            <font>
+                                                <Font name="System Bold" size="16.0" />
+                                            </font>
+                                            <VBox.margin>
+                                                <Insets top="14.0" />
+                                            </VBox.margin>
+                                        </Label>
+                                        <Label fx:id="alleUserCount" alignment="BOTTOM_CENTER" textFill="GREY">
+                                            <font>
+                                                <Font size="12.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                </VBox>
+                            </top>
+                           <center>
+                              <TableView fx:id="einladenTable" BorderPane.alignment="CENTER">
+                                <columns>
+                                  <TableColumn fx:id="einladenCount" editable="false" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" style="-fx-alignment: center;" text="Nr" />
+                                  <TableColumn fx:id="einladenName" maxWidth="80.0" minWidth="80.0" style="-fx-alignment: center;" text="Name" />
+                                    <TableColumn fx:id="einladenMail" maxWidth="530.0" minWidth="180.0" prefWidth="530.0" text="E-Mail-Adresse/Telefonnummer" />
+                                </columns>
+                              </TableView>
+                           </center>
+                            <bottom>
+                                <HBox alignment="CENTER" prefHeight="50.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0 0 10 10; -fx-border-radius: 0 0 10 10;" BorderPane.alignment="CENTER">
+                                    <children>
+                                        <Hyperlink onAction="#einladenClose" text="Abbrechen" textFill="BLUE">
+                                            <font>
+                                                <Font name="System Bold" size="16.0" />
+                                            </font>
+                                        </Hyperlink>
+                                    </children>
+                                </HBox>
+                            </bottom>
+                        </BorderPane>
+                     </children>
+                        </VBox>
+                    </content>
+                </ScrollPane>
+            </center>
+        </BorderPane>
+    </children>
+</AnchorPane>

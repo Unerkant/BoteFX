@@ -2,6 +2,7 @@ package BoteFx.controller.setting;
 
 import BoteFx.controller.ChatBoxController;
 
+import BoteFx.service.TranslateService;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
@@ -19,6 +20,8 @@ import java.util.ResourceBundle;
 @Controller
 public class AllgemeinController implements Initializable {
 
+    @Autowired
+    private TranslateService translate;
     @Autowired
     ChatBoxController chatBoxController;
 
@@ -67,7 +70,7 @@ public class AllgemeinController implements Initializable {
      */
     @FXML
     void allgemeinZuruck() {
-        chatBoxController.changedPane("openfreunde");
+        translate.closeStackPane();
         allgemeinhover.getStyleClass().remove("settingAktiv");
     }
 

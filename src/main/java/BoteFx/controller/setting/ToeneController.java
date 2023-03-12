@@ -2,6 +2,7 @@ package BoteFx.controller.setting;
 
 import BoteFx.controller.ChatBoxController;
 
+import BoteFx.service.TranslateService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -21,6 +22,8 @@ import java.util.ResourceBundle;
 @Controller
 public class ToeneController implements Initializable {
 
+    @Autowired
+    private TranslateService translate;
     @Autowired
     ChatBoxController chatBoxController;
 
@@ -71,7 +74,7 @@ public class ToeneController implements Initializable {
      */
     @FXML
     public void toeneZuruck(ActionEvent event) {
-        chatBoxController.changedPane("openfreunde");
+        translate.closeStackPane();
         toenehover.getStyleClass().remove("settingAktiv");
     }
 }

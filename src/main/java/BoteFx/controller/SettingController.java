@@ -5,6 +5,7 @@ import BoteFx.controller.setting.*;
 import BoteFx.service.LayoutService;
 import BoteFx.service.TokenService;
 
+import BoteFx.service.TranslateService;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -26,6 +27,8 @@ import java.util.ResourceBundle;
 @Controller
 public class SettingController implements Initializable {
 
+    @Autowired
+    private TranslateService translate;
     @Autowired
     private LayoutService layoutService;
     @Autowired
@@ -72,9 +75,9 @@ public class SettingController implements Initializable {
      * Getter & Setter für den #rightPane von chatbox.fxml Zeile: 65
      * zugesendet von ChatBoxController Methode: setting()
      */
-    private AnchorPane RightPane;
-    public AnchorPane getRightPane() { return RightPane; }
-    public void setRightPane(AnchorPane rightPane) {
+    private StackPane RightPane;
+    public StackPane getRightPane() { return RightPane; }
+    public void setRightPane(StackPane rightPane) {
         RightPane = rightPane;
         // bei Setting start wird automatisch Allgemein-Position angezeigt
         MouseEvent mouseEvent = null;
@@ -101,12 +104,15 @@ public class SettingController implements Initializable {
     public void settingBearbeiten(MouseEvent event) {
 
     /* 1 */
-        chatBoxController.changedPane("openmessage");
+        // Translate Starten (functioniert nur unter 650px)
+        //translate.offenStackPane();
+        System.out.println("Setting: " + event);
 
     /* 2 */
         String id = "allgemein";
         if (event != null){
             id = ((Node) event.getSource()).getId();
+            translate.offenStackPane();
         }
 
     /* 3 */

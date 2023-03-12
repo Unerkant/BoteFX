@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="telefonAnchorPane" prefHeight="600.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.TelefonController">
+   <children>
+      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+          <top>
+              <GridPane style="-fx-background-color: #FAFAFF; -fx-border-color: #E6E6FF; -fx-border-width: 0 0 1 0;" BorderPane.alignment="CENTER">
+                  <columnConstraints>
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                      <RowConstraints minHeight="40.0" prefHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                  <children>
+                      <ImageView fitHeight="25.0" fitWidth="25.0" onMouseClicked="#anrufBearbeiten" pickOnBounds="true" preserveRatio="true">
+                          <image>
+                              <Image url="@../static/img/disabled.png" />
+                          </image>
+                          <cursor>
+                              <Cursor fx:constant="HAND" />
+                          </cursor>
+                      </ImageView>
+                      <Label text="Letzte Anrufe" textFill="NAVY" GridPane.columnIndex="1">
+                          <font>
+                              <Font name="System Bold" size="16.0" />
+                          </font>
+                      </Label>
+                  </children>
+              </GridPane>
+          </top>
+         <center>
+            <ScrollPane fx:id="telefonScroll" stylesheets="@../static/css/scrollpane.css" BorderPane.alignment="CENTER">
+               <content>
+                  <VBox fx:id="telefonVBox" minWidth="300.0">
+                     <children>
+                        <GridPane prefHeight="40.0" style="-fx-border-color: #E6E6FF; -fx-border-width: 0 0 1 0;">
+                          <columnConstraints>
+                            <ColumnConstraints fx:id="anrufDeleteAnzeigen" halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="0.0" prefWidth="0.0" />
+                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="0.0" prefWidth="0.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" />
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="75.0" minWidth="0.0" prefWidth="0.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <ImageView fx:id="telefonatID" fitHeight="20.0" fitWidth="20.0" onMouseClicked="#telefonatDelete" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../static/img/remove.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                                 <image>
+                                    <Image url="@../static/img/klinnert.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                                 <image>
+                                    <Image url="@../static/img/offline.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="telefonPseudonym" text="Psuedonym" GridPane.columnIndex="3" />
+                              <Label fx:id="telefonDatum" text="25.09.2025" GridPane.columnIndex="4" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

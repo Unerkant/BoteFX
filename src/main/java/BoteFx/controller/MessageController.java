@@ -63,6 +63,8 @@ import java.util.concurrent.TimeUnit;
 public class MessageController implements Initializable {
 
     @Autowired
+    private TranslateService translate;
+    @Autowired
     private ApiService apiService;
     @Autowired
     private ConfigService configService;
@@ -199,11 +201,11 @@ public class MessageController implements Initializable {
         headerFreundeDaten(chatFreundeDaten);
     }
 
-    private AnchorPane rechtsPane;
-    public AnchorPane getRechtsPane() {
+    private StackPane rechtsPane;
+    public StackPane getRechtsPane() {
         return rechtsPane;
     }
-    public void setRechtsPane(AnchorPane rechtsPane) {
+    public void setRechtsPane(StackPane rechtsPane) {
         this.rechtsPane = rechtsPane;
     }
 
@@ -990,7 +992,7 @@ public class MessageController implements Initializable {
      * Message schliessen + Reset Hover
      */
     public void messageSchliessen() {
-        rechtsPane.getChildren().clear();
+        translate.closeStackPane();
         celleArchorPane.getStyleClass().remove("freundeAktiv");
     }
 
