@@ -89,34 +89,7 @@
 
     *************************** PANE SLIDER ( APP/VERKLEINERN/VERGRßERN) ****************
 
-    ChatBoxController/public void initialize....
 
-    Bei Verkleinerung der Haupt Pane(Stage) unter 650px (leftPane = 300px fest, rightPane = 350px )
-    wird eine von beiden Pane schliessen.
-        a. wenn im rightPane wird was angezeigt dann leftPane schliessen
-        b. wenn rightPane ist Leer dann wird sie geschlossen, leftPane wird angezeigt
-    weitere Infomation in ChatBoxController Zeile: ab 206
-
-    wenn Haupt Pane(Stage) unter 650px dauert haft bleibt.
-    die schliessung und Zeigen von leftPane oder rightPane wird in der Methode
-    changedPane() gesteuert... ChatBoxController/ changedPane() Zeile: 330
-    beim Zusenden an die Methode parameter 'openfreunde' werde die rightPane schliessen,
-    bei 'openmessage' wird die rightPane angezeigt...
-
-        * anbindung möglichkeit: NICHT VERÄNDERN
-         * 1. nur 2 Parameter sind erlaubt(1 zugesendet)
-         *      a. openfreunde
-         *     ODER
-         *      b. openmessage
-         *
-         * 2. @Autowired
-         *    ChatBoxController chatBoxController;
-         *    chatBoxController.changedPane("openfreunde");
-         *    ODER
-         *    chatBoxController.changedPane("openmessage");
-    Weiter Informationen sind auf dem ChatBoxController Zeile: ab 200
-
-    *** der Link 'Zurück'
     *************************** ENDE SLIEDER *******************************************
 
 

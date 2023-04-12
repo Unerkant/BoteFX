@@ -47,7 +47,7 @@
                                         <Image url="@../static/img/links.png" />
                                     </image>
                                 </ImageView>
-                                <Hyperlink onAction="#einladenZuruck" text="Zurück" textFill="BLUE" GridPane.columnIndex="1">
+                                <Hyperlink onAction="#einladenClose" text="Zurück" textFill="BLUE" GridPane.columnIndex="1">
                                     <font>
                                         <Font name="System Bold" size="14.0" />
                                     </font>

@@ -7,6 +7,7 @@ import BoteFx.service.ApiService;
 import BoteFx.service.ConfigService;
 import BoteFx.service.LayoutService;
 
+import BoteFx.service.TranslateService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.fxml.FXML;
@@ -44,6 +45,8 @@ public class FreundeController implements Initializable {
     private LayoutService layoutService;
     @Autowired
     private ChatBoxController chatBoxController;
+    @Autowired
+    private TranslateService translate;
 
     private FreundeCellController cellController;
     private FreundeCellController activeCellController;
@@ -333,6 +336,9 @@ public class FreundeController implements Initializable {
         EinladenController einladenController = (EinladenController) layoutService.switchLayout(GlobalView.EINLADEN);
         einladenController.setMeinerToken(meinToken);
         einladenController.setUserdaten(response.body());
+
+        // Translate Starten(nur unter 650px)
+        translate.offenStackPane();
     }
 
 

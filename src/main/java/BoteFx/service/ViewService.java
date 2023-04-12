@@ -15,9 +15,11 @@ public class ViewService {
 
     @Autowired
     private TokenService tokenService;
-    public ViewService(TokenService tokenService) {
-        this.tokenService = tokenService;
-    }
+    @Autowired
+    private LanguageService languageService;
+
+    //public ViewService(TokenService tokenService) { this.tokenService = tokenService; }
+    //public ViewService(LanguageService languageService1) { this.languageService = languageService1; }
 
     /**
      * springContent konfiguriert in BoteApp Zeile 37 (init)
@@ -67,6 +69,7 @@ public class ViewService {
 
     private ViewWithControllerPair createViewWithController(GlobalView globalView) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(globalView.getFxmlName()));
+        fxmlLoader.setResources(languageService.getCurrentUsedResourceBundle());
         fxmlLoader.setControllerFactory(springContext::getBean);
 
         try {

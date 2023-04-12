@@ -3,8 +3,11 @@
  */
 
  /*
-  *
+  * -fx-font-family:
   *"Rockwell", "Microsoft Sans Serif", "Courier", "Times", "Tahoma", "Sans-Serif", "Helvetica" "Courier New" = *schmall*
+  *
+  * windows-blau:   #2b8cc4
+  * transparent:    #FFFFFF00
 
   * :link { color: #0000EE; }
   * :visited { color: #551A8B; }
@@ -202,6 +205,7 @@ _______________*/
 
  /* MessageController
  --------------------*/
+
         /* Header */
 .headFreundsName
 {
@@ -211,7 +215,7 @@ _______________*/
     -fx-text-fill: #000080;
 }
 
-        /* AltMessage ausgeben */
+        /* AltMessage +liveMessage*/
 .altMessageHover
 {
     -fx-background-color: #E6E6E6;
@@ -269,6 +273,12 @@ _______________*/
 {
 
 }
+
+.altBordersPane
+{
+    -fx-padding: 10 5 10 0;
+}
+
     /* CheckBox */
 .checksBox .box {
     -fx-background-radius: 10;
@@ -281,12 +291,6 @@ _______________*/
 
 .checksBox:selected .box {
     -fx-background-color: #28a3f4;
-}
-
-
-.altBordersPane
-{
-    -fx-padding: 10 5 10 0;
 }
 
     /* separate Fenster, message bearbeiten(message: rechts oben die 3 blaue punkten '...') */
@@ -331,6 +335,8 @@ _______________*/
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.7), 10, 0, 0, 0);
 }
 
+    /* **************** Ende Message Controller ************************** */
+
  /* setting.fxml
   ----------------*/
 
@@ -346,52 +352,22 @@ _______________*/
 
 
 
- /* ??????? ChatController.java (für Live message)
- -----------------------------------------*/
+ /* showSystemMessage
+ --------------------*/
+.showText
+{
+    -fx-background-color: #505050;
+    -fx-font-size: 1.0em;
+    -fx-text-fill: #FFF;
+    -fx-text-alignment: center;
+    -fx-padding: 15 0 ;
+    -fx-border-insets: 15 0;
+    -fx-background-insets: 15 0;
+    -fx-label-padding: 10 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.7), 10, 0, 0, 0);
+}
 
-.livepane
-{
-    -fx-border-color: #E6E6FF;
-    -fx-border-style: none none solid none;
-}
-.livebox            { }
-.livemybox
-{
-    -fx-background-color: #E6FFE6;
-    -fx-padding: 10 10 10 50;
-    -fx-border-insets: 10 10 10 50;
-    -fx-background-insets: 10 10 10 50;
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
-}
-.livefreundbox
-{
-    -fx-background-color: #FCFFFC;
-    -fx-padding: 10 50 10 10;
-    -fx-border-insets: 10 50 10 10;
-    -fx-background-insets: 10 50 10 10;
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
-    -fx-content-display: left;
-}
-.livebild           { }
-.livepseudonym
-{
-    -fx-font: 15px "Serif";
-    -fx-font-weight: bold;
-}
-.livehacken         { }
-.livedatum
-{
-    -fx-font: 15px "Serif";
-    -fx-font-weight: lighter;
-}
-.livedeletebutton   { }
-.livedeletebox      { }
-.liveradiobutton    { }
-.livecloseradio     { }
 
-/* ************ Ende Live message */
 
 
 

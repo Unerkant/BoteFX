@@ -4,8 +4,6 @@ import BoteFx.model.Freunde;
 import BoteFx.model.Message;
 import BoteFx.service.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -30,30 +28,17 @@ import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.converter.AbstractMessageConverter;
-import org.springframework.messaging.simp.stomp.StompCommand;
-import org.springframework.messaging.simp.stomp.StompHeaders;
-import org.springframework.messaging.simp.stomp.StompSession;
-import org.springframework.messaging.simp.stomp.StompSessionHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.socket.client.standard.StandardWebSocketClient;
-import org.springframework.web.socket.messaging.WebSocketStompClient;
-import org.springframework.web.socket.sockjs.client.SockJsClient;
-import org.springframework.web.socket.sockjs.client.Transport;
-import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Den 24.11.2022
@@ -148,6 +133,20 @@ public class MessageController implements Initializable {
      * die headerFreundeDaten wird hier automatisch gestartet,
      * anzeige in Header das Bild und Name
      */
+    private StackPane rechtsPane;
+    public StackPane getRechtsPane() {
+        return rechtsPane;
+    }
+    public void setRechtsPane(StackPane rechtsPane) { this.rechtsPane = rechtsPane; }
+
+    private AnchorPane celleArchorPane;
+    public AnchorPane getCelleArchorPane() {
+        return celleArchorPane;
+    }
+    public void setCelleArchorPane(AnchorPane celleArchorPane) {
+        this.celleArchorPane = celleArchorPane;
+    }
+
     private String freundColor;
     public String getFreundColor() {
         return freundColor;
@@ -156,19 +155,26 @@ public class MessageController implements Initializable {
         this.freundColor = freundColor;
     }
 
+
+    /**
+     * zugesendet von FreundeCellController Zeile: 322
+     * mit zugesendeten messageToken alle messages aus dem Datenbank(mySql, Bote)
+     * holen und als Alte Messages anzeigen
+     */
     private String messageToken;
     private ArrayList<Message> allMessages;
-
-
     public String getMessageToken() {
         return messageToken;
     }
-
     public void setMessageToken(String mesagetoken) {
         this.messageToken = mesagetoken;
 
         //Socket Starten
-        socketService.socketConnect(mesagetoken, (message) -> liveMessage(message), () -> Platform.runLater(() -> fehlerInfo("FEHLER", "sessionNo")));
+        //socketService.socketConnect(mesagetoken, (message) -> liveMessage(message), () -> Platform.runLater(() -> fehlerInfo("FEHLER", "sessionNo")));
+        socketService.setRechtensPane(rechtsPane);
+        socketService.setMessageVBOX(messageVBox);
+        socketService.setMessageScrollPanes(messageScrollPane);
+
 
         // Alte Message von MySql(Tabelle: messages) Holen
         // Request an Bote & response
@@ -181,8 +187,8 @@ public class MessageController implements Initializable {
         allMessages  = gson.fromJson(response.body(), listType);
 
         altMessage(allMessages);
-
     }
+
 
     private String chatFreundeDaten;
     private Image headPunkte;
@@ -197,25 +203,10 @@ public class MessageController implements Initializable {
         headPunkte = new Image(getClass().getResourceAsStream("/static/img/punkteblau.png"));
         blauPunkte = new ImageView(headPunkte);
         freundToken = chatFreundeDaten.getFreundetoken();
-        // methode unten Zeile: 320
+        // methode unten Zeile: 220
         headerFreundeDaten(chatFreundeDaten);
     }
 
-    private StackPane rechtsPane;
-    public StackPane getRechtsPane() {
-        return rechtsPane;
-    }
-    public void setRechtsPane(StackPane rechtsPane) {
-        this.rechtsPane = rechtsPane;
-    }
-
-    private AnchorPane celleArchorPane;
-    public AnchorPane getCelleArchorPane() {
-        return celleArchorPane;
-    }
-    public void setCelleArchorPane(AnchorPane celleArchorPane) {
-        this.celleArchorPane = celleArchorPane;
-    }
 
 
     /**
@@ -255,6 +246,8 @@ public class MessageController implements Initializable {
         headBearbeiten.setGraphic(blauPunkte);
     }
 
+
+    /* ****************** Alte Message + live message Ausgabe ********************** */
 
     /**
      * ACHTUNG: nur alte message aus den Datenbank(keine Live-Message)
@@ -308,13 +301,14 @@ public class MessageController implements Initializable {
     final List<Long> checkGroup = new ArrayList<>(); // nur selected
     final List<CheckBox> checkArray = new ArrayList<>();        // alle checkBox
     final List<StackPane> paneArray = new ArrayList<>();        // nur hover/zum Löschen StackPane
+
     private void altMessage(ArrayList<Message> messageData){
 
         String meinToken = tokenService.tokenHolen();
         //System.out.println("MessageController: Freund Token: " + freundToken +" Mein Token: "+ meinToken);
         for (Message mess :messageData){
 
-            // message Box Pane(complete message Block(nur eine message))
+            // message Box Pane(complete message Block(nur eine einzelne message))
             StackPane mesageBox = new StackPane();
             mesageBox.setId(String.valueOf(mess.getId()));
 
@@ -343,8 +337,8 @@ public class MessageController implements Initializable {
             altUserName.getStyleClass().add("altFreundsName");
 
             // b. Hacken Grau + Blau
-            Image imgGrau = new Image(getClass().getResourceAsStream("/static/img/donegrau.png"), 15, 15, false, false);
-            Image imgGrun = new Image(getClass().getResourceAsStream("/static/img/doppeltgrun.png"), 15, 15, false, false);
+            Image imgGrau = new Image(getClass().getResourceAsStream("/static/img/done.png"), 15, 15, false, false);
+            Image imgGrun = new Image(getClass().getResourceAsStream("/static/img/donegreen.png"), 15, 15, false, false);
             ImageView imgHakenGrau = new ImageView(imgGrau);
             ImageView imgHakenGrun = new ImageView(imgGrun);
             //imgHakenGrun.setVisible(false);
@@ -356,7 +350,7 @@ public class MessageController implements Initializable {
 
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
 
-            // Aktuelle Date
+            // Aktuelle Datum
             DateTimeFormatter aktuell = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
             DateFormat format = new SimpleDateFormat("dd.MM.yy HH:mm");
             String mySqlDatum = mess.getDatum();
@@ -392,7 +386,7 @@ public class MessageController implements Initializable {
 
             /* Label(Bilder anzeige), Label(message anzeigen) */
             // nach GridPane, den message-text in Label anzeigen
-            Label altMessageBilder = new Label("Bilder Anzeigen");
+            Label altMessageBilder = new Label("---");
             altMessageBilder.getStyleClass().add("altMessagesBilder");
             String str = mess.getText();
             Text text = new Text(str);
@@ -454,70 +448,11 @@ public class MessageController implements Initializable {
             });
         } // Ende for schleife
 
-    }
-
-    /* ******************* Message Senden + Live ausgabe ************************ */
+    } // Ende altMessage()...
 
 
-    /**
-     * MESSAGE SENDEN
-     *
-     * die Methode reagiert auf Tasten druck, onKeyReleased,
-     * gesendet nut per ENTER
-     *
-     * @param keyEvent
-     */
-    private  Double messageHeightMerken = 20.0;
-    @FXML
-    private void messageSenden(KeyEvent keyEvent) {
 
-        String messagesText = textareaText.getText();
-
-        // Text Field auf Leer Prüfen
-        if (messagesText.isBlank()) {
-            textareaMinHoch();
-            messageHeightMerken = 20.0;
-            textareaText.clear();
-            textareaText.positionCaret(messagesText.length());
-            return;
-        }
-
-        // Message Senden mit dem ENTER
-        if (keyEvent.getCode() == KeyCode.ENTER){
-            //ausgabe.setText(messagesText);
-            // Aktuelle Date
-            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yy HH:mm");
-
-            Message message = new Message();
-            message.setMessagetoken(messageToken);
-            message.setMeintoken(tokenService.tokenHolen());
-            message.setText(messagesText);
-            message.setDatum(format.format(new Date()));
-            message.setRole("default");
-            message.setName("Client");
-            message.setVorname("Java");
-            message.setPseudonym("JC");
-
-            try {
-                socketService.send(message);
-                textareaText.clear();
-                //messageHeightMerken = 20.0;
-                textareaMinHoch();
-            } catch (Exception e){
-                fehlerInfo("FEHLER", "sessionNo");
-            }
-
-        } else {
-            textareaAutoRow(messagesText);
-        }
-
-        // Text auf Länge prüfen + Textarea Auto height
-        messageLenge();
-
-
-    }
-
-
+    /* ******************* Message Senden ************************ */
 
     /**
      * TEXTAREA MAX. LÄNGE 500 ZEICHEN
@@ -572,19 +507,63 @@ public class MessageController implements Initializable {
 
 
     /**
-     * Live-Chat 'noch nicht fertig'
+     * MESSAGE SENDEN
      *
-     * @param messech
+     * die Methode reagiert auf Tasten druck, onKeyReleased,
+     * gesendet nut per ENTER
+     *
+     * @param keyEvent
      */
-    private void liveMessage(Message messech){
-        Label liveAusgabe = new Label();
-        liveAusgabe.setStyle("-fx-border-color: red;");
-        Platform.runLater(() ->{
-            liveAusgabe.setText(messech.getText());
-            messageVBox.getChildren().add(liveAusgabe);
-        });
+    private  Double messageHeightMerken = 20.0;
+    @FXML
+    private void messageSenden(KeyEvent keyEvent) {
 
+        String messagesText = textareaText.getText();
+
+        // Text Field auf Leer Prüfen
+        if (messagesText.isBlank()) {
+            textareaMinHoch();
+            messageHeightMerken = 20.0;
+            textareaText.clear();
+            textareaText.positionCaret(messagesText.length());
+            return;
+        }
+
+        // Message Senden mit dem ENTER
+        if (keyEvent.getCode() == KeyCode.ENTER){
+            //ausgabe.setText(messagesText);
+            // Aktuelle Date
+            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yy HH:mm");
+
+            Message message = new Message();
+
+            message.setDatum(format.format(new Date()));
+            message.setFreundetoken(freundToken);
+            message.setMeintoken(tokenService.tokenHolen());
+            message.setMessagetoken(messageToken);
+            message.setPseudonym("JC");
+            message.setVorname("Java");
+            message.setName("Client");
+            message.setText(messagesText);
+            message.setRole("default");
+
+            try {
+                socketService.senden(message);
+                textareaText.clear();
+                //messageHeightMerken = 20.0;
+                textareaMinHoch();
+            } catch (Exception e){
+                fehlerInfo("FEHLER", "sessionNo");
+                textareaText.clear();
+            }
+
+        } else {
+            textareaAutoRow(messagesText);
+        }
+        // Text auf Länge prüfen + Textarea Auto height
+        messageLenge();
     }
+
 
 
     /* ************ Message Bearbeiten (die blaue 3 Punkten [...]) + Hilfe-Methoden ************* */
@@ -677,7 +656,7 @@ public class MessageController implements Initializable {
             final String url = urls[i];
             hpl.setOnAction((event) -> {
                 switch (url){
-                    case "bearbeiten":              altCheckBoxGroup();    break;
+                    case "bearbeiten":              altCheckBoxGroup(); break;
                     case "userinfo":                userInfo();         break;
                     case "verlaufleeren":           verlaufLeeren();    break;
                     default: break;

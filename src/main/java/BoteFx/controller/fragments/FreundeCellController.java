@@ -316,10 +316,10 @@ public class FreundeCellController implements Initializable {
             //rechtePane.getChildren().clear();
             layoutService.setausgabeLayout(rechtePane);
             MessageController messageController = (MessageController) layoutService.switchLayout(GlobalView.MESSAGE);
+            messageController.setRechtsPane(rechtePane);
             messageController.setFreundColor(freundHintergrund);
             messageController.setChatFreundeDaten(friend);
             messageController.setMessageToken(messagesToken);
-            messageController.setRechtsPane(rechtePane);
             messageController.setCelleArchorPane(cellAnchorPane);
             //System.out.println("Freunde Cell Controller Zeile: 320 " + messagesToken);
         }

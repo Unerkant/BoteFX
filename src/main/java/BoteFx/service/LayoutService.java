@@ -5,6 +5,7 @@ import BoteFx.Enums.GlobalView;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
@@ -15,6 +16,9 @@ import java.io.IOException;
 
 @Service
 public class LayoutService {
+
+    @Autowired
+    private LanguageService languageService;
 
     /**
      * layoutContext konfiguriert in BoteApp Zeile 37 (init)
@@ -61,6 +65,7 @@ public class LayoutService {
     public LayoutControllerPair createLayoutController(GlobalView globalView){
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource(globalView.getFxmlName()));
+        loader.setResources(languageService.getCurrentUsedResourceBundle());
         loader.setControllerFactory(layoutContext::getBean);
 
         try {

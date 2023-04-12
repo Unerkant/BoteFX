@@ -407,30 +407,16 @@ public class EinladenController implements Initializable {
 
 
     /**
-     * 1. das Parameter "openfreunde" wird an die Methode changedPane(...) in
-     *    ChatBoxController Zeile: 310 gesendet, funktioniert nur unter 650px width
-     *
-     * 2. Achtung: wenn Haupt-Fester ist großer als 650px wird die rightPane nur geleert.
-     *    ChatBoxController/changedPane() Zeile: 356
-     *
-     * 3. der hover effect an die Positionen wird gelöscht
-     */
-    @FXML
-    public void einladenZuruck() {
-        translate.closeStackPane();
-    }
-
-
-    /**
      * der blaue Kreuzbutton + Abbrechen-Button
      */
+    @FXML
     public void einladenClose() {
         // in Element alles Löschen
-        einladenAnchorPane.getChildren().clear();
+        //einladenAnchorPane.getChildren().clear();
         // selber Element Löschen
-        ((Pane) einladenAnchorPane.getParent()).getChildren().remove(einladenAnchorPane);
+        //((Pane) einladenAnchorPane.getParent()).getChildren().remove(einladenAnchorPane);
         // nur, wenn App unter width 650px verkleinert wird
-        translate.offenStackPane();
+        translate.closeStackPane();
     }
 
 

@@ -2,13 +2,12 @@ package BoteFx.controller;
 
 import BoteFx.Enums.GlobalView;
 import BoteFx.service.LayoutService;
+import BoteFx.service.SocketService;
 import BoteFx.service.TokenService;
 
 import BoteFx.service.TranslateService;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -18,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -34,6 +32,8 @@ public class ChatBoxController implements Initializable {
     private LayoutService layoutService;
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private SocketService socketService;
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -83,18 +83,22 @@ public class ChatBoxController implements Initializable {
         // Auto resize Starten
         translate.layoutResize();
 
-        // Freune Laden
+        /* ************************************ SOCKET STARTEN ********************* */
+
+        String meinToken = tokenService.tokenHolen();
+        socketService.connect(meinToken);
+
+        // Freunde Laden
         chatten();
     }
 
-    /* ***************************** Methoden *********************************  */
-
+    /* ***************************** 4 Haupt Methoden *********************************  */
 
     /**
      *  die 4 Methoden werden von chatbox(bottom) gesteuert
      *  1. kontakte
      *  2. telefonate
-     *  3. chatten (wird Automatisch gestartet(initialize) Zeile: 213)
+     *  3. chatten (wird Automatisch gestartet(initialize) Zeile: 94)
      *  4. setting
      *
      */

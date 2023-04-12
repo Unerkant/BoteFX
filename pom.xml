@@ -12,7 +12,7 @@
 
     <groupId>com.BoteFX</groupId>
     <artifactId>BoteFX</artifactId>
-    <version>0.8.1</version>
+    <version>0.8.2</version>
     <name>BoteFX</name>
 
     <properties>
@@ -194,6 +194,11 @@
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
             <version>2.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.24.0-GA</version>
         </dependency>
 
     </dependencies>
