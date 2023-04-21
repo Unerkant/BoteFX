@@ -2,26 +2,11 @@ package BoteFx.service;
 
 
 import BoteFx.model.Message;
+import BoteFx.utilities.SocketResponseHandler;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.converter.AbstractMessageConverter;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -35,78 +20,31 @@ import org.springframework.web.socket.sockjs.client.SockJsClient;
 import org.springframework.web.socket.sockjs.client.Transport;
 import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Den 24.03.2023
  */
+
 @Service
 public class SocketService {
-
-    @Autowired
-    private LanguageService languageService;
-    @Autowired
-    private LayoutService layoutService;
-
-    @Value("${messageServer.address.pattern}")
-    private String serverBaseAdressPattern;
-
-    @Value("${messageServer.address}")
-    private String serverBaseAddress;
-
-    @Value("${messageServer.port}")
-    private String serverPort;
-
-    @Value("${messageServer.registerPath}")
-    private String registerPath;
-
-    @Value("${messageServer.channelPath}")
-    private String channelPath;
-
-    @Value("${messageServer.connectingTimeout:10}")
-    private int serverConnectingTimeout;
-
-    @Value("${messageServer.messageSendingEndPoint}")
-    private String mesaageSendingEndpoint;
 
     private WebSocketStompClient stompClient;
     private StompSession session;
 
-
     /**
-     * Setter&Getter
-     * Rechte StackPane: gedacht für die globalen Pop-up-Fenster anzeige,
-     * z.b.s Fehler oder Info
+     * connect wird in ChatBoxController Zeile: 94 (initialize) gestartet
+     *
+     * neue Nachricht als responseHandler, Zeile: 134 an den MessageController Zeile: ~455
+     * über den ChatBoxController Zeile: 255  weiterleiten...
+     *
+     * message senden, Zeile: 205
      */
-    private StackPane rechtensPane;
-    public StackPane getRechtensPane() { return rechtensPane; }
-    public void setRechtensPane(StackPane rechtenspane) { this.rechtensPane = rechtenspane; }
-
-    /**
-     *  messageVBox: für die Live Message Ausgabe
-     */
-    private VBox messageVBOX;
-    public VBox getMessageVBOX() { return messageVBOX; }
-    public void setMessageVBOX(VBox messageVBOX) { this.messageVBOX = messageVBOX; }
-
-    /**
-     * Automatische scroll nach oben, immer akktuelle Message anzeigen
-     */
-    private ScrollPane messageScrollPanes;
-    public ScrollPane getMessageScrollPanes() { return messageScrollPanes; }
-    public void setMessageScrollPanes(ScrollPane messageScrollPanes) { this.messageScrollPanes = messageScrollPanes; }
-
-
-    /**
-     * gestartet in ChatBoxController Zeile: 90 (initialize)
-     */
-    public void connect(String token){
+    public void connect(String token, SocketResponseHandler responseHandler){
 
         if (session != null){
             System.out.println("Session schon gesetzt");
@@ -114,7 +52,7 @@ public class SocketService {
         }
 
         /**
-         *
+         * ...
          */
         if (stompClient == null){
             stompClient = createNewStompClient();
@@ -151,17 +89,17 @@ public class SocketService {
             session.subscribe("/messages/receive/" + token, new StompSessionHandler() {
                 @Override
                 public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
-                    System.out.println("Session ok: " + session.getSessionId());
+                    responseHandler.afterConnectionEstablished(session);
                 }
 
                 @Override
                 public void handleException(StompSession session, StompCommand command, StompHeaders headers, byte[] payload, Throwable exception) {
-                    System.out.println("Session Error: " + exception.getMessage());
+                    responseHandler.handleError(exception);
                 }
 
                 @Override
                 public void handleTransportError(StompSession session, Throwable exception) {
-                    System.out.println("Session Transpor Error: " + exception.getMessage() );
+                    responseHandler.handleTransportError(exception);
                 }
 
                 @Override
@@ -173,17 +111,16 @@ public class SocketService {
                 public void handleFrame(StompHeaders headers, Object payload) {
                     Message message = (Message) payload;
 
-                    // ****************  Live Message Ausgeben ********************
-
                     /**
-                     *  den message-array möchte ich in MessageController haben...
-                     *  die liveAusgabe-Methode in MessageController kannst du als 'liveMessage' anlegen,
-                     *  da möchte ich automatisch den array 'message' bekommen
+                     * Neue Message anzeigen
+                     * bei eingehend die neue Nachricht wird den message-array als responseHandler an den
+                     * ChatBoxController, Zeile: 94 zurückgesendet als this: socketService.connect(meinToken, this);
+                     * und schliesslich weiter an den MessageController gesendet, Zeile: 244
+                     * public void handleNewMessage(Message message)....
                      *
-                     *  Viel Spaß bei Basteln
                      */
-                    //liveMessage(message);
-                    //System.out.println("Message angekommen an: " + message);
+
+                    responseHandler.handleNewMessage(message);
                 }
             });
         } catch (Exception e) {
@@ -211,7 +148,8 @@ public class SocketService {
     }
 
     /**
-     * Message empfangen und weiter leiten
+     * ???
+     *
      * @param stompClient
      */
     private void registerMessageConverter(WebSocketStompClient stompClient) {
@@ -249,7 +187,10 @@ public class SocketService {
 
 
     /**
-     * Start in MessageController Zeile:  ca. 500
+     * Message Senden,
+     *
+     *
+     * start in MessageController Zeile:  ca. 500
      *
      * @param message
      */
@@ -257,54 +198,5 @@ public class SocketService {
 
         session.send("/app/messages", message);
     }
-
-
-
-    /**
-     * Live-Chat, start hier Zeile: 180
-     *
-     *  //@param messages
-     */
-/*    private void liveMessage(Message messages){
-        //Label liveAusgabe = new Label();
-        //liveAusgabe.setStyle("-fx-border-color: red;");
-        Parent liveAusgabe;
-        Map<String, Object> idObject;
-
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/templates/fragments/messagecell.fxml"));
-            liveAusgabe = loader.load();
-            idObject = loader.getNamespace();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        // Node-id aus dem messagecell.fxml holen
-        Label liveUserBild = (Label)idObject.get("mesageUserBild");
-        Label liveUserName = (Label)idObject.get("mesageUserName");
-        Text liveMesageText = (Text)idObject.get("mesageTextPane");
-        Label liveBilder = (Label)idObject.get("mesageBilder");
-
-        Image liveImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+messages.getMeintoken()+".png", false);
-        ImageView liveImage = new ImageView(liveImg);
-        liveImage.setFitWidth(30);
-        liveImage.setFitHeight(30);
-        liveUserBild.setGraphic(liveImage);
-        liveUserName.setText(messages.getName());
-        liveBilder.setText(messages.getMeintoken());
-        liveMesageText.setText(messages.getText());
-
-
-        Platform.runLater(() ->{
-            //liveAusgabe.setText(messages.getText());
-            messageVBOX.getChildren().add(liveAusgabe);
-
-            // Bottom Scroll, immer letzte Message Anzeigen
-            Animation animation = new Timeline(
-                    new KeyFrame(Duration.seconds(2),
-                            new KeyValue(messageScrollPanes.vvalueProperty(), 1)));
-            animation.play();
-        });
-    }*/
 
 }

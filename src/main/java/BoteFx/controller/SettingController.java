@@ -116,7 +116,7 @@ public class SettingController implements Initializable {
         }
 
     /* 3 */
-        String token    = tokenService.tokenHolen();
+        String token    = tokenService.meinToken();
 
     /* 4 */
         ArrayList<GridPane> settingArray = new ArrayList<>();

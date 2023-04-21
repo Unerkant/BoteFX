@@ -1,20 +1,22 @@
 package BoteFx.controller;
 
 import BoteFx.Enums.GlobalView;
+import BoteFx.model.Message;
 import BoteFx.service.LayoutService;
 import BoteFx.service.SocketService;
 import BoteFx.service.TokenService;
-
 import BoteFx.service.TranslateService;
+import BoteFx.utilities.SocketResponseHandler;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;
@@ -25,7 +27,8 @@ import java.util.ResourceBundle;
  */
 
 @Controller
-public class ChatBoxController implements Initializable {
+public class ChatBoxController implements Initializable, SocketResponseHandler {
+
     @Autowired
     private TranslateService translate;
     @Autowired
@@ -35,7 +38,8 @@ public class ChatBoxController implements Initializable {
     @Autowired
     private SocketService socketService;
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    private MessageController messageController;
+
 
     /**
      * die 3 StackPane hauptPane, leftPane & rightPane nicht Löschen oder ändern
@@ -53,6 +57,7 @@ public class ChatBoxController implements Initializable {
 
     /**
      *  Getter & Setter von StackPane für den globalen Zugriff...
+     *  z.b.s von die MessageController
      *
      *  wird benutzt:
      *  1. MessageController/messageBearbeiten() Zeile: 725
@@ -74,25 +79,38 @@ public class ChatBoxController implements Initializable {
         this.hauptPane = hauptstackpane;
     }
 
+
+
+    /**
+     * responseHandler:this - ist einen array, von einer neuen gesendeten Nachricht, zugesendet von
+     * SocketService, Zeile: 138, responseHandler.handleNewMessage(message);
+     *
+     * alle wird gesteuert über SocketResponseHandler(als interface geerbt)
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // StackPane an Translate Übergeben
         translate.setHauptsPane(hauptPane);
         translate.setLinksPane(leftPane);
         translate.setRechtsPane(rightPane);
+
         // Auto resize Starten
         translate.layoutResize();
 
-        /* ************************************ SOCKET STARTEN ********************* */
 
-        String meinToken = tokenService.tokenHolen();
-        socketService.connect(meinToken);
+    /* ************************************ SOCKET STARTEN ********************* */
 
-        // Freunde Laden
+        String meinToken = tokenService.meinToken();
+        socketService.connect(meinToken, this);
+
+        // Freunde Laden, bei erstem Start automatisch Freunde Laden
         chatten();
     }
 
+
+
     /* ***************************** 4 Haupt Methoden *********************************  */
+
 
     /**
      *  die 4 Methoden werden von chatbox(bottom) gesteuert
@@ -113,6 +131,8 @@ public class ChatBoxController implements Initializable {
         changedImg(kontaktID);
     }
 
+
+
     /**
      * Telefonate anzeigen
      */
@@ -125,6 +145,7 @@ public class ChatBoxController implements Initializable {
         final String telefonId = telefonateImg.getId();
         changedImg(telefonId);
     }
+
 
 
     /**
@@ -143,7 +164,7 @@ public class ChatBoxController implements Initializable {
         FreundeController freundeController = (FreundeController) layoutService.switchLayout(GlobalView.FREUNDE);
         freundeController.setRechtsPane(rightPane);
         freundeController.setFreundenPane(freundePane);
-        freundeController.setMeineToken(tokenService.tokenHolen());
+        freundeController.setMeineToken(tokenService.meinToken());
 
        /* if (event != null) {
             String id = ((Node) event.getSource()).getId();
@@ -158,6 +179,8 @@ public class ChatBoxController implements Initializable {
 
     }
 
+
+
     /**
      * Setting Laden
      */
@@ -171,6 +194,8 @@ public class ChatBoxController implements Initializable {
         final String settingId = settingImg.getId();
         changedImg(settingId);
     }
+
+
 
     /**
      * Menü Bilder(bottom) bei aktiv Blau setzen
@@ -214,4 +239,49 @@ public class ChatBoxController implements Initializable {
         }
     }
 
+
+
+    /* ***************** von SocketService Fehler + Live Message Ausgabe ****************** */
+
+    public void setMessageController(MessageController messageController) {
+        this.messageController = messageController;
+    }
+
+    @Override
+    public void handleError(Throwable throwable) {
+
+        System.out.println("Session Error: " + throwable.getMessage());
+    }
+
+    @Override
+    public void handleTransportError(Throwable throwable) {
+        System.out.println("Session Transport Error: " + throwable.getMessage() );
+    }
+
+
+
+    /**
+     * Neue Nachricht Anzeigen:
+     * der 'message' Array wird von SocketService Zeile: 137 zugesendet und weiter an
+     * MessageController gesendet, Zeile:
+     * an die Methode:  public void neueNachrichtAnzeigen(Message message)....
+     *
+     * alles wird über 'public interface SocketResponseHandler(SocketResponseHandler.java)' gesteuert,
+     * als interface geerbt
+     *
+     * @param message
+     */
+    @Override
+    public void handleNewMessage(Message message) {
+        if (messageController!= null && messageController.getMessageToken() != null) {
+            messageController.neueMessage(message);
+        } else {
+            System.out.println("Kein Chat ausgewählt");
+        }
+    }
+
+    @Override
+    public void afterConnectionEstablished(StompSession session) {
+        System.out.println("Session ok: " + session.getSessionId());
+    }
 }

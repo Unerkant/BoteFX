@@ -1,5 +1,7 @@
 package BoteFx.controller;
 
+import BoteFx.Enums.GlobalView;
+import BoteFx.controller.fragments.MessageCellController;
 import BoteFx.model.Freunde;
 import BoteFx.model.Message;
 import BoteFx.service.*;
@@ -7,7 +9,7 @@ import BoteFx.service.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import javafx.animation.PauseTransition;
+import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +23,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -48,133 +51,99 @@ import java.util.*;
 public class MessageController implements Initializable {
 
     @Autowired
-    private TranslateService translate;
+    private SocketService socketService;
     @Autowired
-    private ApiService apiService;
+    private TranslateService translate;
     @Autowired
     private ConfigService configService;
     @Autowired
+    private ApiService apiService;
+    @Autowired
     private TokenService tokenService;
+    @Autowired
+    private LayoutService layoutService;
     @Autowired
     private MethodenService methodenService;
     @Autowired
     private ChatBoxController chatBoxController;
-    @Autowired
-    private SocketService socketService;
-
-    /* **** 3 StackPane von ChatBoxController(Setter&Getter), Pop-up-Fenster anzeigen/ausblenden */
-    @FXML private StackPane hauptStage;
- /*   @FXML private StackPane rightStage;
-    @FXML private StackPane leftStage;*/
 
 
-    // Haupt Pane
     @FXML private AnchorPane messageAnchorPane;
     @FXML private BorderPane messageBorderPane;
-
-    // Top / header
     @FXML private Label messageProfilBild;
     @FXML private Label headFreundName;
     @FXML private Label headFreundInfo;
     @FXML private Label freundOnlineZeit;
+    @FXML public ImageView onlinePhone;
+    @FXML public ImageView noPhone;
     @FXML private Label headBearbeiten;
-
-    // Center / Body
     @FXML private ScrollPane messageScrollPane;
+    @FXML private StackPane messageBottomStackPane;
+    @FXML private ImageView messageOther;
+    @FXML private TextArea textareaText;
+    @FXML private ImageView messageSmile;
     @FXML private VBox messageVBox;
 
-    //Bottom / footer
-    @FXML private StackPane messageBottomStackPane;
-    final AnchorPane messageLoschenPane = new AnchorPane(); //Bottom, für die löschen function Zeile: ab 900
-    @FXML private ImageView messageOther;
 
-    @FXML private VBox textareaVBox;
-    @FXML private TextArea textareaText;
-    @FXML
-    private ImageView messageSmile;
 
     // Allgemein
-    private String myColor;
+    /**
+     * Haupt Stage von ChatBoxController
+     */
+    @FXML private StackPane hauptStage;
+    @FXML private String myColor;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-        /**
-         * 3 Setter & Getter, für die Pop-up-Fenster anzeige
-         *
-         *   Benutzt in: messageBearbeiten(750), loschenInfo(1145)
-         */
-        hauptStage  = chatBoxController.getHauptStackPane();
-    /*    rightStage  = chatBoxController.getRightStackPane();
-        leftStage   = chatBoxController.getRightStackPane();*/
-
-        // message.fxml width + height auf 100% ziehen
-        AnchorPane.setTopAnchor(messageAnchorPane, 0.0);
-        AnchorPane.setRightAnchor(messageAnchorPane, 0.0);
-        AnchorPane.setBottomAnchor(messageAnchorPane, 0.0);
-        AnchorPane.setLeftAnchor(messageAnchorPane, 0.0);
-
-        // Center: Ausgabe VBox width auf 100% ziehen
+        /* Message VBox auf 100% ziehen*/
         messageVBox.prefWidthProperty().bind(messageAnchorPane.widthProperty());
+
+        /* HauptPane ID holen, ChatBoxController */
+        hauptStage = chatBoxController.getHauptStackPane();
 
         // Bottom: TextArea in Focus setzen
         Platform.runLater(() -> textareaText.requestFocus());
 
         // Methode: altMessage, rundes bild-hintergrund, Zeile: ab 415
         myColor = methodenService.zufallColor();
-
     }
 
 
+    /* ****************** Setter & Getter von FreundeCellController Zeile: 318 ****************  */
+
+
+
     /**
-     * Getter & Setter
-     * zugesenden von FreuneCellController Zeile: 315
-     * die messageChat() wird hier automatisch gestartet
-     * die headerFreundeDaten wird hier automatisch gestartet,
-     * anzeige in Header das Bild und Name
+     * User Bild oder Pseudonym hintergrund Color, zugesendet von
+     * FreundeCellController/ Zeile: 323
+     *
+     * der User Bild-Hintergrund oder Message-Bild oder Freunde-Bild/pseudonym
+     * sind alle identisch
      */
-    private StackPane rechtsPane;
-    public StackPane getRechtsPane() {
-        return rechtsPane;
-    }
-    public void setRechtsPane(StackPane rechtsPane) { this.rechtsPane = rechtsPane; }
-
-    private AnchorPane celleArchorPane;
-    public AnchorPane getCelleArchorPane() {
-        return celleArchorPane;
-    }
-    public void setCelleArchorPane(AnchorPane celleArchorPane) {
-        this.celleArchorPane = celleArchorPane;
-    }
-
     private String freundColor;
-    public String getFreundColor() {
-        return freundColor;
-    }
-    public void setFreundColor(String freundColor) {
-        this.freundColor = freundColor;
-    }
+    public String getFreundColor() { return freundColor; }
+    public void setFreundColor(String freundColor) { this.freundColor = freundColor; }
+
 
 
     /**
-     * zugesendet von FreundeCellController Zeile: 322
-     * mit zugesendeten messageToken alle messages aus dem Datenbank(mySql, Bote)
-     * holen und als Alte Messages anzeigen
+     * celleAnchorPane - ist in FreundeCellController den Freunde-Box/ Freunde-Klick-Box
+     */
+    private AnchorPane celleArchorPane;
+    public AnchorPane getCelleArchorPane() { return celleArchorPane; }
+    public void setCelleArchorPane(AnchorPane celleArchorPane) { this.celleArchorPane = celleArchorPane; }
+
+
+
+    /**
+     * Message Token von FreuneCellContorlle zugesendet: Zeile: 322
+     * alle Messages aus der Datenbank holen und den Methode altMessage(), ausgeben
      */
     private String messageToken;
     private ArrayList<Message> allMessages;
-    public String getMessageToken() {
-        return messageToken;
-    }
+    public String getMessageToken() { return messageToken;}
     public void setMessageToken(String mesagetoken) {
         this.messageToken = mesagetoken;
-
-        //Socket Starten
-        //socketService.socketConnect(mesagetoken, (message) -> liveMessage(message), () -> Platform.runLater(() -> fehlerInfo("FEHLER", "sessionNo")));
-        socketService.setRechtensPane(rechtsPane);
-        socketService.setMessageVBOX(messageVBox);
-        socketService.setMessageScrollPanes(messageScrollPane);
-
 
         // Alte Message von MySql(Tabelle: messages) Holen
         // Request an Bote & response
@@ -186,34 +155,37 @@ public class MessageController implements Initializable {
         Type listType = new TypeToken<ArrayList<Message>>(){}.getType();
         allMessages  = gson.fromJson(response.body(), listType);
 
-        altMessage(allMessages);
+        alteMessages(allMessages);
     }
 
 
+    /**
+     * Freunde Daten zugesendet von FreudeCellController Zeile: 320
+     *
+     * werde in Header der message Name + online-Zeit angezeigt
+     */
     private String chatFreundeDaten;
     private Image headPunkte;
     private ImageView blauPunkte;
     private String freundToken;
-    public String getChatFreundeDaten() {
-        return chatFreundeDaten;
-    }
+    public String getChatFreundeDaten() { return chatFreundeDaten; }
     public void setChatFreundeDaten(Freunde chatFreundeDaten) {
         this.chatFreundeDaten = String.valueOf(chatFreundeDaten);
 
         headPunkte = new Image(getClass().getResourceAsStream("/static/img/punkteblau.png"));
         blauPunkte = new ImageView(headPunkte);
         freundToken = chatFreundeDaten.getFreundetoken();
+
         // methode unten Zeile: 220
         headerFreundeDaten(chatFreundeDaten);
     }
 
 
 
-    /**
-     * Anzeige in Header nur das Bild + Name + Letzte Online Zeit
-     *
-     * @param freundData
-     */
+
+
+    /* *********************** Header, Freunde Daten Anzeigen ************************* */
+
     private void headerFreundeDaten(Freunde freundData){
         String freundBild = freundData.getFreundebild();
         String freundPseudonym = freundData.getFreundepseudonym();
@@ -234,11 +206,11 @@ public class MessageController implements Initializable {
 
         // Name Anzeigen
         headFreundName.setText(freundData.getFreundename().isBlank() ? freundData.getFreundepseudonym() :
-                                        freundData.getFreundevorname() +" "+ freundData.getFreundename());
+                freundData.getFreundevorname() +" "+ freundData.getFreundename());
         headFreundName.getStyleClass().add("headFreundsName");
 
         // Letzte Online Zeit(style direct in message.fxml)
-       // freundOnlineZeit.setText("???...MessageControll..Zeile: 358");
+        // freundOnlineZeit.setText("???...MessageControll..Zeile: 358");
 
         // Message Bearbeiten (Label) onMouseClicked(messageBearbeiten)
         blauPunkte.setFitWidth(30);
@@ -247,212 +219,323 @@ public class MessageController implements Initializable {
     }
 
 
-    /* ****************** Alte Message + live message Ausgabe ********************** */
+    /* *********************** Alte Message + neue Message Ausgabe ******************* */
+
 
     /**
-     * ACHTUNG: nur alte message aus den Datenbank(keine Live-Message)
-     *
-     * Alle messages aus dem Datenbank in 'messageVBox' anzeigen(for schleife)
-     * ACHTUNG: Der '#messageVBox' ist in eine 'ScrollPane' integriert(message.fxml/center)
-     *
-     *  ACHTUNG: die 3 variablen
-     *  1.  checkGroup: da sind nur selected checkBox zusammen gespeichert
-     *      für die Methode: messageLoschenAktiv(checkGroup, paneArray); Zeile: ca. 900
-     *      ....
-     *  2.  checkArray: sind alle in schleife angezeigte checkBox gespeichert
-     *      für die Methode: altChekcBoxShow() + altCheckBoxHide()...
-     *      da werden alle ChechBox angezeigt oder versteckt
-     *  3.  paneArray: sind alle selectierte messages was zum Löschen sind
-     *      mit dem #messageBox(StackPane)...mit der gleichen ID wie die checkBox
-     *      für die Methode: messageLoschenAktiv(checkGroup, paneArray); Zeile: ca. 900
-     *
-     *   KURZE BESCHREIBUNG VON MESSAGE BOX:
-     *   alle messages sind in einem Array gespeichert: 'messageData', zugesendet von
-     *   setMessageToken(), Zeile: 160, da werden sie von Datenbank geholt
-     *
-     *   Aufbau selbe message Box:
-     *   Haupt-Message Pane ist eine StackPane mit dem ID mesageBox,
-     *   in der StackPane ist eine BorderPane geladen,
-     *   BorderPane:
-     *      a. left: ist einen Bild in Label und Label eine VBox integriert
-     *      b. Center: ausgabe von Namen, Hacken, Zeit ist in einen GridPane
-     *                 ausgabe von Bilder in Label(wenn wird gepostet)
-     *                 ausgabe von Nachrichten(message) zuerst in einem Text(Layout)
-     *                 dann der Text in eine TextFlow integriert, dann die alle 3 Elemenzet in
-     *                 einem VBox, ...new VBox(altGridPane, altMessageBilder, textFlow);
-     *      c. Right:  da sind alle CheckBox in einem VBox untergebracht,
-     *                 bei anClicken den checkBox wird eine selectedProperty ausgelöst
-     *                 da werden alle angclickte checkBox in einem Array 'checkGroup' gespeichert,
-     *                 und schliesslich an die Methode: messageLoschenAktiv(checkGroup, paneArray);
-     *                 weitergeleitet für das Löschen oder Weiterleiten
-     *    die alle Labels werden in schleife mit Daten gefühlt und schliesslich die stackPane
-     *    wird in messageVBox integriert: messageVBox.getChildren().add(mesageBox);
-     *    die selbe messageVBox befindet sich in eine ScrollPane,
-     *    quelle: message.fxml / Center
-     *
-     *    ACHTUNG:     StackPane(messageBox) ist ein Message-Block nur von einer einzelnen Message,
-     *      *          bei Löschen die Message wird die StackPane nur gelehrt aber selbe Pane erhalten,
-     *      *          bis zu nächsten Aktualisierung...
-     *      *          kein Style auf StackPane wird aufgelegt
-     *      *          Lösch-Methode hier unten: geloschteMessageHide(.., Zeile ab 1050
-     *
-     * @param messageData
+     * Alte Message von den Globalen(Bote, MySql) Datenbank holen und Ausgeben,
+     * wird gestartet in Zeile: 158
      */
-    final List<Long> checkGroup = new ArrayList<>(); // nur selected
-    final List<CheckBox> checkArray = new ArrayList<>();        // alle checkBox
-    final List<StackPane> paneArray = new ArrayList<>();        // nur hover/zum Löschen StackPane
+    private void alteMessages(ArrayList<Message> altMessage){
 
-    private void altMessage(ArrayList<Message> messageData){
+        messagesAusgeben(altMessage);
 
-        String meinToken = tokenService.tokenHolen();
-        //System.out.println("MessageController: Freund Token: " + freundToken +" Mein Token: "+ meinToken);
-        for (Message mess :messageData){
+    }
 
-            // message Box Pane(complete message Block(nur eine einzelne message))
-            StackPane mesageBox = new StackPane();
-            mesageBox.setId(String.valueOf(mess.getId()));
 
-        /* 1. Left Pane, inhalt(Freund Bild) */
-            Label altBildLabel = new Label(mess.getPseudonym());
-            altBildLabel.getStyleClass().add("altBildsLabel");
+
+    /**
+     * Neue Message Anzeigen, gestartet von ChatBoxController/ Zeile: 275
+     * die einzelne(Letzte/Live) zugesendete neuMessage wird in einem
+     * ArrayList<> umgewandelt, weil die Alte Message von der Datenbank
+     * sind in einem List-Array gespeichert...
+     *
+     * die Methode messagesAusgeben akzeptiert als Parameter einen ArrayList
+     *
+     * @param neuMessage
+     */
+    public void neueMessage(Message neuMessage) {
+
+        ArrayList<Message> newMessage = new ArrayList<Message>(Collections.singleton(neuMessage));
+        messagesAusgeben(newMessage);
+
+    }
+
+
+    /**
+     * hier werden in eine schleife die Alte-Message und die Neue-Message Ausgegeben
+     * @param allmesage
+     */
+    final List<Long> checkBoxSelected = new ArrayList<>();              // CheckBox: nur selected
+    final List<StackPane> stackPaneSelected = new ArrayList<>();        // StackPane: zum Löschen, hover
+    final List<CheckBox> allCheckBoxArray = new ArrayList<>();          // CheckBox: alle, benutzt in cellCheckBoxHide()
+    final List<VBox> cellRightVBoxArray = new ArrayList<>();             // VBox: alle, für die show/hide CheckBox
+    private VBox cellRightVBox;
+    // die 3 final, für den Löschen Teil
+    @FXML final Hyperlink linkLoschen = new Hyperlink();
+    @FXML final Label labelCount = new Label();
+    @FXML final Hyperlink linkWeiterleiten = new Hyperlink();
+
+    private void messagesAusgeben(ArrayList<Message> allmesage){
+
+        String meinToken = tokenService.meinToken();
+
+        for (Message mess : allmesage){
+
+        /**
+         *  1. StackPane: Haupt Pane, mit iD: cellHauptStackPane
+         *
+         *  hier wird nur eine message ausgegeben mit allem Daten,
+         *  User Bild, User Name, Gelesen/Ungelesen, message Datum,
+         *  Bilder, message ausgabe + CheckBox für bearbeitung
+         */
+            StackPane cellHauptStackPane = new StackPane();
+            cellHauptStackPane.setId(String.valueOf(mess.getId()));
+
+        /**
+         *  2. VBox(Label)
+         *
+         *     VBox(Label(User Bild))
+         *     der VBox wird in der Position N.5 in die BorderPane integriert
+         */
+            Label cellUserBildLabel = new Label(mess.getPseudonym());
+            cellUserBildLabel.getStyleClass().add("cellBildsLabel");
             // Bild von Bote holen
-            Image altImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+mess.getMeintoken()+".png", false);
-            if (altImg.isError()){
-                altBildLabel.setText(mess.getPseudonym());
-                altBildLabel.setStyle( "-fx-background-color:" + (freundToken.equals(mess.getMeintoken()) ? freundColor : myColor) + "; " +
+            Image cellProfilImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+mess.getMeintoken()+".png", false);
+            if (cellProfilImg.isError()){
+                cellUserBildLabel.setText(mess.getPseudonym());
+                cellUserBildLabel.setStyle( "-fx-background-color:" + (freundToken.equals(mess.getMeintoken()) ? freundColor : myColor) + "; " +
                         "-fx-text-fill: white; -fx-font-family: \"Sans-Serif\"; -fx-font-weight: 700;");
             }else {
-                ImageView altImageView = new ImageView(altImg);
-                altImageView.setFitHeight(30);
-                altImageView.setFitWidth(30);
-                altBildLabel.setGraphic(altImageView);
+                ImageView cellProfilBild = new ImageView(cellProfilImg);
+                cellProfilBild.setFitHeight(30);
+                cellProfilBild.setFitWidth(30);
+                cellUserBildLabel.setGraphic(cellProfilBild);
             }
             // Label(bild) ins VBox integrieren
-            VBox altLeftBox = new VBox(altBildLabel);
-            altLeftBox.getStyleClass().add("altLinksVBox");
+            VBox cellLeftVBox = new VBox(cellUserBildLabel);
+            cellLeftVBox.getStyleClass().add("cellLinksVBox");
 
-        /* 2. GridPane: User Name/Pseudonym + Hacken(grau+grün) + Zeit(von diese message), BorderPane/ center */
+        /**
+         *  3. VBox(GridPane + Label + TextFlow)
+         *
+         *      VBox(
+         *           GridPane( Label:Name, Label:Korrektur, Image:hacken, Label:Datum)
+         *           Label('vorgesehen für Bilder Ausgabe')
+         *           TextFlow(Text(Message Ausgabe))
+         *          )
+         *
+         *        der VBox wird in der Position N.5 in die BorderPane mit der
+         *        ID: cellBorderPane in den Center integriert
+         */
             // a. Username
-            Label altUserName = new Label(mess.getName().isBlank() ? mess.getPseudonym() : mess.getVorname() +" "+ mess.getName());
-            altUserName.getStyleClass().add("altFreundsName");
+            Label cellUserName = new Label(mess.getName().isBlank() ? mess.getPseudonym() : mess.getVorname() +" "+ mess.getName());
+            cellUserName.getStyleClass().add("cellUsersName");
 
-            // b. Hacken Grau + Blau
-            Image imgGrau = new Image(getClass().getResourceAsStream("/static/img/done.png"), 15, 15, false, false);
-            Image imgGrun = new Image(getClass().getResourceAsStream("/static/img/donegreen.png"), 15, 15, false, false);
-            ImageView imgHakenGrau = new ImageView(imgGrau);
-            ImageView imgHakenGrun = new ImageView(imgGrun);
-            //imgHakenGrun.setVisible(false);
+            // b. Text-Message Korrigieren (text anzeige: bearbeitet)
+            Label cellTextKorrektur = new Label("bearbeitet");
+            cellTextKorrektur.getStyleClass().add("cellMesagesZeit");
+
+            // b. Hacken Grau + Grün
+            StackPane cellDonePane = new StackPane();
+            //Image imgGrau = new Image();
+            //Image imgGrun = new Image();
+            ImageView imgHakenGrau = new ImageView(new Image(getClass().getResourceAsStream("/static/img/hacken.png")));
+            ImageView imgHakenGrun = new ImageView(new Image(getClass().getResourceAsStream("/static/img/donegreen.png")));
+            imgHakenGrau.setFitWidth(15);
+            imgHakenGrau.setFitHeight(15);
+            imgHakenGrun.setFitWidth(15);
+            imgHakenGrun.setFitHeight(15);
+
+            imgHakenGrau.setVisible(false);
+            imgHakenGrun.setVisible(false);
+            cellDonePane.getChildren().addAll(imgHakenGrun, imgHakenGrau);
 
             // c. Message Zeit
             String zeit = mess.getDatum().substring(8,14);
-            Label altMessageZeit = new Label(zeit);
-            altMessageZeit.getStyleClass().add("altMessagesZeit");
+            Label cellMessageZeit = new Label(zeit);
+            cellMessageZeit.getStyleClass().add("cellMesagesZeit");
+            
 
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
-
-            // Aktuelle Datum
-            DateTimeFormatter aktuell = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
-            DateFormat format = new SimpleDateFormat("dd.MM.yy HH:mm");
-            String mySqlDatum = mess.getDatum();
-            Date date;
-            try {
-                date = format.parse(mySqlDatum);
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
-
-            // d. GridPane + add column
-            GridPane altGridPane = new GridPane();
+            // d. GridPane + add column(),
+            GridPane cellGridPane = new GridPane();
             // Top Pos. von hacken + Zeit
+            GridPane.setValignment(cellTextKorrektur, VPos.TOP);
             GridPane.setValignment(imgHakenGrau, VPos.TOP);
             GridPane.setValignment(imgHakenGrun, VPos.TOP);
-            GridPane.setValignment(altMessageZeit, VPos.TOP);
+            GridPane.setValignment(cellMessageZeit, VPos.TOP);
             // new column + width
             ColumnConstraints column0 = new ColumnConstraints();
             column0.setHgrow(Priority.ALWAYS);
             ColumnConstraints column1 = new ColumnConstraints();
-            column1.setMinWidth(20);
+            column1.setMinWidth(50);
             ColumnConstraints column2 = new ColumnConstraints();
-            column2.setMinWidth(40);
+            column2.setMinWidth(20);
+            ColumnConstraints column3 = new ColumnConstraints();
+            column3.setMinWidth(40);
             // add column
-            altGridPane.getColumnConstraints().addAll(column0, column1, column2);
-            altGridPane.addColumn(0, altUserName);
-            if (Objects.equals(aktuell, date)) {
-                altGridPane.addColumn(1, imgHakenGrau);
-            } else {
-                altGridPane.addColumn(1, imgHakenGrun);
-            }
-            altGridPane.addColumn(2, altMessageZeit);
+            cellGridPane.getColumnConstraints().addAll(column0, column1, column2, column3);
+            cellGridPane.addColumn(0, cellUserName);
+            cellGridPane.addColumn(1, cellTextKorrektur);
+            cellGridPane.addColumn(2, cellDonePane);
+            cellGridPane.addColumn(3, cellMessageZeit);
+            
 
-            /* Label(Bilder anzeige), Label(message anzeigen) */
-            // nach GridPane, den message-text in Label anzeigen
-            Label altMessageBilder = new Label("---");
-            altMessageBilder.getStyleClass().add("altMessagesBilder");
+            // Label(Bilder anzeige), Label(message anzeigen)
+            Label cellMessageBilder = new Label("hier werden Bilder Angezeigt");
+            cellMessageBilder.getStyleClass().add("cellMesagesBilder");
+
+            // Message-Text ausgeben
             String str = mess.getText();
             Text text = new Text(str);
             TextFlow textFlow = new TextFlow(text);
+            textFlow.getStyleClass().add("cellTextsFlow");
 
             // add VBox (GridPane + Label + Label)
-            VBox altCenterVBox = new VBox(altGridPane, altMessageBilder, textFlow);
-            altCenterVBox.getStyleClass().add("altMittesVBox");
+            VBox cellCenterVBox = new VBox(cellGridPane, cellMessageBilder, textFlow);
+            cellCenterVBox.getStyleClass().add("cellMittesVBox");
 
-        /* 3.  Right Pane, inhalt */
-            CheckBox altCheckBox = new CheckBox();
-            altCheckBox.getStyleClass().add("checksBox");
-            altCheckBox.setStyle("-fx-font-size: 0.1px;");
-            altCheckBox.setId(String.valueOf(mess.getId()));
-            VBox altRightBox = new VBox(altCheckBox);
+            
+        /**
+         *  4.  AnchorPane( VBox( CheckBox(id) ) )
+         */
+            CheckBox cellCheckBox = new CheckBox();
+            cellCheckBox.getStyleClass().add("cellChecksBox");
+            cellCheckBox.setId(String.valueOf(mess.getId()));
 
-            // Group checkBox, für die Methode altCheckBoxGroup()...Zeile: 680
-            checkArray.add(altCheckBox);
-            altCheckBox.selectedProperty().addListener((observable, oldValue, selectedNow) -> {
+            cellRightVBox = new VBox(cellCheckBox);
+            cellRightVBox.setId(String.valueOf(mess.getId()));
+
+            AnchorPane cellRightAnchorPane = new AnchorPane(cellRightVBox);
+            AnchorPane.setRightAnchor(cellRightVBox, -25.0);
+
+            cellRightVBoxArray.add(cellRightVBox);
+            allCheckBoxArray.add(cellCheckBox);
+
+            cellCheckBox.selectedProperty().addListener((observable, oldValue, selectedNow) -> {
+                /* observable, oldValue, selectedNow: output:~ selected/false/true */
+                /* selected message in Array speichern + hover setzen und umgekehrt */
                 if (selectedNow) {
-                    checkGroup.add(Long.valueOf(altCheckBox.getId()));
-                    paneArray.add(mesageBox);
-                    mesageBox.getStyleClass().add("altMessageHover");
+                    checkBoxSelected.add(Long.valueOf(cellCheckBox.getId()));
+                    stackPaneSelected.add(cellHauptStackPane);
+                    cellHauptStackPane.getStyleClass().add("cellMessagesHover");
                 } else {
-                    checkGroup.remove(Long.valueOf(altCheckBox.getId()));
-                    paneArray.remove(mesageBox);
-                    mesageBox.getStyleClass().remove("altMessageHover");
+                    checkBoxSelected.remove(Long.valueOf(cellCheckBox.getId()));
+                    stackPaneSelected.remove(cellHauptStackPane);
+                    cellHauptStackPane.getStyleClass().remove("cellMessagesHover");
                 }
-                // Zeile: ab 1000
-                if (checkGroup.size() == 0 && paneArray.size() == 0){
-                    // keine checkBox ausgewellt, alles schliessen
-                    altCheckBoxHide();
+
+                System.out.println("selectedProperty: " + observable +"/"+ oldValue +"/"+ selectedNow );
+                // Message Löschen Teil
+                if (checkBoxSelected.size() == 0 && stackPaneSelected.size() == 0){
+                    // keine checkBox aus gewellt, alles schliessen
+                    messageLoschenHide();
+                    cellCheckBoxHide();
 
                 } else {
-                    // selected checkBox an Methode senden
-                    messageLoschenAktiv(checkGroup, paneArray);
+                    // checkBox + StackPane selected
+                    linkLoschen.setText(String.valueOf(checkBoxSelected));
+                    int checkCount = checkBoxSelected.size();
+                    labelCount.setText(String.valueOf(checkCount));
+                    linkWeiterleiten.setText(String.valueOf(checkBoxSelected));
                 }
 
             });
 
-        /* 4.  Border Pane integration(complete message Box) */
+        /**
+         *  5. BorderPane(Left:VBox(Bild), Center:VBox(message), Right:AnchorPane(CheckBox))
+         */
+            BorderPane cellBorderPane = new BorderPane();
+            cellBorderPane.getStyleClass().add("cellBordersPane");
+            cellBorderPane.setLeft(cellLeftVBox);
+            cellBorderPane.setCenter(cellCenterVBox);
+            cellBorderPane.setRight(cellRightAnchorPane);
+            cellHauptStackPane.getChildren().add(cellBorderPane);
 
-            BorderPane altBorderPane = new BorderPane();
-            altBorderPane.getStyleClass().add("altBordersPane");
-            altBorderPane.setLeft(altLeftBox);
-            altBorderPane.setCenter(altCenterVBox);
-            altBorderPane.setRight(altRightBox);
-            mesageBox.getChildren().add(altBorderPane);
 
-
-        /* 5.  message-box anzeigen */
+        /**
+         *  6.  message-box anzeigen */
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    messageVBox.getChildren().add(mesageBox);
-                    //1.0 means 100% at the bottom
-                    messageScrollPane.setVvalue(1.0);
+
+                    messageVBox.getChildren().add(cellHauptStackPane);
+
+                    // Bottom Scroll, immer letzte Message Anzeigen
+                    scrollBottom(messageScrollPane);
                 }
             });
+
         } // Ende for schleife
+    }
 
-    } // Ende altMessage()...
 
+    /**
+     * die scrollPane immer nach oben scrollen
+     *
+     * Duration.seconds oder millis
+     *
+     * @param pane
+     */
+    private void scrollBottom(ScrollPane pane){
+        Animation animation = new Timeline(
+                new KeyFrame(Duration.millis(600),
+                        new KeyValue(pane.vvalueProperty(), 1)));
+        animation.play();
+    }
 
 
     /* ******************* Message Senden ************************ */
+
+
+    /**
+     * MESSAGE SENDEN
+     *
+     * die Methode reagiert auf Tasten druck, onKeyReleased,
+     * gesendet nut per ENTER
+     *
+     * @param keyEvent
+     */
+    private  Double messageHeightMerken = 20.0;
+    @FXML
+    private void messageSenden(KeyEvent keyEvent) {
+
+        String messagesText = textareaText.getText();
+
+        // Text Field auf Leer Prüfen
+        if (messagesText.isBlank()) {
+            textareaMinHoch();
+            messageHeightMerken = 20.0;
+            textareaText.clear();
+            textareaText.positionCaret(messagesText.length());
+            return;
+        }
+
+        // Message Senden mit dem ENTER
+        if (keyEvent.getCode() == KeyCode.ENTER){
+            //ausgabe.setText(messagesText);
+            // Aktuelle Date
+            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yy HH:mm");
+
+            Message message = new Message();
+
+            message.setDatum(format.format(new Date()));
+            message.setFreundetoken(freundToken);
+            message.setMeintoken(tokenService.meinToken());
+            message.setMessagetoken(messageToken);
+            message.setPseudonym("JC");
+            message.setVorname("Java");
+            message.setName("Client");
+            message.setText(messagesText);
+            message.setRole("default");
+
+            try {
+                socketService.senden(message);
+                textareaText.clear();
+                //messageHeightMerken = 20.0;
+                textareaMinHoch();
+            } catch (Exception e){
+
+                textareaText.clear();
+            }
+
+        } else {
+            textareaAutoRow(messagesText);
+        }
+        // Text auf Länge prüfen + Textarea Auto height
+        messageLenge();
+    }
+
 
     /**
      * TEXTAREA MAX. LÄNGE 500 ZEICHEN
@@ -506,93 +589,16 @@ public class MessageController implements Initializable {
 
 
 
-    /**
-     * MESSAGE SENDEN
-     *
-     * die Methode reagiert auf Tasten druck, onKeyReleased,
-     * gesendet nut per ENTER
-     *
-     * @param keyEvent
-     */
-    private  Double messageHeightMerken = 20.0;
-    @FXML
-    private void messageSenden(KeyEvent keyEvent) {
-
-        String messagesText = textareaText.getText();
-
-        // Text Field auf Leer Prüfen
-        if (messagesText.isBlank()) {
-            textareaMinHoch();
-            messageHeightMerken = 20.0;
-            textareaText.clear();
-            textareaText.positionCaret(messagesText.length());
-            return;
-        }
-
-        // Message Senden mit dem ENTER
-        if (keyEvent.getCode() == KeyCode.ENTER){
-            //ausgabe.setText(messagesText);
-            // Aktuelle Date
-            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yy HH:mm");
-
-            Message message = new Message();
-
-            message.setDatum(format.format(new Date()));
-            message.setFreundetoken(freundToken);
-            message.setMeintoken(tokenService.tokenHolen());
-            message.setMessagetoken(messageToken);
-            message.setPseudonym("JC");
-            message.setVorname("Java");
-            message.setName("Client");
-            message.setText(messagesText);
-            message.setRole("default");
-
-            try {
-                socketService.senden(message);
-                textareaText.clear();
-                //messageHeightMerken = 20.0;
-                textareaMinHoch();
-            } catch (Exception e){
-                fehlerInfo("FEHLER", "sessionNo");
-                textareaText.clear();
-            }
-
-        } else {
-            textareaAutoRow(messagesText);
-        }
-        // Text auf Länge prüfen + Textarea Auto height
-        messageLenge();
-    }
-
-
-
-    /* ************ Message Bearbeiten (die blaue 3 Punkten [...]) + Hilfe-Methoden ************* */
+    /* *************** Message Bearbeiten ********************** */
 
 
     /**
-     * Message Bearbeiten (click auf die drei Punkte oder 'fertig')
-     * aufbaue nur dem Pop-up-Fenster
-     *              +
-     *   alle click in der Pop-up-Fenster
-     *              +
-     *   Pop-up-Fenster schliessen
-     *
-     * message.fxml /
-     * Label: # headBearbeiten  onMouseClicked (drei Punkten(Bild) oder fertig(Text))
-     *
-     * auf der ganzen Stage wir eine ArchorPane draufgesetzt mit der
-     * click function Zeile 647 (bearPane.setOnMouseClicked) um der
-     * Pop-up-Fenster zu schliessen(message bearbeiten, oben mit der 3 punkten'...')
-     *
-     *  1. hauptStage:  #hauptPane von ChatBoxController(Setter & Getter)
-     *  2. bearPane:    die ArchorPane mit dem Pop-Up-Fenster(positioniert über
-     *                  ganze Stage(#hauptPane)), transparent
-     *  3. vBoxBearbeiten:  der selber Pop-up-Fenster(), positionier oben recht
-     *                      in der bearPane.
-     *  4.
+     * Message Bearbeiten, click auf die Drei Blau Punkte...
+     * nur für show/hide den Pop-up-Fenster + checkBox(für den Löschen)
+     * Löschen ist in separaten Teil 'Message Löschen'
      */
     @FXML
-    private void messageBearbeiten() {
+    public void messageBearbeiten() {
 
         //System.out.println("Message Bearbeiten");
 
@@ -604,21 +610,23 @@ public class MessageController implements Initializable {
 
         String fertig = headBearbeiten.getText();
         if ("fertig".equals(fertig)){
-            altCheckBoxHide();
+
+            cellCheckBoxHide();
+            messageLoschenHide();
             return;
         }
 
         // aufbaue eine pane über die ganze Stage, und ober Rechts das Pop-up-Fenster
-        AnchorPane bearPane = new AnchorPane();
-        bearPane.setStyle("-fx-background-color: transparent; -fx-border-color: red;");
-        bearPane.prefWidthProperty().bind(hauptStage.widthProperty());
-        bearPane.prefHeightProperty().bind(hauptStage.heightProperty());
+        AnchorPane spiegelungHaupStage = new AnchorPane();
+        spiegelungHaupStage.setStyle("-fx-background-color: transparent; -fx-border-color: red;");
+        spiegelungHaupStage.prefWidthProperty().bind(hauptStage.widthProperty());
+        spiegelungHaupStage.prefHeightProperty().bind(hauptStage.heightProperty());
 
-        VBox vBoxBearbeiten = new VBox();
-        vBoxBearbeiten.getStyleClass().add("messagesBearbeiten");
-        vBoxBearbeiten.setEffect(new DropShadow(5, Color.GRAY));
-        AnchorPane.setTopAnchor(vBoxBearbeiten, 25.0);
-        AnchorPane.setRightAnchor(vBoxBearbeiten, 20.0);
+        VBox popUpBearbeiten = new VBox();
+        popUpBearbeiten.getStyleClass().add("messagesBearbeiten");
+        popUpBearbeiten.setEffect(new DropShadow(5, Color.GRAY));
+        AnchorPane.setTopAnchor(popUpBearbeiten, 25.0);
+        AnchorPane.setRightAnchor(popUpBearbeiten, 20.0);
 
         // der Pop-up-Fenster in Schleife erstellen
         final String[] imageFiles = new String[]{
@@ -650,44 +658,114 @@ public class MessageController implements Initializable {
             // image ins hyperlink integrieren
             final Hyperlink hpl = hpls[i] = new Hyperlink(captions[i], imageView);
             hpl.getStyleClass().add("hypersLink");
-            hpl.prefWidthProperty().bind(vBoxBearbeiten.widthProperty());
+            hpl.prefWidthProperty().bind(popUpBearbeiten.widthProperty());
 
             // Methoden abruffen
             final String url = urls[i];
             hpl.setOnAction((event) -> {
                 switch (url){
-                    case "bearbeiten":              altCheckBoxGroup(); break;
-                    case "userinfo":                userInfo();         break;
-                    case "verlaufleeren":           verlaufLeeren();    break;
+                    case "bearbeiten":              cellCheckBoxZeigen();   break;
+                    case "userinfo":                userInfo();             break;
+                    case "verlaufleeren":           verlaufLeeren();        break;
                     default: break;
                 }
                 //Pop-Up-Fester ausblenden
-                popUpFensterClose(bearPane);
+                popUpFensterClose(spiegelungHaupStage);
             });
         }
 
         // VBox mit hyperlink oben Rechts in Haupt-AnchorPane anzeigen
-        vBoxBearbeiten.getChildren().addAll(hpls);
-        bearPane.getChildren().add(vBoxBearbeiten);
-        hauptStage.getChildren().add(bearPane);
+        popUpBearbeiten.getChildren().addAll(hpls);
+        spiegelungHaupStage.getChildren().add(popUpBearbeiten);
+        hauptStage.getChildren().add(spiegelungHaupStage);
 
         //Pop-Up-Fester ausblenden
-        bearPane.setOnMouseClicked(mouseEvent -> {
-                popUpFensterClose(bearPane);
+        spiegelungHaupStage.setOnMouseClicked(mouseEvent -> {
+            popUpFensterClose(spiegelungHaupStage);
         });
-
     }
 
 
+    /**
+     * checkBox verwalten(click auf bearbeiten in pop-up-Fenster)
+     */
+    private void cellCheckBoxZeigen(){
 
+        messageLoschenShow();
+        cellCheckBoxShow();
+        textareaMinHoch();
+        
+    }
+
+
+    /**
+     * Alle checkBox anzeigen
+     *
+     */
+    private void cellCheckBoxShow(){
+
+        clickDreiPunkteHide();
+
+        for (VBox show : cellRightVBoxArray){
+            AnchorPane.setRightAnchor(show, 1.0);
+        }
+    }
+
+
+    /**
+     * Alle CheckBox wieder verstecken + unselected, wenn
+     * selected waren
+     */
+    private void cellCheckBoxHide(){
+
+        clickDreiPunkteShow();
+        textareaWiederHerstellen();
+
+        for (VBox hide : cellRightVBoxArray){
+            AnchorPane.setRightAnchor(hide, -25.0);
+        }
+
+        // checkBox unselected,
+        for (CheckBox hide : allCheckBoxArray){
+            if (hide.isSelected()){
+                hide.setSelected(false);
+            }
+        }
+
+    }
+    
+    
+    /**
+     *  Header: Bild-drei-Punkte löschen, Text 'fertig' einfügen
+     */
+    private void clickDreiPunkteHide(){
+
+        headBearbeiten.setGraphic(null);
+        headBearbeiten.setText("fertig");
+    }
+
+    
+    /**
+     *  Header: Text 'fertig' Löschen, Bild(drei Punkte) einfügen
+     */
+    private void clickDreiPunkteShow(){
+
+        headBearbeiten.setText("");
+        blauPunkte.setFitHeight(30);
+        blauPunkte.setFitWidth(30);
+        headBearbeiten.setGraphic(blauPunkte);
+    }
+
+    
     /**
      * Bottom, textarea height auf 20px schrumpfen, für die anzeige
      * von bearbeiten menu(Löschen, Löschen-Count + weiterleiten)
      */
     private void textareaMinHoch(){
+        
         textareaText.setMinHeight(20.0);
+        
     }
-
 
 
     /**
@@ -698,246 +776,87 @@ public class MessageController implements Initializable {
      *
      */
     private void textareaWiederHerstellen(){
+        
         textareaText.setMinHeight(messageHeightMerken);
         textareaText.requestFocus();
         textareaText.positionCaret(textareaText.getText().length());
+        
     }
 
-
-
+    
     /**
-     * checkBox verwalten(click auf bearbeiten in pop-up-Fenster)
-     *
-     * die checkBox sind erstellt in Methode: altMessage() und
-     * in einen Group gesammelt, die checkBox werden nur per css
-     * angezeigt, die font-size werden von 0.1px auf 16px geändert...
-     * der VBox(von checkBoxen) wird automatisch geschlossen, weil leer ist
-     *
-     *
+     * der Bearbeiten-Pop-up-Fenster(rechts oben mit 3 punkten '...' ) schliessen
+     * Quelle: Methode: messageBearbeiten Zeile: 670
      */
-    private void altCheckBoxGroup(){
-        // anzeige von checkBoxen + bottom löschen-Menü
-        altCheckBoxShow();
-        textareaMinHoch();
-        messageLoschenDisabled();
+    private void popUpFensterClose(Pane pane){
+        
+        pane.getChildren().clear();
+        ((Pane)pane.getParent()).getChildren().remove(pane);
+        
     }
 
 
-    /**
-     * Alle CheckBox schliessen
-     *
-     * bei
-     */
-    private void altCheckBoxHide(){
-
-        // Header: text löschen, Bild einfügen
-        headBearbeiten.setText("");
-        blauPunkte.setFitHeight(30);
-        blauPunkte.setFitWidth(30);
-        headBearbeiten.setGraphic(blauPunkte);
-
-        // checkBox verstecken
-        for (CheckBox hide : checkArray){
-            hide.setStyle("-fx-font-size: 0.1px;");
-            if (hide.isSelected()){
-                hide.setSelected(false);
-            }
-        }
-
-        // Bottom Löschen-Box ausblenden
-        messageLoschenHide();
-        textareaWiederHerstellen();
-    }
-
+    /* *************** Message Löschen *********************** */
 
     /**
-     * CheckBox anzeigen (Alle)
-     */
-    private void altCheckBoxShow(){
-
-        // Header Bild löschen, Text einfügen
-        headBearbeiten.setGraphic(null);
-        headBearbeiten.setText("fertig");
-
-        // checkBox anzeigen
-        for (CheckBox zeige : checkArray){
-            zeige.setStyle("-fx-font-size: 1.0em;");
-        }
-    }
-
-
-
-    /**
-     * Disabled Message-Löschen Pane(nur Information anzeige)
+     * Message Löschen
+     * die Methode messageLoschenShow wird gestartet in der Methode
+     * cellCheckBoxZeigen() / Zeile: 700
      *
-     *
-     *
-     * disable Information Fenster in der bottom bereich
-     * wird zusammen nur mit dem 'unchecked checkBox' angezeigt...
-     *
-     * ausgelöst durch, click auf 'bearbeiten' in Pop-up-Fenster...
-     */
-    private void messageLoschenDisabled() {
-
-        // messageLoschenAktiv ausblenden
-        messageLoschenHide();
-
-        // messageLoschenDisabled Laden
-        Parent loschenDisable;
-        try {
-            loschenDisable = FXMLLoader.load(getClass().getResource("/templates/fragments/messageLoschenDisabled.fxml"));
-        } catch (IOException e) {
-            // Fehler anzeige functionier nicht, wird java.lang.NullPointerException ausgeführt
-            fehlerInfo("NO", "fxmlDisable");
-            throw new RuntimeException(e);
-        }
-
-        messageLoschenPane.getChildren().add(loschenDisable);
-        AnchorPane.setLeftAnchor(loschenDisable, 0.0);
-        AnchorPane.setRightAnchor(loschenDisable, 0.0);
-        messageBottomStackPane.getChildren().add(messageLoschenPane);
-    }
-
-
-
-    /**
-     * Aktive Message-Löschen, mit Methoden
-     *
-     * Achtung: zugesendete parameter checkGroup: in diesem Array sind
+     * Achtung: zugesendete parameter checkBoxSelected: in diesem Array sind
      * nur selected checkBox gespeichert mit der ID(von dem message)
+     * mit diesem Format werden sie mit requestApi versendet
      * List<Long>: [205, 207, 202, 200]
      * StackPane: [StackPane[id=261, styleClass=altMessageHover],
      *            StackPane[id=273, styleClass=altMessageHover],
      *            StackPane[id=274, styleClass=altMessageHover]]
      *
      */
-    private void messageLoschenAktiv(List<Long> checkGruppe, List<StackPane> paneGruppe){
+    @FXML final AnchorPane messageLoschenPane = new AnchorPane();
+    final GridPane loschGridPane = new GridPane();
+    /*List<Long> checkGruppe, List<StackPane> paneGruppe*/
+    private void messageLoschenShow(){
 
-        // messageLoschenDisabled ausblenden
-        messageLoschenHide();
+        /**
+         * HBox(Image(Bild) + Label(Löschen) ), wird ins GridPane/Left integriert
+         */
+        //Image imgGrau = new Image(getClass().getResourceAsStream("/static/img/hacken.png"));
+        ImageView loschImg = new ImageView(new Image(getClass().getResourceAsStream("/static/img/delete.png")));
+        loschImg.setFitWidth(20);
+        loschImg.setFitHeight(20);
+        Label loschText = new Label("Löschen");
+        HBox loschHBox = new HBox(loschImg, loschText);
 
-        // fxml Laden + alle Node holen
-        Parent loschenAktiv ;
-        Map<String, Object> idsObject;
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/templates/fragments/messageLoschenAktiv.fxml"));
-            loschenAktiv = loader.load();
-            // Node in einem Object speichern
-            idsObject = loader.getNamespace();
-        } catch (IOException e) {
-            // Fehler anzeige functionier nicht, wird java.lang.NullPointerException ausgeführt
-            fehlerInfo("NO", "fxmlAktiv");
-            throw new RuntimeException(e);
-        }
-        // fxml ausgeben/anzeigen + auf 100% length ziehen
-        messageLoschenPane.getChildren().add(loschenAktiv);
-        AnchorPane.setLeftAnchor(loschenAktiv, 0.0);
-        AnchorPane.setRightAnchor(loschenAktiv, 0.0);
-        messageBottomStackPane.getChildren().add(messageLoschenPane);
+        /**
+         * HBox( Label(5) + Label(Nachrichten Ausgewählt) ), wird in GridPane/Center integriert
+         */
+        Label loschCount = new Label();
+        Label loschWellen = new Label("Nachrichten auswählen");
+        HBox countHBox = new HBox(loschCount, loschWellen);
 
-        // Zahl ausgewählte Message zum Löschen anzeigen
-        Label loschenCount = (Label)idsObject.get("messageLoschenCount");
-        int checkCount = checkGruppe.size();
-        loschenCount.setText(String.valueOf(checkCount));
+        /**
+         * HBox(Label(Weiterleiten) + Image(Bild) ), wird in GridPane/Right integriert
+         */
+        Label loschweiter = new Label();
+        ImageView weiterImg = new ImageView(new Image(getClass().getResourceAsStream("/static/img/forward.png")));
+        weiterImg.setFitWidth(20);
+        weiterImg.setFitHeight(20);
+        HBox weiterHBox = new HBox(loschweiter, weiterImg);
 
-        //Click auf den 'Löschen', unten in angeblendeten box
-        HBox clickLoschen = (HBox)idsObject.get("loschenHBox");
-        clickLoschen.setOnMouseClicked(mouseEvent -> {
-            // alle checkBox & StackPane IDs weiter geben, zum Löschen
-            geloschteMessageHide(paneGruppe);
-            messageLoschen(checkGruppe);
 
-        });
+        loschGridPane.add(loschHBox, 0, 0);
+        loschGridPane.add(countHBox, 1, 0);
+        loschGridPane.add(weiterHBox, 2, 0);
+       /* loschGridPane.addColumn(0, loschHBox);
+        loschGridPane.addColumn(1, countHBox);
+        loschGridPane.addColumn(0, weiterHBox);*/
 
-        // Click auf dem 'Weiterleiten'
-        HBox clickWeiterleiten = (HBox)idsObject.get("weiterHBox");
-        clickWeiterleiten.setOnMouseClicked(mouseEvent -> {
-            //System.out.println("Mesage Weiterleiten:" + checkGroup);
-            //messageWeiterleiten(checkGruppe);
-        });
+
+        //messageLoschenPane.getChildren().addAll(loschHBox, countHBox);
+        loschGridPane.getStyleClass().add("mesagesLoschPane");
+
+        messageBottomStackPane.getChildren().add(loschGridPane);
     }
-
-
-
-    /**
-     * Zum Löschen Messages mit Request an Bote senden
-     *
-     * alle selected checkBox(gewellt zum Löschen) werden in einem List-Array zusammen
-     * gesammelt und mit Request an Bote/ApiMessage/messageLoschenApi als List<Long>
-     * zum Löschen gesendet...
-     *  so sehen gesendete List -Array aus:
-     *      [261]                       = eine Message Löschen
-     *      [261, 275, 287,356, 360]    = mehrere Message Löschen
-     *
-     * @param mesageIds
-     */
-    private void messageLoschen(List<Long> mesageIds){
-
-        String loschenUrl  = configService.FILE_HTTP+"messageLoschenApi";
-        HttpResponse<String> response = apiService.requestAPI(loschenUrl, String.valueOf(mesageIds));
-
-        // alle checkBox ausblenden, selected:false
-        altCheckBoxHide();
-
-        // Information von gelöschte Elementen anzeigen, nach 5 sek. ausblenden
-        int messageCount = Integer.parseInt(response.body());
-        if (messageCount > 0){
-            loschenInfo(messageCount);
-            System.out.println("Gelöschte Message Conut aunzeigen: " + messageCount);
-        } else {
-            fehlerInfo("NO", "loschenNO");
-        }
-
-        System.out.println("response: " + response.body() );
-
-
-    }
-
-
-    /**
-     * Gelöschte message Ausblenden
-     *
-     * zugesendete StackPane IDs von gelöschten Message, sind in einem List-Array gesammelt
-     * und nach dem Löschen werden aus dem Message-Verlauf gelöscht,
-     *
-     *  zugesendete List-Array sieht so aus:
-     *      [StackPane[id=261, styleClass=altMessageHover]]     = eine message zu Löschen
-     *      [StackPane[id=261, styleClass=altMessageHover], StackPane[id=275, styleClass=altMessageHover]] = mehreren
-     *
-     *  Fazit: StackPane(paneIds) ist ein Message-Block nur von einer einzelnen Message,
-     *          bei Löschen die Message wird die StackPane nur gelehrt aber selbe Pane erhalten,
-     *          bis zu nächsten Aktualisierung...
-     *          kein Style auf StackPane wird aufgelegt
-     *
-     * @param paneIds
-     */
-    private void geloschteMessageHide(List<StackPane> paneIds){
-
-        for (StackPane mesagePane : paneIds){
-            mesagePane.getChildren().clear();
-        }
-    }
-
-
-    /**
-     * Alle Message Löschen
-     */
-    private void verlaufLeeren(){
-        System.out.println("Verlauf Leern");
-    }
-
-
-
-    /**
-     * Message Weiterleiten
-     *
-     * @param nachrichtWeiterleiten
-     */
-    private void messageWeiterleiten(List<String> nachrichtWeiterleiten){
-
-        System.out.println("Nachricht Weiterleiten: " + nachrichtWeiterleiten );
-    }
-
 
 
     /**
@@ -946,162 +865,57 @@ public class MessageController implements Initializable {
      * der unten in Textarea eingeblendeten Löschen-Info ausblenden
      */
     private void messageLoschenHide(){
-        messageLoschenPane.getChildren().clear();
-        messageBottomStackPane.getChildren().remove(messageLoschenPane);
+        //messageLoschenPane.getChildren().clear();
+        loschGridPane.getChildren().clear();
+        messageBottomStackPane.getChildren().remove(loschGridPane);
+       // messageBottomStackPane.getChildren().remove(messageLoschenPane);
     }
 
+
+    /* ***************  Weitere Methoden ********************* */
+
+
     /**
-     * der Bearbeiten-Pop-up-Fenster(rechts oben mit 3 punkten '...' ) schliessen
-     * Quelle: Methode: messageBearbeiten Zeile: 755
+     * gestartet in Pop-up-Fenster(mit 3 Punkten)
      */
-    private void popUpFensterClose(AnchorPane pane){
-        pane.getChildren().clear();
-        ((Pane)pane.getParent()).getChildren().remove(pane);
-    }
-
-
-    /* ************************* Weiter Methoden ************************** */
-
     private void userInfo(){
-        System.out.println("User Information");
+        System.out.println("User Info");
     }
 
 
     /**
-     * Message schliessen + Reset Hover
+     * gestartet in Pop-up-Fenster(mit dem 3 Punkten)
+     */
+    private void verlaufLeeren(){
+        System.out.println("Verlauf Leeren");
+    }
+
+    public void smileZeigen() {
+        System.out.println("Smile Zeigen");
+    }
+
+
+    public void otherZeigen() {
+        System.out.println("Other Zeigen");
+    }
+
+
+    public void onlinePhone() {
+        System.out.println("Telefon Zeigen");
+    }
+
+
+
+    /* *********************** Message Schliessen ***************** */
+
+    /**
+     * celleAnchorPane = eine complete Freunde-Pane mit allen Daten von FreundeCellController...
+     *
+     * hier wird bei schliessen die Message-Ausgabe(messageVBox) nur den Hover-Effekt ausgeblendet in
+     * den FreundeCellController(Freunde Celle)
      */
     public void messageSchliessen() {
         translate.closeStackPane();
         celleArchorPane.getStyleClass().remove("freundeAktiv");
     }
-
-
-    /**
-     *  Telefonate, Zurzeit funktioniert noch nicht
-     */
-    public void messageTelefon() {
-        System.out.println("Telefonate: functioniert noch nicht");
-    }
-
-
-    /**
-     * Foto, Datei, Kamera Zeigen
-     */
-    public void otherZeigen() {
-        System.out.println("Bild + Datei + Kamera");
-    }
-
-
-    /**
-     * Anzeige von Smile Icon
-     */
-    public void smileZeigen() {
-        System.out.println("Smile zeigen");
-    }
-
-
-
-    /* ************************** Fehler Anzeigen **************** */
-
-    /**
-     * Kurze anzeige für gelöschte Messages
-     *
-     * @param count
-     */
-    final AnchorPane loschPane = new AnchorPane();
-    private void loschenInfo(int count){
-        System.out.println("loschen Info vor: " +count);
-        // Loschen Pane Leeren
-        messageLoschenHide();
-
-        System.out.println("loschen Info danach: " +count);
-        Label loschInfo = new Label(count + " Messages werden gelöscht");
-        loschInfo.getStyleClass().add("loschInfo");
-        //loschInfo.setMaxWidth(Double.MIN_NORMAL);
-        AnchorPane.setLeftAnchor(loschInfo, Region.USE_COMPUTED_SIZE);
-        //AnchorPane.setTopAnchor(loschInfo, 5d);
-        AnchorPane.setRightAnchor(loschInfo, Region.USE_COMPUTED_SIZE);
-        //AnchorPane.setBottomAnchor(loschInfo, 5d);
-        loschInfo.setAlignment(Pos.CENTER);
-        loschPane.getChildren().add(loschInfo);
-        hauptStage.getChildren().add(loschPane);
-
-        // Anzeige Ausblenden
-        pauseZeit("loschPane", 10);
-
-    }
-
-
-
-    /**
-     * Fehler Anzeigen
-     *
-     * automatische ausblenden von Fehler-Anzeige,  ca. 5 Sek....
-     *
-     * ACHTUNG: zurzeit sid alle Fehlermeldungen ausgeblendet
-     *      1. sockedConnect: Zeile 243, 250, 263
-     *      2. messageSenden: Zeile 427, 436
-     *      3. Aktive Fehler:
-     *          a. messageLoschen Zeile: 1000
-     *          b. messageLoschenAktiv(.. Zeile: 900 (functionier auch nicht)
-     *
-     *      ***für die fehler ausgabe gibst separate Label(#headFreundInfo)
-     *
-     * @param ok
-     * @param fehlerText
-     */
-    private void fehlerInfo(String ok, String fehlerText){
-
-        headFreundInfo.setTextFill(  ok == "OK" ? Color.GREEN : Color.RED );
-
-        switch (fehlerText){
-            case "connectOk":           headFreundInfo.setText("connection successfully established...");
-                                        break;
-            case "connectNo":           headFreundInfo.setText("connection not successfully established...");
-                                        break;
-            case "sessionOk":           headFreundInfo.setText("Session Verbindung aufgebaut...");
-                                        break;
-            case "sessionNo":           headFreundInfo.setText("Es besteht keine Verbindung!");
-                                        break;
-            case "textLeer":            headFreundInfo.setText("Feld darf nicht leer sein");
-                                        break;
-            case "fxmlDisable":         headFreundInfo.setText("125: xml kann nicht geladen werden");
-                                        break;
-            case "fxmlAktiv":           headFreundInfo.setText("126: xml kann nicht geladen werden");
-                                        break;
-            case "loschenNO":           headFreundInfo.setText("127: Message Löschen fehlgeschlagen");
-                                        break;
-            default: break;
-
-        }
-
-        pauseZeit("infoLabel", 10);
-    }
-
-
-    /**
-     * Automatische ausblenden von Pop-up-Fenster nach der Zeit
-     *
-     *  1. Label: headFreundInfo, Fehler anzeige in Header bereich
-     *  2. AnchorPane 'loschPane', Haup-Box von Pop-up-Fenster für
-     *     die Anzeigen gelöschte messages,
-     *     Methode: loschenInfo(... Zeile: 1150
-     *
-     * @param pane
-     * @param sek
-     */
-    private void pauseZeit(String pane, int sek){
-        PauseTransition pause = new PauseTransition(Duration.seconds(sek));
-        pause.setOnFinished(e -> {
-            switch (pane) {
-                case "infoLabel":           headFreundInfo.setText(null);
-                                            break;
-                case "loschPane":           popUpFensterClose(loschPane);
-                                            break;
-                default: break;
-            }
-        });
-        pause.play();
-    }
-
 }

@@ -241,6 +241,8 @@ public class FreundeCellController implements Initializable {
 
     }
 
+
+
     /**
      * Methode für die Freundschaft annehmen oder Ablehnen
      * zugesendet zu Bote: ApiEinladenController Zeile: 200
@@ -296,6 +298,7 @@ public class FreundeCellController implements Initializable {
         freundeController.freundeHover(this);
     }
 
+
     /**
      * CHAT LADEN
      * messagesToken, wird als Button-ID in setProperties() gesetzt Zeile: 153(hier)
@@ -316,17 +319,21 @@ public class FreundeCellController implements Initializable {
             //rechtePane.getChildren().clear();
             layoutService.setausgabeLayout(rechtePane);
             MessageController messageController = (MessageController) layoutService.switchLayout(GlobalView.MESSAGE);
-            messageController.setRechtsPane(rechtePane);
+            //messageController.setRechtsPane(rechtePane);
             messageController.setFreundColor(freundHintergrund);
             messageController.setChatFreundeDaten(friend);
             messageController.setMessageToken(messagesToken);
             messageController.setCelleArchorPane(cellAnchorPane);
+
+            chatBoxController.setMessageController(messageController);
+
             //System.out.println("Freunde Cell Controller Zeile: 320 " + messagesToken);
         }
 
         // Translate Starten (functioniert nur unter 650px)
         translate.offenStackPane();
     }
+
 
 
     /**
@@ -351,6 +358,8 @@ public class FreundeCellController implements Initializable {
         Bounds bonds = deleteCellPane.localToParent(deleteCellPane.getBoundsInLocal());
         return bonds.getMinX();
     }
+
+
 
     /**
      *  NUR, FÜR DIE ANZEIGE/VERBERGEN VON DEM LÖSCHEN-BUTTON(roter runde buttons)

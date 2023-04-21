@@ -16,7 +16,11 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
-<StackPane fx:id="mesageBox" prefWidth="350.0" style="-fx-border-color: red;" stylesheets="@../../static/css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="mesageBox" prefWidth="350.0"
+           stylesheets="@../../static/css/style.css"
+           xmlns="http://javafx.com/javafx/18"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="BoteFx.controller.fragments.MessageCellController">
    <children>
       <BorderPane>
          <left>
@@ -33,24 +37,7 @@
                </children>
             </VBox>
          </left>
-         <right>
-            <AnchorPane fx:id="mesageAnchorPaneCheckBox" BorderPane.alignment="CENTER">
-               <children>
-                  <VBox fx:id="mesageVBoxCheckBox" alignment="TOP_CENTER" AnchorPane.rightAnchor="-25.0">
-                     <children>
-                        <CheckBox fx:id="mesageCheckBox" alignment="TOP_CENTER" mnemonicParsing="false" style="-fx-background-radius: 10; -fx-border-radius: 10;" styleClass="checksBox">
-                           <VBox.margin>
-                              <Insets top="15.0" />
-                           </VBox.margin>
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </CheckBox>
-                     </children>
-                  </VBox>
-               </children>
-            </AnchorPane>
-         </right>
+
          <center>
             <VBox BorderPane.alignment="CENTER">
                <children>
@@ -70,7 +57,7 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="mesageBearbetet" text="Überarbeitet" textFill="#858585" GridPane.columnIndex="1" />
+                        <Label fx:id="mesageKorektur" text="Überarbeitet" textFill="#858585" GridPane.columnIndex="1" />
                         <StackPane GridPane.columnIndex="2">
                            <children>
                               <ImageView fx:id="mesageGelesen" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" visible="false">
@@ -88,7 +75,7 @@
                         <Label fx:id="mesageZeit" alignment="CENTER" text="20:50" textFill="#858585" GridPane.columnIndex="3" />
                      </children>
                   </GridPane>
-                  <Label fx:id="mesageBilder" text="Bilder Ausgaben">
+                  <Label fx:id="mesageBilder" text="...">
                      <font>
                         <Font size="14.0" />
                      </font></Label>
@@ -104,6 +91,25 @@
                </children>
             </VBox>
          </center>
+
+         <right>
+            <AnchorPane fx:id="mesageAnchorPaneCheckBox" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox fx:id="mesageVBoxCheckBox" alignment="TOP_CENTER" AnchorPane.rightAnchor="-25.0">
+                     <children>
+                        <CheckBox fx:id="mesageCheckBox" alignment="TOP_CENTER" mnemonicParsing="false" style="-fx-background-radius: 10; -fx-border-radius: 10;" styleClass="checksBox">
+                           <VBox.margin>
+                              <Insets top="15.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </CheckBox>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+         </right>
       </BorderPane>
    </children>
 </StackPane>

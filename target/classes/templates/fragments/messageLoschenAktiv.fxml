@@ -69,7 +69,7 @@
                         <Insets left="5.0" right="5.0" />
                     </HBox.margin>
                     <image>
-                        <Image url="@../../static/img/forwardblau.png" />
+                        <Image url="@../../static/img/forwardblue.png" />
                     </image>
                 </ImageView>
             </children>

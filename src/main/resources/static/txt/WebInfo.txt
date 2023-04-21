@@ -90,9 +90,21 @@
     *************************** PANE SLIDER ( APP/VERKLEINERN/VERGRßERN) ****************
 
 
-    *************************** ENDE SLIEDER *******************************************
+    *************************** Socket *******************************************
 
+    Socket(Client) ist in einem extra class abgelegt, SocketService.java
+        1.  Socket wird in ChatBoxController gestartet Zeile: 94, socketService.connect(meinToken, this);
+                a. meinToken wird zugesendet für die Identifizierung, Zeile: 105
+                    ...session.subscribe("/messages/receive/" + token, new StompSessionHandler()
+                b. this(responsHandler), mit dem this wird neue Nachrichter empfangen, von SocketService Zeile: 136
+                    responseHandler.handleNewMessage(message); und schliesslich weiter gesendet
+                    an MessageController/ Methode: public void neueNachrichtAnzeigen(Message message) Zeile:
 
+        2.
+
+        3.  wenn verbindung zu Server: "http://localhost:8080/register" wird unterbrochen dann
+            nach 10Sekunden neu verbinden
+        4.
 
 
 

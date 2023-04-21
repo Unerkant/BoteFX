@@ -117,6 +117,8 @@ public class TelefonRegisterController implements Initializable {
         HttpResponse<String> response = apiService.requestAPI(urlApi, jsonApi);
         if (response != null && response.statusCode() == 200) {
 
+            String tokenOk = null;
+
             /* token ermitteln von response */
             JSONObject objec = new JSONObject(response.body());
             String resToken = objec.getString("tokenResponse");
@@ -124,26 +126,20 @@ public class TelefonRegisterController implements Initializable {
             /* token in H2 Database speichern (localBote/Token) */
             Token H2Token = tokenService.findeToken(resToken);     // h2token output: null
             if (H2Token == null){
-                String datum = methodenService.deDatum();
                 Token neuToken = new Token();
-                neuToken.setDatum(datum);
+                String datum = methodenService.deDatum();
                 neuToken.setMytoken(resToken);
+                neuToken.setDatum(datum);
                 tokenService.saveToken(neuToken);
-
+                tokenOk = "writeH2Ok";
             } else {
                 telefonRegisterFehlerAusgabe("H2NoSpeichern", "no");
             }
 
-            /* token in json Datei schreiben */
-            String txttoken = tokenService.writeToken(resToken);
-            switch (txttoken){
-                case "writeJsonOk":     TelefonSuccessController telefonSuccessController = (TelefonSuccessController) viewService.switchTo(GlobalView.TELEFONSUCCESS);
+            switch (tokenOk){
+                case "writeH2Ok":     TelefonSuccessController telefonSuccessController = (TelefonSuccessController) viewService.switchTo(GlobalView.TELEFONSUCCESS);
                                         telefonSuccessController.setUserDaten(response.body());
                                         break;
-                case "writeJsonNein":   telefonRegisterFehlerAusgabe("writeJsonNo", "no");
-                                        return;
-                case "eintragExist"     :telefonRegisterFehlerAusgabe("eintragExistiert", "no");
-                                        return;
                 default:                telefonRegisterFehlerAusgabe("writeFehler", "no");
                                         return;
             }
@@ -285,10 +281,6 @@ public class TelefonRegisterController implements Initializable {
                                             "die richtige Code ist: " + testCode);
                                             break;
             case "H2NoSpeichern":           telefonRegisterFehler.setText("H2 Database kann nicht gespeichert werden, Zeile: 135");
-                                            break;
-            case "writeJsonNo":             telefonRegisterFehler.setText("token.json datei kann nicht beschrieben werden");
-                                            break;
-            case "eintragExistiert":        telefonRegisterFehler.setText("token.json: Eintrag existiert schon");
                                             break;
             case "writeFehler":             telefonRegisterFehler.setText("token.json: Allgemeine write Fehler");
                                             break;

@@ -215,13 +215,11 @@ _______________*/
     -fx-text-fill: #000080;
 }
 
-        /* AltMessage +liveMessage*/
-.altMessageHover
-{
-    -fx-background-color: #E6E6E6;
-}
 
-.altBildsLabel
+      /* Alt Message + new Message*/
+
+
+.cellBildsLabel
 {
     /* nicht ändern: nur für die rund aussehen, kein Text style, wird direkt geStylt  */
      -fx-background-color: transparent;
@@ -237,13 +235,13 @@ _______________*/
      -fx-alignment: center;
 }
 
-.altLinksVBox
+.cellLinksVBox
 {
     -fx-pref-width: 40;
     -fx-alignment: TOP_CENTER;
 }
 
-.altFreundsName
+.cellUsersName
 {
     -fx-font-family: "Courier New";
     -fx-font-size: 1.0em;
@@ -251,49 +249,59 @@ _______________*/
     -fx-text-fill: #000080;
 }
 
-.altMessagesZeit
+.cellMesagesZeit
 {
     -fx-font-size: 0.9em;
     -fx-text-fill: #999;
 }
 
-.altMessagesBilder
+.cellMesagesBilder
 {
+    -fx-font-size: 0.7em;
+    -fx-text-fill: #999;
   /*  -fx-border-color: #E6FFE6;
     -fx-border-width: 5;
     -fx-padding: 5;*/
 }
 
-.altTextsFlow
+.cellTextsFlow
 {
 
 }
 
-.altMittesVBox
+.cellMittesVBox
 {
 
 }
 
-.altBordersPane
+.cellMessagesHover
+{
+    -fx-background-color: #E6E6E6;
+}
+
+.cellBordersPane
 {
     -fx-padding: 10 5 10 0;
 }
 
     /* CheckBox */
-.checksBox .box {
+.cellChecksBox .box {
     -fx-background-radius: 10;
     -fx-border-radius: 10;
 }
 
-.checksBox:selected .mark {
+.cellChecksBox:selected .mark {
     -fx-background-color: white;
 }
 
-.checksBox:selected .box {
+.cellChecksBox:selected .box {
     -fx-background-color: #28a3f4;
 }
 
-    /* separate Fenster, message bearbeiten(message: rechts oben die 3 blaue punkten '...') */
+
+
+
+    /* Pop-up-Fenster, message bearbeiten(message: rechts oben die 3 blaue punkten '...') */
 .messagesBearbeiten
 {
     -fx-background-color: #FFF;
@@ -314,6 +322,18 @@ _______________*/
 {
    -fx-background-color: #F2F2F2;
 }
+
+
+    /* Löschen Teil */
+.mesagesLoschPane
+{
+    -fx-background-color: white;
+    -fx-border-color: red;
+}
+
+
+
+
 
     /* Separate Fenster Loschen */
 .logoShadow

@@ -119,6 +119,7 @@ public class MailRegisterController implements Initializable {
         /* request & response */
         HttpResponse<String> response = apiService.requestAPI(apiUrl, apiJson);
 
+
         /**
          *  Response von Bote -> ApiMailController.java Methode: @PostMapping(value = "/codeApi")
          *  der json-array wird von Bote -> ApiMailController -> return ResponseEntity.status(HttpStatus.OK).body(userResponse);
@@ -132,6 +133,8 @@ public class MailRegisterController implements Initializable {
          */
         if (response != null && response.statusCode() == 200){
 
+            String tokenOK = null;
+
             /* token ermitteln von response */
             JSONObject object = new JSONObject(response.body());
             String token = object.getString("tokenOutput");
@@ -139,26 +142,20 @@ public class MailRegisterController implements Initializable {
             /* token in H2 Database speichern (localBote/Token) */
             Token h2token = tokenService.findeToken(token);     // h2token output: null
             if (h2token == null){
-                String datum = methodenService.deDatum();
                 Token newToken = new Token();
-                newToken.setDatum(datum);
+                String datum = methodenService.deDatum();
                 newToken.setMytoken(token);
+                newToken.setDatum(datum);
                 tokenService.saveToken(newToken);
-
+                tokenOK = "writeH2OK";
             } else {
                 mailRegisterFehlerAusgabe("h2speichernNo", "no");
             }
 
-            /* token in json Datei schreiben */
-            String txttoken = tokenService.writeToken(token);
-            switch (txttoken){
-                case "writeJsonOk":     MailSuccessController mailSuccessController = (MailSuccessController) viewService.switchTo(GlobalView.MAILSUCCESS);
+            switch (tokenOK){
+                case "writeH2OK":     MailSuccessController mailSuccessController = (MailSuccessController) viewService.switchTo(GlobalView.MAILSUCCESS);
                                         mailSuccessController.setUserDaten(response.body());
                                         break;
-                case "writeJsonNo":     mailRegisterFehlerAusgabe(txttoken, "no");
-                                        return;
-                case "eintragExist":    mailRegisterFehlerAusgabe(txttoken, "no");
-                                        return;
                 default:                mailRegisterFehlerAusgabe("writeFehler", "no");
                                         return;
             }
@@ -174,11 +171,12 @@ public class MailRegisterController implements Initializable {
             JSONObject object = new JSONObject(response.body());
             testerCode = String.valueOf(object.getInt("testerCode"));
             /* Ende später Löschen */
-            System.out.println("MailRegisterController Zeile: 180  / " + testerCode);
+            System.out.println("MailRegisterController Zeile: 173  / " + testerCode);
             mailRegisterFehlerAusgabe("codefalsch", "no");
         }
 
     }
+
 
 
     /**
@@ -320,10 +318,6 @@ public class MailRegisterController implements Initializable {
                                     "die richtige Code ist: " + testerCode);
                                     break;
             case "h2speichernNo":   mailRegisterFehler.setText("H2 Database kann nicht gespeichert werden, Zeile: 150");
-                                    break;
-            case "writeJsonNo":     mailRegisterFehler.setText("token.json datei kann nicht beschrieben werden");
-                                    break;
-            case "eintragExist":mailRegisterFehler.setText("token.json: Eintrag existiert schon");
                                     break;
             case "writeFehler":     mailRegisterFehler.setText("token.json: Allgemeine write Fehler");
                                     break;

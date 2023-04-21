@@ -36,7 +36,7 @@
                <children>
                   <ImageView fitHeight="25.0" fitWidth="25.0" onMouseClicked="#messageSchliessen" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../static/img/linksblau.png" />
+                        <Image url="@../static/img/linksblue.png" />
                      </image>
                      <cursor>
                         <Cursor fx:constant="HAND" />
@@ -65,14 +65,23 @@
                         </HBox>
                      </children>
                   </VBox>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" onMouseClicked="#messageTelefon" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                     <image>
-                        <Image url="@../static/img/phone.png" />
-                     </image>
-                     <cursor>
-                        <Cursor fx:constant="HAND" />
-                     </cursor>
-                  </ImageView>
+                  <StackPane GridPane.columnIndex="3">
+                     <children>
+                        <ImageView fx:id="onlinePhone" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#onlinePhone" pickOnBounds="true" preserveRatio="true" visible="false">
+                           <image>
+                              <Image url="@../static/img/phoneblue.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                        <ImageView fx:id="noPhone" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../static/img/nophone.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
                   <Label fx:id="headBearbeiten" onMouseClicked="#messageBearbeiten" textFill="NAVY" GridPane.columnIndex="4">
                      <font>
                         <Font size="15.0" />

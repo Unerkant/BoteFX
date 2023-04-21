@@ -153,7 +153,7 @@ public class FreundeController implements Initializable {
     public void freundeLaden(String myToken) {
 
         // Nachricht oder Aktualisierung Anzeigen
-        freundeAnzeiger.setText("Aktualisierung ausgabe");
+
 
         // Request & response an/von Bote
         String urlApi = configService.FILE_HTTP+"freundeApi";
@@ -166,6 +166,10 @@ public class FreundeController implements Initializable {
             Gson gson = new Gson();
             Type listType = new TypeToken<ArrayList<Freunde>>(){}.getType();
             ArrayList<Freunde> friends = gson.fromJson(response.body(), listType);
+
+            String meinName = friends.get(0).getMeinentoken();
+            freundeAnzeiger.setText(meinName);
+
             // vor der Freunde Laden, box leeren
             freundeVBox.getChildren().clear();
             for (Freunde fried : friends){

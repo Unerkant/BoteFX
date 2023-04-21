@@ -4,7 +4,6 @@ package BoteFx.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
@@ -14,25 +13,21 @@ import javax.persistence.Id;
 @Entity
 public class Token {
     @Id
-    @GeneratedValue
-    private long id;
+    private String mytoken;
     @JsonFormat(pattern = "yyyy.MM.dd HH:mm:ss")
     private String datum;
-    private String mytoken;
+
 
 
     public Token(){
         // Leer
     }
 
-    public Token(long id, String datum, String mytoken){
-        this.id         = id;
-        this.datum      = datum;
+    public Token(String mytoken, String datum){
         this.mytoken    = mytoken;
+        this.datum      = datum;
     }
 
-    public long getId() { return id; }
-    public void setId(long id) { this.id = id; }
 
     public String getDatum() { return datum; }
     public void setDatum(String datum) { this.datum = datum; }
@@ -43,9 +38,8 @@ public class Token {
     @Override
     public String toString(){
        return "Token{ " +
-                "id='" + id + '\''  +
+               ", mytoken='" + mytoken + '\'' +
                 ", datum='" + datum + '\'' +
-                ", mytoken='" + mytoken + '\'' +
                 "}";
     }
 

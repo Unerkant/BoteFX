@@ -10,6 +10,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 
+/**
+ * Datum Unbekannt
+ */
+
 @Service
 public class ViewService {
 
@@ -18,24 +22,21 @@ public class ViewService {
     @Autowired
     private LanguageService languageService;
 
-    //public ViewService(TokenService tokenService) { this.tokenService = tokenService; }
-    //public ViewService(LanguageService languageService1) { this.languageService = languageService1; }
 
     /**
      * springContent konfiguriert in BoteApp Zeile 37 (init)
      */
     private ConfigurableApplicationContext springContext;
 
+
     private Scene scene;
-
-
     public Scene getScene() {
         return scene;
     }
-
     public void setScene(Scene scene) {
         this.scene = scene;
     }
+
 
     /**
      * QUELLE: BoteApp.java Zeile: 38
@@ -45,10 +46,12 @@ public class ViewService {
         this.springContext = springContext;
     }
 
+
     public Object switchTo(GlobalView globalView) {
 
         /* prüfen ob token vorhanden ist, wenn Leer: HOME Starten */
-        String myToken = tokenService.tokenHolen();
+        String myToken = tokenService.meinToken();
+
         if (myToken == null){
             switch (globalView){
                 case MAILSUCCESS:           globalView = GlobalView.MAILSUCCESS; break;

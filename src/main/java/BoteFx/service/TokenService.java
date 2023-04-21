@@ -3,17 +3,12 @@ package BoteFx.service;
 import BoteFx.model.Token;
 import BoteFx.repository.TokenRepository;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 
 
 /**
@@ -27,9 +22,8 @@ public class TokenService {
     private ConfigService configService;
     @Autowired
     private TokenRepository tokenRepository;
-/*    public TokenService(TokenRepository tokenRepository) {
-        this.tokenRepository = tokenRepository;
-    }*/
+
+
 
     /**
      * Neue User Token generieren
@@ -45,6 +39,7 @@ public class TokenService {
     }
 
 
+
     /**
      *  Token ins H2 speichern
      *
@@ -52,70 +47,82 @@ public class TokenService {
      *  oder:    TelefonRegisterController Zeile 132
      *
      *  nach erfolgreichen registrierung oder Einloggen den Token
-     *  in h2 localBote/Token speichern, für weitere nutzung als 'cookie'
-     *  in BoteApp.java Zeile: 55
+     *  in h2 localBoteFx.mv.db/Token speichern, für weitere nutzung als 'cookie'
+     *  in ViewService
      */
     public void saveToken(Token token){
         tokenRepository.save(token);
     }
 
 
+
     /**
      *  H2, nach gleichen token suchen
      *  return true: json-array
      *  return false: null
-     *  benutzt: MailRegisterController Zeile: 152
+     *  benutzt: MailRegisterController Zeile: 142
+     *  benutzt: TelefonRegisterController Zeile: 127
      */
     public Token findeToken(String token){
         return tokenRepository.findByMytoken(token);
     }
 
 
+
     /**
-     *  Token in json-Datei schreiben:
-     *  resources/static/json/token.json
+     * User Token, Haupt Token, wird bei Start die BoteFX-App benutzt,
+     * wenn leer, neu anmelden oder Registrieren...
+     * Benutzt: ViewService, Zeile: 54
      *
+     * output: 12042023204557
+     * output leer: null
+     * @return
      */
-    public String writeToken(String token){
-        File file = new File(configService.FILE_URL+"src/main/resources/static/json/token.json");
-        if (file.length() == 0) {
-            try {
-                FileWriter writer = new FileWriter(file);
-                writer.write("{\"token\":\""+token+"\"}");
-                writer.flush();
-                writer.close();
-                return "writeJsonOk";
-            } catch (IOException e) {
-                //throw new RuntimeException(e);
-                return "writeJsonNein";
-            }
-        } else {
-            return "eintragExist";
+    public String meinToken(){
+        String token = null;
+        Iterable result = tokenRepository.findAll();
+        if (!result.iterator().hasNext()){
+            return null;
         }
 
+        Iterator itr = result.iterator();
+        while (itr.hasNext()){
+            Token tok = (Token)itr.next();
+            token = tok.getMytoken();
+        }
+        return token;
     }
 
 
+
     /**
-     * Prüfen ob Token vorhanden ist
-     * wenn leer ist: null
-     * vergleich operation: if (myToken == null){}
+     * Zurzeit nicht benutzt, Einloggen Datum, funktioniert gut
+     *
+     * output: 21-04-2023 16:02:02
+     * bei leer: null
+     *
+     * @return
      */
-    public String tokenHolen(){
-        File file =  new File(configService.FILE_URL+"src/main/resources/static/json/token.json");
-        Object obj = null;
-        try {
-            obj = new JSONParser().parse(new FileReader(file));
-            String jsonToken = String.valueOf(((JSONObject) obj).get("token"));
-            return String.valueOf(jsonToken);
-        } catch (IOException e) {
-            //throw new RuntimeException(e);
-            return null;
-        } catch (ParseException e) {
-            //throw new RuntimeException(e);
+    public String einloggDatum(){
+
+        //String log = null;
+        Iterable res = tokenRepository.findAll();
+        if(!res.iterator().hasNext()){
             return null;
         }
 
+        /**
+         * ACHTUNG: abgekürzte variant, aber wenn Datenbank leer ist, dann ohne
+         * obere if Abfrage geht auf totale Fehler, liebe Schleife benutzen,
+         * die if Abfrage brachen auf jeden Fall
+         */
+        return tokenRepository.findAll().iterator().next().getDatum();
+     /*   Iterator it = res.iterator();
+        while (it.hasNext()){
+            Token tok = (Token) it.next();
+            log = tok.getDatum();
+        }
+        return log;*/
     }
 
 }
