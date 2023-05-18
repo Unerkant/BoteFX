@@ -444,3 +444,35 @@
         c. ....
 
     3. **********
+
+    *********************** neue Nachrichten, count anzeige ****************************************
+
+    1. eine neue eingehende Nachricht wird mit dem Socket empfangen: SoketService Zeile: 123
+    2. weiter die neue nachricht wird zum ChatBoxController umgeleitet(durch interface: SocketResponseHandler)
+        an die Methode: public void handleNewMessage(Message message), in der Methode wird geprüft, wer ist Online
+        User Online: IF
+        'messageController!= null' dann message live ausgeben an MessageController/ Methode
+        messageController.neueMessage(message); Zeile: 254
+        User nicht Online: ELSE
+        zuerst wird mit dem message Token nach dem User gesucht an wem war die nachricht gesendet:
+        FreundeCellController freundeCellController = freundeController.getRichtigenFreundeCellController(message.getMessagetoken());
+        wen der User werde gefunden dann wird einfach in FreundeCellController eine methode abgeruffen:
+        freundeCellController.nachrichtEmpfangen()); Zeile: 467
+        in den FreundeCellController:
+            bei abruffen die methode: nachrichtEmpfangen, wird einfach die variable count hoch gezählt count++
+            und so erchoht sich die variable bei jeder neue nachricht...
+            gleichzeitig wird in der Freunde-Box die count-anzeige angezeigt mit dem Zahl die eingehenden
+            nachrichten, einen rundes roten Label mit der Zahl die nachrichten..
+            zusätzlich wird der count  noch ins H2 Datenbank gespeichert, weil bei nächsten start wird in datenbank
+            nachgesehen ob eine neue nachricht vorhanden ist(oder mehrehren)
+            der Datenbank: der H2 datenbank ist ins BoteFX-APP integriert(Local), die Tabelle ist: neuemessage
+            nur mit dem 2 Spalten: token und count....
+            Freunde oberfläche anklicken: bei starten neuer Chat(click auf Freunde) werden count anzeige auf null
+            gesetzt + aus den datenbank einträge gelöscht
+             Alle Anzeige Methoden(3) + Datenbank einträge(3) sind in FreundeCellController/ Zeile ab: 460
+             prüft in Datenbank nach neuer Nachrichten Zeile: 188 in der Methode:
+             public void setProperties(Freunde frienden) {
+                     this.friend = frienden;
+                     ..... Weitere Ausgaben von Freunde Daten ..........
+                     }
+    **************************** Ende neue Nachrichten ********************************************************+

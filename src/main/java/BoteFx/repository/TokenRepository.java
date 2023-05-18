@@ -9,11 +9,11 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface TokenRepository extends CrudRepository<Token, Long> {
+public interface TokenRepository extends CrudRepository<Token, String> {
 
     /**
      * Token aus H2 holen und vergleichen
      */
-    Token findByMytoken(String mytoken);
+   // Token findByMytoken(String mytoken);
 
 }

@@ -1,11 +1,15 @@
 package BoteFx.service;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -88,13 +92,13 @@ public class MethodenService {
      * Achtung: Die Pane wird zuerst geleert... dann geschlossen
      *
      * benutzt von:
-     *  1. FreundeCellController Zeile: 295
-     *  2.
+     *  1. FreundeCellController Zeile: 413
+     *  2. PARAMETER: Pane + int  methodenService.hidePane(Pane, 3);
      *
      * @param pane
      * @param timer
      */
-    public void hidePane(AnchorPane pane, int timer){
+    public void hidePane(Pane pane, int timer){
         int paneHeight = (int) pane.getHeight();
         pane.getChildren().clear();
         pane.setStyle("-fx-background-color: #FFCCCC;");
@@ -124,7 +128,7 @@ public class MethodenService {
      * @param pane
      * @param timer
      */
-    public void showPane(AnchorPane pane, int timer){
+    public void showPane(Pane pane, int timer){
         int paneHeight = (int) pane.getHeight();
         Thread tread = new Thread(){
             public void run(){
@@ -139,6 +143,32 @@ public class MethodenService {
             }
         }; tread.start();
     }
+
+
+    /**
+     * Zeigt kürzlich den Informationslabel an und nach gewisse Zeit(timer)
+     * blendet langsam wieder aus
+     *
+     * Zugesendete Parameter: x2
+     *  a. Label
+     *  b. timer
+     *
+     * Benutzt: MessageController Zeile: über 1000(am schluss)
+     *
+     * @param pane
+     * @param timer
+     */
+    public void fadeIn(Parent pane, int timer){
+        FadeTransition fadeTransition = new FadeTransition(
+                Duration.seconds(timer),
+                pane);
+        fadeTransition.setToValue(0);
+        fadeTransition.play();
+        fadeTransition.setOnFinished(event -> {
+            //pane.setManaged(false);
+        });
+    }
+
 
 
     /**
@@ -161,6 +191,26 @@ public class MethodenService {
         y = event.getSceneY();
         //System.out.println("Global pressed");
     }
+
+
+
+    /**
+     * Alle Pop-up-Fenster schliessen, welche sind in Haupt StackPane ausgegeben
+     *
+     * Kurze Beschreibung: zuerst werden alle children in zugesendete Pane gelöscht
+     * dan selbe Pane wird auch gelöscht.
+     *
+     * Parameter: als parameter sind möglich AnchorPan, TilePane, StackPane... u.s.w
+     *
+     * ACHTUNG: als parameter keine Haupt-StackPane zusenden, nur den inhalt....
+     */
+    public void popUpFensterClose(Pane pane){
+
+        pane.getChildren().clear();
+        ((Pane)pane.getParent()).getChildren().remove(pane);
+
+    }
+
 
 
     /**

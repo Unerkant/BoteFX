@@ -15,18 +15,21 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+
 import java.net.URL;
 import java.net.http.HttpResponse;
 import java.util.ResourceBundle;
 
+
 /**
  * Den 6.11.2022
  */
+
 @Controller
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FreundeCellController implements Initializable {
@@ -45,6 +48,8 @@ public class FreundeCellController implements Initializable {
     private ChatBoxController chatBoxController;
     @Autowired
     private ApiService apiService;
+    @Autowired
+    private NeuemessageService countmessageService;
 
     @FXML private AnchorPane freundeCellAnchorPane;
     @FXML private Pane deleteCellPane;
@@ -52,13 +57,17 @@ public class FreundeCellController implements Initializable {
     @FXML private AnchorPane cellAnchorPane;
     @FXML private Label freundCellBild;
     @FXML private Label freundeCellName;
-    @FXML private ImageView freundeCellHaken;
+    @FXML private ImageView freundeCellHakenGreen;
+    @FXML private ImageView freundeCellHakenGrau;
     @FXML private Label freundeCellDatum;
     @FXML private Label freundeCellMessage;
     @FXML private Label freundeCellMessageCount;
     @FXML private Button freundeCellButton;
     @FXML private VBox freundeInfo;
+
     private String freundHintergrund;
+    private int count = 0;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -78,6 +87,8 @@ public class FreundeCellController implements Initializable {
     public void setRechtePane(StackPane rechtepane) {
         this.rechtePane = rechtepane;
     }
+
+
 
     /**
      *      SETTER von setProperties
@@ -110,12 +121,21 @@ public class FreundeCellController implements Initializable {
      *    ID mit Value belegt:  setId(friend.getMessagetoken());
      */
     private Freunde friend;
+
+    public String getMessageToken(){
+        return friend.getMessagetoken();
+    }
+    public String getFruendToken(){
+        return friend.getFreundetoken();
+    }
+
     public void setProperties(Freunde frienden) {
         this.friend = frienden;
 
     // a. delete button
         //friend.getMessagetoken();
         //deleteCellImg.setId(friend.getMessagetoken());
+
 
     // b. Freunde Bild
         String  freundBild  = friend.getFreundebild();
@@ -128,12 +148,13 @@ public class FreundeCellController implements Initializable {
             freundCellBild.setText(freundPseu);
         } else {
             // Bild aus mysql(Bote) holen
-            Image freundImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+freundBild+".png", false);
+            Image freundImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+freundBild+".png", true);
             ImageView imageView = new ImageView(freundImg);
             imageView.setFitHeight(50);
             imageView.setFitWidth(50);
             freundCellBild.setGraphic(imageView);
         }
+
 
     // c. Name oder Pseudonym Ausgeben
         String freundName = friend.getFreundename();
@@ -144,10 +165,13 @@ public class FreundeCellController implements Initializable {
             freundeCellName.setText(friend.getFreundevorname()+" "+ friend.getFreundename());
         }
 
+
     // d. Nachricht gelesen oder ungelesen
         /**
          * noch nicht vorgesehen
          */
+
+
 
     // e. Datum von letzte Nachricht
         if (friend.getDatumLetzteNachricht() != null) {
@@ -158,15 +182,27 @@ public class FreundeCellController implements Initializable {
             freundeCellDatum.setText("--");
         }
 
+
     // f. kurze anzeige von der letzten Nachricht
         freundeCellMessage.setText(friend.getLetzteNachricht());
 
+
     // g. Meldung von der neuen Nachricht anzeigen
-        freundeCellMessageCount.setText("99");
+
+        String h2Count = loadCountNeueNachricht();
+        if (h2Count != null){
+            count = Integer.parseInt(h2Count);
+            aktualisiereMessageCount();
+        } else {
+            // h2count ist null
+        }
+        //freundeCellMessageCount.setText("99");
+
 
     // h.
         freundeCellButton.setId(String.valueOf(friend.getMessagetoken()));
         //System.out.println("Set Property: " + freundeCellButton);
+
 
     // j.
         // Anzeige von Eingeladenen/
@@ -180,6 +216,7 @@ public class FreundeCellController implements Initializable {
         }
 
     } // Ende setProperties
+
 
 
     /**
@@ -269,7 +306,8 @@ public class FreundeCellController implements Initializable {
 
 
 
-    /* ************************* Click auf dem Chat-Freund ****************************** */
+    /* ************** Click auf dem Chat-Freund / Chat Laden + Freunde Löschen ***************** */
+
 
     /**
      *  CLICK AUF DIE FREUNDE-OBERFLÄCHE...
@@ -296,7 +334,9 @@ public class FreundeCellController implements Initializable {
 
         /* 3. */
         freundeController.freundeHover(this);
+        resetEmpfangeneNachrichten();
     }
+
 
 
     /**
@@ -347,6 +387,8 @@ public class FreundeCellController implements Initializable {
         cellAnchorPane.getStyleClass().add("freundeAktiv");
     }
 
+
+
     /**
      * Delete Pane prüfen auf offen oder zu ist
      * return: 0.0 = zeigt der roten button an
@@ -382,6 +424,8 @@ public class FreundeCellController implements Initializable {
 
     }
 
+
+
     /**
      * Click auf dem roten Löschen-Button
      * eine messageToken wird als parameter an Bote/apiFreundeController
@@ -416,6 +460,96 @@ public class FreundeCellController implements Initializable {
             // nicht machen, oder globaleFehler anlegen
         }
     }
+
+
+    /* ************** neue eingehende Nachrichten + count in H2(Local) speichern  **************** */
+
+
+    /**
+     *  beim Eingehen eine neue Nachricht count wird erhöht und
+     *  angezeigt + h2 Datenbank speicherung
+     */
+    public void nachrichtEmpfangen() {
+
+        count++;
+        aktualisiereMessageCount();
+        saveCountNeueNachricht();
+    }
+
+
+    /**
+     * zeigt die anzahl die neuen Nachrichten an...
+     */
+    private void aktualisiereMessageCount() {
+
+        if (count < 1) {
+
+            freundeCellMessageCount.setText("");
+            freundeCellMessageCount.getStyleClass().remove("freundeCellCount");
+            return;
+
+        }
+
+        freundeCellMessageCount.setText(String.valueOf(count));
+        freundeCellMessageCount.getStyleClass().add("freundeCellCount");
+    }
+
+
+    /**
+     * count reset + H2 Datenbank löschung von eingehende Nachrichten,
+     * Resetet wird über den Click auf den Freund Oberfläche Zeile: 317
+     *
+     * ACHTUNG: wird ausgelöst, wenn neue nachricht vorhanden sind(count großer als null)
+     */
+    private void resetEmpfangeneNachrichten() {
+
+        if (count > 0){
+
+            count = 0;
+            aktualisiereMessageCount();
+            // count von neue Nachricht in H2 Löschen
+            deleteCountNeueNachricht();
+        }
+
+    }
+
+
+    /**
+     * User nicht Online: neue eingehende Nachrichten ins H2 datenbank speichern
+     * Parameter: Freunde Token(wer nachricht versendet)
+     *            count, alle eingehende nachrichten in der Methode 'nachrichtEmpfangen' hochzählen
+     */
+    private void saveCountNeueNachricht(){
+
+        countmessageService.saveCountNeueMessage(friend.getFreundetoken(), String.valueOf(count));
+    }
+
+
+    /**
+     * prüfen, ob neue nachricht eingegangen sind: Zeile: 188
+     *
+     * return: Zahl oder null
+     * @return
+     */
+    private String loadCountNeueNachricht(){
+
+        return countmessageService.loadCountNeueMessage(friend.getFreundetoken());
+
+    }
+
+
+    /**
+     * mit dem Klick auf die Freunde oberfläche werde der eintrag in H2 Datenbank gelöscht
+     * Parameter: freunde token
+     * output: true oder false
+     */
+    private void deleteCountNeueNachricht(){
+
+        boolean countOutput = countmessageService.deleteCountNeueMessage(friend.getFreundetoken());
+        //System.out.println("Count von neue Nachricht wurde gelöscht: " + countOutput);
+
+    }
+
 
 }
 

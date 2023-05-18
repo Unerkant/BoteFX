@@ -124,12 +124,10 @@ public class TelefonRegisterController implements Initializable {
             String resToken = objec.getString("tokenResponse");
 
             /* token in H2 Database speichern (localBote/Token) */
-            Token H2Token = tokenService.findeToken(resToken);     // h2token output: null
+            String H2Token = tokenService.meinToken();     // h2token output: null
             if (H2Token == null){
                 Token neuToken = new Token();
-                String datum = methodenService.deDatum();
                 neuToken.setMytoken(resToken);
-                neuToken.setDatum(datum);
                 tokenService.saveToken(neuToken);
                 tokenOk = "writeH2Ok";
             } else {

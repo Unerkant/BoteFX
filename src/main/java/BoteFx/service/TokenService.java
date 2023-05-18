@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 
 
 /**
@@ -18,8 +17,6 @@ import java.util.Iterator;
 @Service
 public class TokenService {
 
-    @Autowired
-    private ConfigService configService;
     @Autowired
     private TokenRepository tokenRepository;
 
@@ -57,21 +54,8 @@ public class TokenService {
 
 
     /**
-     *  H2, nach gleichen token suchen
-     *  return true: json-array
-     *  return false: null
-     *  benutzt: MailRegisterController Zeile: 142
-     *  benutzt: TelefonRegisterController Zeile: 127
-     */
-    public Token findeToken(String token){
-        return tokenRepository.findByMytoken(token);
-    }
-
-
-
-    /**
-     * User Token, Haupt Token, wird bei Start die BoteFX-App benutzt,
-     * wenn leer, neu anmelden oder Registrieren...
+     * User Token nicht vorhanden, neu anmelden oder Registrieren...
+     *
      * Benutzt: ViewService, Zeile: 54
      *
      * output: 12042023204557
@@ -79,50 +63,32 @@ public class TokenService {
      * @return
      */
     public String meinToken(){
-        String token = null;
-        Iterable result = tokenRepository.findAll();
+
+        Iterable<Token> result = tokenRepository.findAll();
+
         if (!result.iterator().hasNext()){
             return null;
         }
+        return result.iterator().next().getMytoken();
 
-        Iterator itr = result.iterator();
-        while (itr.hasNext()){
-            Token tok = (Token)itr.next();
-            token = tok.getMytoken();
-        }
-        return token;
     }
 
 
 
     /**
-     * Zurzeit nicht benutzt, Einloggen Datum, funktioniert gut
      *
-     * output: 21-04-2023 16:02:02
-     * bei leer: null
-     *
+     * @param token
      * @return
      */
-    public String einloggDatum(){
+    public boolean deleteToken(String token){
 
-        //String log = null;
-        Iterable res = tokenRepository.findAll();
-        if(!res.iterator().hasNext()){
-            return null;
+        Token findToken = tokenRepository.findById(token).orElse(null);
+
+        if (findToken != null){
+            tokenRepository.delete(findToken);
         }
 
-        /**
-         * ACHTUNG: abgekürzte variant, aber wenn Datenbank leer ist, dann ohne
-         * obere if Abfrage geht auf totale Fehler, liebe Schleife benutzen,
-         * die if Abfrage brachen auf jeden Fall
-         */
-        return tokenRepository.findAll().iterator().next().getDatum();
-     /*   Iterator it = res.iterator();
-        while (it.hasNext()){
-            Token tok = (Token) it.next();
-            log = tok.getDatum();
-        }
-        return log;*/
+        return false;
     }
 
 }

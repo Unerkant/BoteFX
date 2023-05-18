@@ -140,12 +140,10 @@ public class MailRegisterController implements Initializable {
             String token = object.getString("tokenOutput");
 
             /* token in H2 Database speichern (localBote/Token) */
-            Token h2token = tokenService.findeToken(token);     // h2token output: null
+            String h2token = tokenService.meinToken();     // h2token output: null
             if (h2token == null){
                 Token newToken = new Token();
-                String datum = methodenService.deDatum();
                 newToken.setMytoken(token);
-                newToken.setDatum(datum);
                 tokenService.saveToken(newToken);
                 tokenOK = "writeH2OK";
             } else {

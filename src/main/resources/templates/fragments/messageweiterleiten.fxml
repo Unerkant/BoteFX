@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="weiterleitenHauptPane" alignment="CENTER" styleClass="weiterleitensHauptPane" stylesheets="@../../static/css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.fragments.WeiterleitenController">
+   <children>
+      <StackPane fx:id="weiterleitenStackPane" maxWidth="360.0">
+         <children>
+            <BorderPane maxHeight="700.0" maxWidth="360.0" minHeight="300.0" prefWidth="360.0" style="-fx-background-color: #FAFAFF; -fx-background-radius: 8; -fx-border-color: transparent; -fx-border-radius: 8;">
+               <top>
+                  <HBox alignment="CENTER_LEFT" style="-fx-border-color: #F2F2F2; -fx-border-width: 0 0 1 0;" BorderPane.alignment="CENTER">
+                     <children>
+                        <Hyperlink alignment="CENTER" onAction="#weiterleitenClose" prefHeight="50.0" prefWidth="50.0">
+                           <graphic>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../static/img/closered.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </graphic>
+                        </Hyperlink>
+                        <TextField fx:id="weiterleitenTextField" prefWidth="300.0" promptText="Teilen mit...." style="-fx-background-color: #F5F5F5; -fx-background-radius: 6; -fx-border-color: transparent; -fx-border-radius: 6;">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </TextField>
+                     </children>
+                  </HBox>
+               </top>
+               <center>
+                  <ScrollPane fx:id="weiterleitenScrollPane" stylesheets="@../../static/css/scrollpane.css">
+                     <content>
+                        <VBox fx:id="weiterleitenVBox" prefWidth="360.0" />
+                     </content>
+                  </ScrollPane>
+               </center>
+               <bottom>
+                  <GridPane BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <StackPane fx:id="weiterleitenSmileStackPane">
+                           <children>
+                              <ImageView fx:id="weiterleitenSmileBlau" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                 <image>
+                                    <Image url="@../../static/img/smileblue.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="weiterleitenSmile" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../static/img/smile.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <TextArea fx:id="weiterleitenTextarea" maxHeight="300.0" minHeight="20.0" onKeyReleased="#weiterleitenTextareaReleased" prefHeight="20.0" promptText="Kommentar..." styleClass="textareatext" stylesheets="@../../static/css/footer-textarea.css" wrapText="true" GridPane.columnIndex="1">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets top="10.0" />
+                           </GridPane.margin>
+                        </TextArea>
+                        <Hyperlink alignment="CENTER" onAction="#weiterleitenSenden" prefHeight="50.0" prefWidth="50.0" GridPane.columnIndex="2">
+                           <graphic>
+                              <ImageView fx:id="weiterleitenSenden" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../static/img/sendenblue.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </graphic>
+                        </Hyperlink>
+                     </children>
+                  </GridPane>
+               </bottom>
+            </BorderPane>
+         </children>
+      </StackPane>
+   </children>
+   <padding>
+      <Insets bottom="50.0" top="50.0" />
+   </padding>
+</VBox>

@@ -6,10 +6,11 @@ import BoteFx.model.Freunde;
 import BoteFx.service.ApiService;
 import BoteFx.service.ConfigService;
 import BoteFx.service.LayoutService;
-
 import BoteFx.service.TranslateService;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -18,16 +19,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -50,8 +51,7 @@ public class FreundeController implements Initializable {
 
     private FreundeCellController cellController;
     private FreundeCellController activeCellController;
-
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    private HashMap<String, FreundeCellController> freundeCellControllerHashMap;
 
     @FXML private AnchorPane freundeAnchorPane;
     @FXML private ImageView imgFreundRemove;
@@ -65,6 +65,7 @@ public class FreundeController implements Initializable {
 
     /**
      * zieht die AnchorPane & ScrollPane auf 100%
+     *
      * @param url
      * @param resourceBundle
      */
@@ -82,6 +83,8 @@ public class FreundeController implements Initializable {
         freundeVBox.prefWidthProperty().bind(freundeScroll.widthProperty());
         freundeVBox.prefHeightProperty().bind(freundeScroll.heightProperty());
     }
+
+
 
     /**
      *  Setter & Getter
@@ -124,7 +127,9 @@ public class FreundeController implements Initializable {
         freundeLaden(meinToken);
     }
 
+
     /* ******************* Freunde Laden/Anzeigen ************************ */
+
 
     /**
      *  Automatische Laden, Zeile: 113 (hier oben)
@@ -151,6 +156,8 @@ public class FreundeController implements Initializable {
      */
     private final ArrayList<LayoutService.LayoutControllerPair> rootAndControllerPairs = new ArrayList<>();
     public void freundeLaden(String myToken) {
+
+        freundeCellControllerHashMap = new HashMap<>();
 
         // Nachricht oder Aktualisierung Anzeigen
 
@@ -181,6 +188,8 @@ public class FreundeController implements Initializable {
                 cellController = (FreundeCellController) pair.getController();
                 cellController.setRechtePane(rechtsPane);
                 cellController.setProperties(fried);
+
+                freundeCellControllerHashMap.put(fried.getMessagetoken(), cellController);
             }
 
         } else {
@@ -199,7 +208,8 @@ public class FreundeController implements Initializable {
 
     }
 
-    /* *************************** Freunde-Anzeige Hover Setzen ****************** */
+
+    /* ************ Freunde-Anzeige Hover Setzen + neue Nachrichten count ****************** */
 
 
     /**
@@ -220,6 +230,24 @@ public class FreundeController implements Initializable {
         currentCellController.setHover();
         // Hover Position merken
         activeCellController = currentCellController;
+    }
+
+
+
+    /**
+     *  alle controller von meiner Freunde in einem HashMap Zeile: 188 speichern
+     *  und an ChatBoxController Zeile: 290 zurück geben, für die count anzeige
+     *  in dr FreundeCellController
+     *
+     * @param messagetoken
+     * @return
+     */
+    public FreundeCellController getRichtigenFreundeCellController(String messagetoken) {
+        if (freundeCellControllerHashMap.containsKey(messagetoken)) {
+            return freundeCellControllerHashMap.get(messagetoken);
+        }
+
+        return null;
     }
 
 
@@ -263,6 +291,8 @@ public class FreundeController implements Initializable {
         imgRemoveZeigen(false);
     }
 
+
+
     /**
      * Methode nur für die Anzeige den roten Button
      * Anzeige von der Remove pane wird in FreundeCellController/freundeRemoveZeigen()
@@ -274,6 +304,8 @@ public class FreundeController implements Initializable {
             ((FreundeCellController) pair.getController()).paneRemoveZeigen(zeige);
         }
     }
+
+
 
     /**
      * Anzeige von icon:
@@ -288,6 +320,7 @@ public class FreundeController implements Initializable {
 
 
     /* *************************** Bekannten zum Chatten Einladen ******************************** */
+
 
     /**
      * Bekannten oder Freunde zum Chat Einladen
@@ -314,6 +347,8 @@ public class FreundeController implements Initializable {
         bekanntenEinladen();
 
     }
+
+
 
     /**
      * SPÄTER LÖSCHEN ODER ÄNDERN
@@ -344,6 +379,5 @@ public class FreundeController implements Initializable {
         // Translate Starten(nur unter 650px)
         translate.offenStackPane();
     }
-
 
 }

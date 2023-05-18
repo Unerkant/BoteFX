@@ -1,12 +1,17 @@
 package BoteFx.controller.setting;
 
+import BoteFx.BoteApp;
 import BoteFx.controller.ChatBoxController;
 import BoteFx.service.ConfigService;
 
+import BoteFx.service.MethodenService;
+import BoteFx.service.TokenService;
 import BoteFx.service.TranslateService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -24,6 +29,10 @@ import java.util.ResourceBundle;
 @Controller
 public class ProfilController implements Initializable {
 
+    @Autowired
+    private MethodenService methodenService;
+    @Autowired
+    private TokenService tokenService;
     @Autowired
     private TranslateService translate;
     @Autowired
@@ -83,5 +92,32 @@ public class ProfilController implements Initializable {
      */
     public void profilSpeichern(ActionEvent event) {
         System.out.println("Profil Speichern: " + event);
+    }
+
+
+    /**
+     * Abmelden von BoteFx
+     *
+     * wird nur in Datenbank(H2 Local) den User Token gelöscht und Stage geschlossen
+     *
+     * ACHTUNG: könnte überarbeitet auf: stage neu Starten statt schliessen und
+     * einem Pop-up-Fenster für warnung ausgeben
+     *
+     * @param event
+     */
+    public void profilAbmelden(ActionEvent event) {
+
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Möchten Sie sich wirklich abmelden?", ButtonType.YES, ButtonType.NO);
+        ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+
+        if (ButtonType.YES.equals(result)) {
+            // no choice or no clicked -> don't close
+            boolean geloscht = tokenService.deleteToken(profiltoken);
+            methodenService.stageClose(event);
+            System.out.println("Abmelden: " +geloscht);
+        }
+
+
     }
 }

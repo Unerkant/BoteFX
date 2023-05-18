@@ -1,9 +1,10 @@
 package BoteFx.controller;
 
 import BoteFx.Enums.GlobalView;
-import BoteFx.controller.fragments.MessageCellController;
+import BoteFx.controller.fragments.WeiterleitenController;
 import BoteFx.model.Freunde;
 import BoteFx.model.Message;
+import BoteFx.model.Usern;
 import BoteFx.service.*;
 
 import com.google.gson.Gson;
@@ -12,35 +13,29 @@ import com.google.gson.reflect.TypeToken;
 import javafx.animation.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.http.HttpResponse;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -66,10 +61,13 @@ public class MessageController implements Initializable {
     private MethodenService methodenService;
     @Autowired
     private ChatBoxController chatBoxController;
+    @Autowired
+    private UserdataService userdataService;
 
 
     @FXML private AnchorPane messageAnchorPane;
     @FXML private BorderPane messageBorderPane;
+    @FXML private StackPane messageTopStackPane;
     @FXML private Label messageProfilBild;
     @FXML private Label headFreundName;
     @FXML private Label headFreundInfo;
@@ -77,6 +75,7 @@ public class MessageController implements Initializable {
     @FXML public ImageView onlinePhone;
     @FXML public ImageView noPhone;
     @FXML private Label headBearbeiten;
+    @FXML private StackPane messageCenterStackPane;
     @FXML private ScrollPane messageScrollPane;
     @FXML private StackPane messageBottomStackPane;
     @FXML private ImageView messageOther;
@@ -92,7 +91,8 @@ public class MessageController implements Initializable {
      */
     @FXML private StackPane hauptStage;
     @FXML private String myColor;
-
+    private String meinerToken;
+    Usern mineData = null;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         /* Message VBox auf 100% ziehen*/
@@ -106,6 +106,12 @@ public class MessageController implements Initializable {
 
         // Methode: altMessage, rundes bild-hintergrund, Zeile: ab 415
         myColor = methodenService.zufallColor();
+
+        // Meiner Token
+        meinerToken = tokenService.meinToken();
+
+        // Meine Daten
+        mineData = userdataService.meineDaten();
     }
 
 
@@ -155,7 +161,9 @@ public class MessageController implements Initializable {
         Type listType = new TypeToken<ArrayList<Message>>(){}.getType();
         allMessages  = gson.fromJson(response.body(), listType);
 
-        alteMessages(allMessages);
+        //Collections.reverse(allMessages);
+        messagesAusgeben(allMessages);
+
     }
 
 
@@ -191,7 +199,7 @@ public class MessageController implements Initializable {
         String freundPseudonym = freundData.getFreundepseudonym();
 
         // Profil Bild von Bote holen
-        Image headFreundImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+freundBild+".png");
+        Image headFreundImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+freundBild+".png", true);
         if (headFreundImg.isError()){
             messageProfilBild.setText(freundPseudonym);
             messageProfilBild.setAlignment(Pos.CENTER);
@@ -212,7 +220,7 @@ public class MessageController implements Initializable {
         // Letzte Online Zeit(style direct in message.fxml)
         // freundOnlineZeit.setText("???...MessageControll..Zeile: 358");
 
-        // Message Bearbeiten (Label) onMouseClicked(messageBearbeiten)
+        // Click auf die drei Punkten, onMouseClicked(messageBearbeitenStart)
         blauPunkte.setFitWidth(30);
         blauPunkte.setFitHeight(30);
         headBearbeiten.setGraphic(blauPunkte);
@@ -222,16 +230,16 @@ public class MessageController implements Initializable {
     /* *********************** Alte Message + neue Message Ausgabe ******************* */
 
 
+
     /**
-     * Alte Message von den Globalen(Bote, MySql) Datenbank holen und Ausgeben,
-     * wird gestartet in Zeile: 158
+     *  Allgemeine variable für die Methoden messageAusgeben + neueMessage
      */
-    private void alteMessages(ArrayList<Message> altMessage){
-
-        messagesAusgeben(altMessage);
-
-    }
-
+    final List<Long> checkBoxSelected = new ArrayList<>();              // CheckBox: nur selected
+    final List<StackPane> stackPaneSelected = new ArrayList<>();        // StackPane: zum Löschen, hover
+    final List<CheckBox> allCheckBoxArray = new ArrayList<>();          // CheckBox: alle, benutzt in cellCheckBoxHide()
+    final List<VBox> cellRightVBoxArray = new ArrayList<>();            // VBox: alle, für die show/hide CheckBox
+    final List<String> messageWeiterleitenArray = new ArrayList<>();    // alle selected-messages für weiterleiten
+    private VBox cellRightVBox;                                         // VBox: CheckBox(show/hide) Zeile:395/ab 700
 
 
     /**
@@ -246,26 +254,18 @@ public class MessageController implements Initializable {
      */
     public void neueMessage(Message neuMessage) {
 
-        ArrayList<Message> newMessage = new ArrayList<Message>(Collections.singleton(neuMessage));
-        messagesAusgeben(newMessage);
 
+        ArrayList<Message> newMessage = new ArrayList<Message>(Collections.singleton(neuMessage));
+
+        messagesAusgeben(newMessage);
+        scrollBottom(messageScrollPane);
     }
 
 
     /**
-     * hier werden in eine schleife die Alte-Message und die Neue-Message Ausgegeben
+     * Alte Message Ausgeben, gestartet Zeile: 160
      * @param allmesage
      */
-    final List<Long> checkBoxSelected = new ArrayList<>();              // CheckBox: nur selected
-    final List<StackPane> stackPaneSelected = new ArrayList<>();        // StackPane: zum Löschen, hover
-    final List<CheckBox> allCheckBoxArray = new ArrayList<>();          // CheckBox: alle, benutzt in cellCheckBoxHide()
-    final List<VBox> cellRightVBoxArray = new ArrayList<>();             // VBox: alle, für die show/hide CheckBox
-    private VBox cellRightVBox;
-    // die 3 final, für den Löschen Teil
-    @FXML final Hyperlink linkLoschen = new Hyperlink();
-    @FXML final Label labelCount = new Label();
-    @FXML final Hyperlink linkWeiterleiten = new Hyperlink();
-
     private void messagesAusgeben(ArrayList<Message> allmesage){
 
         String meinToken = tokenService.meinToken();
@@ -291,7 +291,7 @@ public class MessageController implements Initializable {
             Label cellUserBildLabel = new Label(mess.getPseudonym());
             cellUserBildLabel.getStyleClass().add("cellBildsLabel");
             // Bild von Bote holen
-            Image cellProfilImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+mess.getMeintoken()+".png", false);
+            Image cellProfilImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+mess.getMeintoken()+".png", true);
             if (cellProfilImg.isError()){
                 cellUserBildLabel.setText(mess.getPseudonym());
                 cellUserBildLabel.setStyle( "-fx-background-color:" + (freundToken.equals(mess.getMeintoken()) ? freundColor : myColor) + "; " +
@@ -328,8 +328,6 @@ public class MessageController implements Initializable {
 
             // b. Hacken Grau + Grün
             StackPane cellDonePane = new StackPane();
-            //Image imgGrau = new Image();
-            //Image imgGrun = new Image();
             ImageView imgHakenGrau = new ImageView(new Image(getClass().getResourceAsStream("/static/img/hacken.png")));
             ImageView imgHakenGrun = new ImageView(new Image(getClass().getResourceAsStream("/static/img/donegreen.png")));
             imgHakenGrau.setFitWidth(15);
@@ -345,7 +343,6 @@ public class MessageController implements Initializable {
             String zeit = mess.getDatum().substring(8,14);
             Label cellMessageZeit = new Label(zeit);
             cellMessageZeit.getStyleClass().add("cellMesagesZeit");
-            
 
             // d. GridPane + add column(),
             GridPane cellGridPane = new GridPane();
@@ -396,38 +393,51 @@ public class MessageController implements Initializable {
             cellRightVBox = new VBox(cellCheckBox);
             cellRightVBox.setId(String.valueOf(mess.getId()));
 
+            // CheckBox verstecken, show/hide ab Zeile: 700
             AnchorPane cellRightAnchorPane = new AnchorPane(cellRightVBox);
             AnchorPane.setRightAnchor(cellRightVBox, -25.0);
+
+            // Click auf die Zeit Anzeige
+            cellMessageZeit.setOnMouseClicked((event) ->{
+                clickAufZeitAnzeige();
+                cellCheckBox.setSelected(true);
+            });
 
             cellRightVBoxArray.add(cellRightVBox);
             allCheckBoxArray.add(cellCheckBox);
 
             cellCheckBox.selectedProperty().addListener((observable, oldValue, selectedNow) -> {
+
                 /* observable, oldValue, selectedNow: output:~ selected/false/true */
                 /* selected message in Array speichern + hover setzen und umgekehrt */
                 if (selectedNow) {
                     checkBoxSelected.add(Long.valueOf(cellCheckBox.getId()));
                     stackPaneSelected.add(cellHauptStackPane);
                     cellHauptStackPane.getStyleClass().add("cellMessagesHover");
+                    messageWeiterleitenArray.add(mess.getText());
                 } else {
                     checkBoxSelected.remove(Long.valueOf(cellCheckBox.getId()));
                     stackPaneSelected.remove(cellHauptStackPane);
                     cellHauptStackPane.getStyleClass().remove("cellMessagesHover");
+                    messageWeiterleitenArray.remove(mess.getText());
                 }
 
-                System.out.println("selectedProperty: " + observable +"/"+ oldValue +"/"+ selectedNow );
+
                 // Message Löschen Teil
                 if (checkBoxSelected.size() == 0 && stackPaneSelected.size() == 0){
+
                     // keine checkBox aus gewellt, alles schliessen
                     messageLoschenHide();
                     cellCheckBoxHide();
 
+                    /* Message Löschen, Zeile: 950 */
+                    loschenDisabled();
+
                 } else {
-                    // checkBox + StackPane selected
-                    linkLoschen.setText(String.valueOf(checkBoxSelected));
-                    int checkCount = checkBoxSelected.size();
-                    labelCount.setText(String.valueOf(checkCount));
-                    linkWeiterleiten.setText(String.valueOf(checkBoxSelected));
+
+                    /* Message Löschen, Zeile: 800 */
+                    messageLoschenHandle(checkBoxSelected, stackPaneSelected, messageWeiterleitenArray);
+
                 }
 
             });
@@ -444,7 +454,8 @@ public class MessageController implements Initializable {
 
 
         /**
-         *  6.  message-box anzeigen */
+         *  6.  message-box anzeigen
+         */
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -452,7 +463,8 @@ public class MessageController implements Initializable {
                     messageVBox.getChildren().add(cellHauptStackPane);
 
                     // Bottom Scroll, immer letzte Message Anzeigen
-                    scrollBottom(messageScrollPane);
+                    messageScrollPane.setVvalue(1.0);
+                    //scrollBottom(messageScrollPane);
                 }
             });
 
@@ -484,6 +496,11 @@ public class MessageController implements Initializable {
      * die Methode reagiert auf Tasten druck, onKeyReleased,
      * gesendet nut per ENTER
      *
+     * Message-Array:
+     *      Message{id='0', datum='24.04.23 16:08', freundetoken='09042023111429', meintoken='12042023204557',
+     *      messagetoken='12042023205845', pseudonym='JC', vorname='Java', name='Client',
+     *      text='so sieht einen Array von message', role='default'}
+     *
      * @param keyEvent
      */
     private  Double messageHeightMerken = 20.0;
@@ -493,7 +510,7 @@ public class MessageController implements Initializable {
         String messagesText = textareaText.getText();
 
         // Text Field auf Leer Prüfen
-        if (messagesText.isBlank()) {
+        if (messagesText == null || messagesText.trim().length() == 0) {
             textareaMinHoch();
             messageHeightMerken = 20.0;
             textareaText.clear();
@@ -511,11 +528,11 @@ public class MessageController implements Initializable {
 
             message.setDatum(format.format(new Date()));
             message.setFreundetoken(freundToken);
-            message.setMeintoken(tokenService.meinToken());
+            message.setMeintoken(meinerToken);
             message.setMessagetoken(messageToken);
-            message.setPseudonym("JC");
-            message.setVorname("Java");
-            message.setName("Client");
+            message.setPseudonym(mineData.getPseudonym());
+            message.setVorname(mineData.getVorname());
+            message.setName(mineData.getName());
             message.setText(messagesText);
             message.setRole("default");
 
@@ -593,38 +610,85 @@ public class MessageController implements Initializable {
 
 
     /**
-     * Message Bearbeiten, click auf die Drei Blau Punkte...
-     * nur für show/hide den Pop-up-Fenster + checkBox(für den Löschen)
-     * Löschen ist in separaten Teil 'Message Löschen'
+     * Click auf drei Punkte & 'fertig'
      */
-    @FXML
-    public void messageBearbeiten() {
+    public void messageBearbeitenStart(){
 
-        //System.out.println("Message Bearbeiten");
-
-        double textareaHoch = textareaText.getHeight();
-        if (textareaHoch > 40.0){
-            // Message Height Merken
-            messageHeightMerken = textareaHoch;
-        }
+        textareaHochMerken();
 
         String fertig = headBearbeiten.getText();
         if ("fertig".equals(fertig)){
 
             cellCheckBoxHide();
             messageLoschenHide();
-            return;
-        }
 
-        // aufbaue eine pane über die ganze Stage, und ober Rechts das Pop-up-Fenster
+        } else {
+
+            messageBearbeiten();
+        }
+    }
+
+    /**
+     * click auf die Datum/uhrzeit
+     */
+    public void clickAufZeitAnzeige(){
+
+        textareaHochMerken();
+
+        String fertig = headBearbeiten.getText();
+        if ("fertig".equals(fertig)){
+
+            cellCheckBoxHide();
+            messageLoschenHide();
+
+        } else {
+
+            cellCheckBoxShow();
+            messageLoschenShow();
+            textareaMinHoch();
+        }
+    }
+
+
+    /**
+     *  Header: Text 'fertig' gegen Bild(drei Punkte) tauschen
+     */
+    private void clickDreiPunkteShow(){
+
+        headBearbeiten.setText("");
+        blauPunkte.setFitHeight(30);
+        blauPunkte.setFitWidth(30);
+        headBearbeiten.setGraphic(blauPunkte);
+    }
+
+
+    /**
+     *  Header: Bild-drei-Punkte gegen, Text 'fertig' tauschen
+     */
+    private void clickDreiPunkteHide(){
+
+        headBearbeiten.setGraphic(null);
+        headBearbeiten.setText("fertig");
+    }
+
+
+    /**
+     * der Pop-up-Fenster mit verschiedene click Methoden
+     *
+     * aufbaue eine pane über die ganze Stage, und ober Rechts das Pop-up-Fenster,
+     * mit click auf die oberfläche in der ganzen Stage wird der Pop-up-Fenster geschlossen
+     * popUpFensterClose(spiegelungHaupStage);
+     */
+    private void messageBearbeiten() {
+
         AnchorPane spiegelungHaupStage = new AnchorPane();
-        spiegelungHaupStage.setStyle("-fx-background-color: transparent; -fx-border-color: red;");
-        spiegelungHaupStage.prefWidthProperty().bind(hauptStage.widthProperty());
-        spiegelungHaupStage.prefHeightProperty().bind(hauptStage.heightProperty());
+        spiegelungHaupStage.setStyle("-fx-background-color: transparent;");
+        //spiegelungHaupStage.prefWidthProperty().bind(hauptStage.widthProperty());
+        //spiegelungHaupStage.prefHeightProperty().bind(hauptStage.heightProperty());
 
         VBox popUpBearbeiten = new VBox();
         popUpBearbeiten.getStyleClass().add("messagesBearbeiten");
-        popUpBearbeiten.setEffect(new DropShadow(5, Color.GRAY));
+        //popUpBearbeiten.setEffect(new DropShadow(5, Color.GRAY));
         AnchorPane.setTopAnchor(popUpBearbeiten, 25.0);
         AnchorPane.setRightAnchor(popUpBearbeiten, 20.0);
 
@@ -670,7 +734,7 @@ public class MessageController implements Initializable {
                     default: break;
                 }
                 //Pop-Up-Fester ausblenden
-                popUpFensterClose(spiegelungHaupStage);
+                methodenService. popUpFensterClose(spiegelungHaupStage);
             });
         }
 
@@ -681,19 +745,21 @@ public class MessageController implements Initializable {
 
         //Pop-Up-Fester ausblenden
         spiegelungHaupStage.setOnMouseClicked(mouseEvent -> {
-            popUpFensterClose(spiegelungHaupStage);
+            methodenService.popUpFensterClose(spiegelungHaupStage);
         });
     }
 
 
     /**
-     * checkBox verwalten(click auf bearbeiten in pop-up-Fenster)
+     * click auf bearbeiten in der Pop-up-Fenster...
      */
     private void cellCheckBoxZeigen(){
 
-        messageLoschenShow();
         cellCheckBoxShow();
         textareaMinHoch();
+        clickDreiPunkteHide();
+        // Löschen Teil, ab 800
+        messageLoschenShow();
         
     }
 
@@ -733,33 +799,21 @@ public class MessageController implements Initializable {
         }
 
     }
-    
-    
-    /**
-     *  Header: Bild-drei-Punkte löschen, Text 'fertig' einfügen
-     */
-    private void clickDreiPunkteHide(){
 
-        headBearbeiten.setGraphic(null);
-        headBearbeiten.setText("fertig");
-    }
 
-    
-    /**
-     *  Header: Text 'fertig' Löschen, Bild(drei Punkte) einfügen
-     */
-    private void clickDreiPunkteShow(){
 
-        headBearbeiten.setText("");
-        blauPunkte.setFitHeight(30);
-        blauPunkte.setFitWidth(30);
-        headBearbeiten.setGraphic(blauPunkte);
+    private void textareaHochMerken(){
+        double textareaHoch = textareaText.getHeight();
+        if (textareaHoch > 40.0){
+            // Message Height Merken
+            messageHeightMerken = textareaHoch;
+        }
     }
 
     
     /**
      * Bottom, textarea height auf 20px schrumpfen, für die anzeige
-     * von bearbeiten menu(Löschen, Löschen-Count + weiterleiten)
+     * der Löschen-Fenster
      */
     private void textareaMinHoch(){
         
@@ -783,92 +837,253 @@ public class MessageController implements Initializable {
         
     }
 
-    
-    /**
-     * der Bearbeiten-Pop-up-Fenster(rechts oben mit 3 punkten '...' ) schliessen
-     * Quelle: Methode: messageBearbeiten Zeile: 670
-     */
-    private void popUpFensterClose(Pane pane){
-        
-        pane.getChildren().clear();
-        ((Pane)pane.getParent()).getChildren().remove(pane);
-        
-    }
-
 
     /* *************** Message Löschen *********************** */
 
     /**
      * Message Löschen
-     * die Methode messageLoschenShow wird gestartet in der Methode
+     * die Methode messageLoschenHandle wird gestartet in der Methode
      * cellCheckBoxZeigen() / Zeile: 700
      *
-     * Achtung: zugesendete parameter checkBoxSelected: in diesem Array sind
-     * nur selected checkBox gespeichert mit der ID(von dem message)
-     * mit diesem Format werden sie mit requestApi versendet
-     * List<Long>: [205, 207, 202, 200]
-     * StackPane: [StackPane[id=261, styleClass=altMessageHover],
-     *            StackPane[id=273, styleClass=altMessageHover],
-     *            StackPane[id=274, styleClass=altMessageHover]]
+     * Achtung: die zugesendete parameter checkBoxSelected + StackPaneSelected:
+     * sind selectierte CheckBox + StackPane in einem List-Array gesammelt
+     * mit gespeicherten ID von der Message...
      *
+     * mit diesem Format werden sie mit requestApi versendet
+     * List<Long>: [386, 385, 384]
+     * StackPane: [
+     *              StackPane[id=386, styleClass=cellMessagesHover],
+     *              StackPane[id=385, styleClass=cellMessagesHover],
+     *              StackPane[id=384, styleClass=cellMessagesHover]
+     *            ]
      */
-    @FXML final AnchorPane messageLoschenPane = new AnchorPane();
-    final GridPane loschGridPane = new GridPane();
+    int checkCount;
+    final AnchorPane messageLoschenPane = new AnchorPane();
+    final Label loschLabelDisable = new Label("Löschen");
+    final Hyperlink loschHyperlinkAktiv = new Hyperlink("Löschen");
+    final Label loschCount = new Label();
+    final Label loschAuswehlenLabel = new Label("Nachrichten auswählen");
+    final Label weiterLabelDisable = new Label("Weiterleiten");
+    final Hyperlink weiterHyperlinkAktiv = new Hyperlink("Weiterleiten");
     /*List<Long> checkGruppe, List<StackPane> paneGruppe*/
+    private void messageLoschenHandle(List<Long> checkGruppe, List<StackPane> stackGruppe, List<String> messageGruppe){
+
+        checkCount = checkGruppe.size();
+
+
+        loschenAktiv();
+
+        /* Message Löschen, Zeile: 980*/
+        loschHyperlinkAktiv.setOnAction((event) -> {
+            
+            messageLoschen(checkGruppe, stackGruppe);
+        });
+        
+        /* Message Weiterleiten Handle, Zeile: 1000*/
+        weiterHyperlinkAktiv.setOnAction((event) -> {
+            messageWeiterleitenHandle(messageGruppe);
+        });
+
+        //System.out.println("Loschen Handle:" + checkCount);
+    }
+
+
+
+    /**
+     * Message Löschen Block wird unten in Textarea Bereich angezeigt
+     * gestartet wird in oberer Pop-up-Fenster 'bearbeiten', Zeile: 690
+     *
+     * Message Löschen Block Beschreibung:
+     * Haupt Pane ist eine AnchorPan, mit integrierte GridPane mit 3 column
+     *  a. links column: StackPane mit Label(Text + Bild), Disabled + Hyperlink(Text + Bild), Aktiv(Red)
+     *  b. Center column: HBox mit Label(Count) + Label(Text)
+     *  c. Right column: StackPane mit Label(Text + Bild), Disabled + Hyperlink(Text + Bild), Aktiv(Red)
+     * schliesslich wird die Haup-Löschen-Block, AnchorPane in einer StackPane angezeigt( show/hide )
+     */
     private void messageLoschenShow(){
 
         /**
-         * HBox(Image(Bild) + Label(Löschen) ), wird ins GridPane/Left integriert
+         * StackPane( Label(Image + Text),   Hyperlink(Bild + Text) ), wird ins GridPane/Left integriert
          */
-        //Image imgGrau = new Image(getClass().getResourceAsStream("/static/img/hacken.png"));
         ImageView loschImg = new ImageView(new Image(getClass().getResourceAsStream("/static/img/delete.png")));
-        loschImg.setFitWidth(20);
-        loschImg.setFitHeight(20);
-        Label loschText = new Label("Löschen");
-        HBox loschHBox = new HBox(loschImg, loschText);
+        ImageView loschImgRed = new ImageView(new Image(getClass().getResourceAsStream("/static/img/deletered.png")));
+        loschImg.setFitWidth(25);
+        loschImg.setFitHeight(25);
+        loschImgRed.setFitWidth(25);
+        loschImgRed.setFitHeight(25);
+
+        loschLabelDisable.setGraphic(loschImg);
+        loschLabelDisable.getStyleClass().add("loschDisabled");
+
+        loschHyperlinkAktiv.setGraphic(loschImgRed);
+        loschHyperlinkAktiv.getStyleClass().add("loschAktiv");
+        loschHyperlinkAktiv.setVisible(false);
+
+        StackPane loschStackPane = new StackPane(loschLabelDisable, loschHyperlinkAktiv);
 
         /**
-         * HBox( Label(5) + Label(Nachrichten Ausgewählt) ), wird in GridPane/Center integriert
+         * HBox( Label(Zahl) + Label(Nachrichten Ausgewählt) ), wird in GridPane/Center integriert
          */
-        Label loschCount = new Label();
-        Label loschWellen = new Label("Nachrichten auswählen");
-        HBox countHBox = new HBox(loschCount, loschWellen);
+        loschCount.getStyleClass().add("loschAktiv");
+        loschAuswehlenLabel.getStyleClass().add("loschDisabled");
+        HBox countHBox = new HBox(loschCount, loschAuswehlenLabel);
+        countHBox.getStyleClass().add("loschHBox");
+        countHBox.setAlignment(Pos.CENTER);
 
         /**
-         * HBox(Label(Weiterleiten) + Image(Bild) ), wird in GridPane/Right integriert
+         * StackPane(Label(Text + Bild), Hyperlink(Text + Bild), wird in GridPane/Right integriert
          */
-        Label loschweiter = new Label();
-        ImageView weiterImg = new ImageView(new Image(getClass().getResourceAsStream("/static/img/forward.png")));
-        weiterImg.setFitWidth(20);
-        weiterImg.setFitHeight(20);
-        HBox weiterHBox = new HBox(loschweiter, weiterImg);
+        ImageView weiterImg = new ImageView(new Image(getClass().getResourceAsStream("/static/img/forwardblack.png")));
+        ImageView weiterImgBlau = new ImageView(new Image(getClass().getResourceAsStream("/static/img/forwardblue.png")));
+        weiterImg.setFitWidth(30);
+        weiterImg.setFitHeight(30);
+        weiterImgBlau.setFitWidth(30);
+        weiterImgBlau.setFitHeight(30);
 
+        weiterLabelDisable.setGraphic(weiterImg);
+        weiterLabelDisable.setContentDisplay(ContentDisplay.RIGHT);
+        weiterLabelDisable.getStyleClass().add("loschDisabled");
 
-        loschGridPane.add(loschHBox, 0, 0);
-        loschGridPane.add(countHBox, 1, 0);
-        loschGridPane.add(weiterHBox, 2, 0);
-       /* loschGridPane.addColumn(0, loschHBox);
+        weiterHyperlinkAktiv.setGraphic(weiterImgBlau);
+        weiterHyperlinkAktiv.setContentDisplay(ContentDisplay.RIGHT);
+        weiterHyperlinkAktiv.getStyleClass().add("loschBlau");
+        weiterHyperlinkAktiv.setVisible(false);
+
+        StackPane weiterStackPane = new StackPane(weiterLabelDisable, weiterHyperlinkAktiv);
+
+        /**
+         * GridPane, Integration von 3 HBox
+         */
+        GridPane loschGridPane = new GridPane();
+        AnchorPane.setLeftAnchor(loschGridPane, 0.0);
+        AnchorPane.setTopAnchor(loschGridPane, 0.0);
+        AnchorPane.setRightAnchor(loschGridPane, 0.0);
+        AnchorPane.setBottomAnchor(loschGridPane, 0.0);
+
+        ColumnConstraints column0 = new ColumnConstraints();
+        ColumnConstraints column1 = new ColumnConstraints();
+        ColumnConstraints column2 = new ColumnConstraints();
+        column0.setMinWidth(80);
+        column1.setHgrow(Priority.ALWAYS);
+        column2.setMinWidth(80);
+
+        loschGridPane.getColumnConstraints().addAll(column0, column1, column2);
+        loschGridPane.addColumn(0, loschStackPane);
         loschGridPane.addColumn(1, countHBox);
-        loschGridPane.addColumn(0, weiterHBox);*/
+        loschGridPane.addColumn(2, weiterStackPane);
 
+        /* Haupt Block, AnchorPane Zeile: 813 */
+        messageLoschenPane.getChildren().add(loschGridPane);
+        messageLoschenPane.getStyleClass().add("loschAnchorPane");
 
-        //messageLoschenPane.getChildren().addAll(loschHBox, countHBox);
-        loschGridPane.getStyleClass().add("mesagesLoschPane");
+        /* StackPane, bestand Teil die message.fxml/bottom  */
+        messageBottomStackPane.getChildren().add(messageLoschenPane);
 
-        messageBottomStackPane.getChildren().add(loschGridPane);
     }
 
 
     /**
-     * Löschen Anzeige(bottom) ausblenden
+     * Message Löschen Block unten in Textarea: ausblenden
      *
-     * der unten in Textarea eingeblendeten Löschen-Info ausblenden
      */
     private void messageLoschenHide(){
-        //messageLoschenPane.getChildren().clear();
-        loschGridPane.getChildren().clear();
-        messageBottomStackPane.getChildren().remove(loschGridPane);
-       // messageBottomStackPane.getChildren().remove(messageLoschenPane);
+        messageLoschenPane.getChildren().clear();
+        //loschGridPane.getChildren().clear();
+       // messageBottomStackPane.getChildren().remove(loschGridPane);
+        messageBottomStackPane.getChildren().remove(messageLoschenPane);
+    }
+
+
+    /**
+     * Message Löschen Bloch unten in Textarea: visible: false setzen
+     */
+    private void loschenDisabled(){
+
+        loschLabelDisable.setVisible(true);
+        loschHyperlinkAktiv.setVisible(false);
+
+        loschCount.setText("");
+        loschAuswehlenLabel.setStyle("-fx-text-fill: #858585;");
+
+        weiterLabelDisable.setVisible(true);
+        weiterHyperlinkAktiv.setVisible(false);
+
+    }
+
+
+    /**
+     * Message Löschen Bloch unten in Textarea: visible: true setzen
+     */
+    private void loschenAktiv(){
+
+        loschLabelDisable.setVisible(false);
+        loschHyperlinkAktiv.setVisible(true);
+
+
+        loschCount.setText(String.valueOf(checkCount));
+        if (checkCount == 1){
+            loschAuswehlenLabel.setText("Nachricht ausgewählt");
+        } else {
+            loschAuswehlenLabel.setText("Nachrichten ausgewählt");
+        }
+        loschAuswehlenLabel.setStyle("-fx-text-fill: #000000;");
+
+        weiterLabelDisable.setVisible(false);
+        weiterHyperlinkAktiv.setVisible(true);
+
+    }
+
+
+    /**
+     * Selectierte message aus der Datenbank löschen + aktuelle-gelöschte message ausblenden
+     *
+     * @param checkID
+     * @param stackID
+     */
+    private void messageLoschen(List<Long> checkID, List<StackPane> stackID){
+
+        String loschUrl  = configService.FILE_HTTP+"messageLoschenApi";
+        HttpResponse<String> response = apiService.requestAPI(loschUrl, String.valueOf(checkID));
+
+        // Gelöschte Message ausblenden
+        geloschteMessageHide(stackID);
+
+        // Message Löschen Bloch unten in Textarea: ausblenden
+        messageLoschenHide();
+        cellCheckBoxHide();
+
+        // Kurze Information Anzeigen
+        String text =  response.body()+" Messages werden gelöscht! ";
+        messagesPopUpFensterInfo(messageCenterStackPane, text);
+    }
+
+
+    /**
+     * gelöschte Message ausblenden, live
+     * @param paneIds
+     */
+    private void geloschteMessageHide(List<StackPane> paneIds){
+
+        for (StackPane mesagePane : paneIds){
+            mesagePane.getChildren().clear();
+        }
+    }
+
+
+    /* ******************* Message Weiterleiten **************** */
+
+    /**
+     * Message Weiterleiten
+     */
+    private void messageWeiterleitenHandle(List<String> mesageText){
+
+
+        layoutService.setausgabeLayout(hauptStage);
+        // fxml laden mit switchLayout oder switchView
+        WeiterleitenController weiterleitenController = (WeiterleitenController) layoutService.switchLayout(GlobalView.MESSAGEWEITERLEITEN);
+        weiterleitenController.setWeiterleitenText(mesageText.toString());
+
+        System.out.println("Message Weiterleiten Handle: " + hauptStage );
     }
 
 
@@ -906,16 +1121,44 @@ public class MessageController implements Initializable {
 
 
 
-    /* *********************** Message Schliessen ***************** */
+    /* ************* Message Schliessen + Freunde hover effekt ausblenden  ***************** */
 
     /**
-     * celleAnchorPane = eine complete Freunde-Pane mit allen Daten von FreundeCellController...
+     * Click auf dem Pfeil 'ZURÜCK'(< blau), oben in header Bereich
      *
-     * hier wird bei schliessen die Message-Ausgabe(messageVBox) nur den Hover-Effekt ausgeblendet in
-     * den FreundeCellController(Freunde Celle)
+     * celleAnchorPane = ist eine complete Freunde-Pane mit allen Daten von FreundeCellController...
+     *  a. translate:       message schliessen
+     *  b. celleAnchorPane: hover effekt ausgeblendet
      */
     public void messageSchliessen() {
         translate.closeStackPane();
         celleArchorPane.getStyleClass().remove("freundeAktiv");
     }
+
+    /* ***************** Pop-up-Fenster für den Info + Close *************************** */
+
+
+    /**
+     * Pop-up-Fenster Information kürzlich anzeigen und nach 3 Sekunden ausblenden(Fade)
+     *
+     * Parameter StackPane: sind insgesamt 4 StackPane
+     *      1. hauptStage: liegt unten komplette BoteFx-App, zugesendet von ChatBoxController
+     *      2. messageTopStackPane: liegt in Header bereich
+     *      3. messageCenterStackPane: liegt in Center, message Bereich
+     *      4. messageBottomStackPane: liegt in Bottom bereich, textarea, senden
+     * Parameter: textInfo, als String
+     *
+     * @param textInfo
+     */
+    private void messagesPopUpFensterInfo(StackPane pane, String textInfo){
+
+        Label popInfo = new Label(textInfo);
+        popInfo.getStyleClass().add("popInfoLabel");
+        pane.getChildren().add(popInfo);
+
+        // Label für 3 Sekunden einblenden
+        methodenService.fadeIn(popInfo, 3);
+        //messageCenterStackPane.getChildren().remove(popInfo);
+    }
+
 }

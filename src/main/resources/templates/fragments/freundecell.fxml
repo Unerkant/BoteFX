@@ -7,6 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -33,18 +34,31 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <ImageView fx:id="freundeCellHaken" fitHeight="20.0" fitWidth="20.0" layoutX="190.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="55.0" AnchorPane.topAnchor="8.0" />
+            <StackPane layoutX="225.0" layoutY="8.0" AnchorPane.rightAnchor="55.0" AnchorPane.topAnchor="8.0">
+               <children>
+                  <ImageView fx:id="freundeCellHakenGreen" fitHeight="15.0" fitWidth="15.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" visible="false">
+                     <image>
+                        <Image url="@../../static/img/donegreen.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="freundeCellHakenGrau" fitHeight="15.0" fitWidth="15.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" visible="false">
+                     <image>
+                        <Image url="@../../static/img/done.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </StackPane>
             <Label fx:id="freundeCellDatum" alignment="CENTER_RIGHT" layoutX="210.0" layoutY="5.0" prefWidth="50.0" text="13.06.22" textFill="#858585" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
                <font>
                   <Font size="12.0" />
                </font>
             </Label>
             <Label fx:id="freundeCellMessage" alignment="TOP_LEFT" layoutX="57.0" layoutY="25.0" text="Text Ausgabe, und noch mehr Text, und noch medwafwf,faef   aefef ae" textFill="#858585" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="30.0" />
-            <Label fx:id="freundeCellMessageCount" alignment="CENTER" layoutX="245.0" layoutY="25.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" prefHeight="20.0" prefWidth="20.0" style="-fx-background-radius: 10; -fx-border-radius: 10;" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+            <Label fx:id="freundeCellMessageCount" alignment="CENTER" layoutX="245.0" layoutY="25.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" prefHeight="20.0" prefWidth="20.0" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                <font>
-                  <Font size="12.0" />
+                  <Font size="14.0" />
                </font></Label>
-            <Button fx:id="freundeCellButton" mnemonicParsing="false" onAction="#cellClick" style="-fx-background-color: transparent;" styleClass="buttonHover" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Button fx:id="freundeCellButton" mnemonicParsing="false" onAction="#cellClick" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>
                   <Font size="1.0" />
                </font>

@@ -1,6 +1,7 @@
 package BoteFx.controller;
 
 import BoteFx.Enums.GlobalView;
+import BoteFx.controller.fragments.FreundeCellController;
 import BoteFx.model.Message;
 import BoteFx.service.LayoutService;
 import BoteFx.service.SocketService;
@@ -8,6 +9,7 @@ import BoteFx.service.TokenService;
 import BoteFx.service.TranslateService;
 import BoteFx.utilities.SocketResponseHandler;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
@@ -39,7 +41,7 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
     private SocketService socketService;
 
     private MessageController messageController;
-
+    private FreundeController freundeController;
 
     /**
      * die 3 StackPane hauptPane, leftPane & rightPane nicht Löschen oder ändern
@@ -54,6 +56,8 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
     @FXML private ImageView chattenImg;
     @FXML private ImageView settingImg;
     @FXML private AnchorPane tippPane;
+
+
 
     /**
      *  Getter & Setter von StackPane für den globalen Zugriff...
@@ -161,7 +165,7 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
     public void chatten() {
         freundePane.getChildren().clear();
         layoutService.setausgabeLayout(freundePane);
-        FreundeController freundeController = (FreundeController) layoutService.switchLayout(GlobalView.FREUNDE);
+        freundeController = (FreundeController) layoutService.switchLayout(GlobalView.FREUNDE);
         freundeController.setRechtsPane(rightPane);
         freundeController.setFreundenPane(freundePane);
         freundeController.setMeineToken(tokenService.meinToken());
@@ -262,6 +266,8 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
 
     /**
      * Neue Nachricht Anzeigen:
+     * gestartet in SocketService Zeile: 123
+     * ============================================================
      * der 'message' Array wird von SocketService Zeile: 137 zugesendet und weiter an
      * MessageController gesendet, Zeile:
      * an die Methode:  public void neueNachrichtAnzeigen(Message message)....
@@ -269,16 +275,29 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
      * alles wird über 'public interface SocketResponseHandler(SocketResponseHandler.java)' gesteuert,
      * als interface geerbt
      *
+     * IF: wenn User Online ist, wird die Nachrichten angezeigt
+     * ELSE: wenn User nicht Online ist dann in FreuneCellController der count von gesendeten
+     * nachrichten anzeigen, zuerst wird noch richtige messageToken von FreundeController geholt
+     * Zeile: 245
+     *
      * @param message
      */
     @Override
     public void handleNewMessage(Message message) {
-        if (messageController!= null && messageController.getMessageToken() != null) {
+        if (messageController!= null &&
+                messageController.getMessageToken() != null &&
+                messageController.getMessageToken().equals(message.getMessagetoken())) {
             messageController.neueMessage(message);
         } else {
-            System.out.println("Kein Chat ausgewählt");
+
+            FreundeCellController freundeCellController = freundeController.getRichtigenFreundeCellController(message.getMessagetoken());
+            if (freundeCellController != null) {
+                Platform.runLater(() -> freundeCellController.nachrichtEmpfangen());
+                //System.out.println("User nict Online, count anzeigen: " + message.getMeintoken());
+            }
         }
     }
+
 
     @Override
     public void afterConnectionEstablished(StompSession session) {

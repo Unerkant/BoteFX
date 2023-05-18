@@ -47,9 +47,13 @@ public class ViewService {
     }
 
 
+    /**
+     * wenn kein Token vorhanden ist, register modus starten
+     * @param globalView
+     * @return
+     */
     public Object switchTo(GlobalView globalView) {
 
-        /* prüfen ob token vorhanden ist, wenn Leer: HOME Starten */
         String myToken = tokenService.meinToken();
 
         if (myToken == null){

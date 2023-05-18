@@ -102,7 +102,6 @@ public class Freunde {
     public String getLetzteNachricht() {
         return letzteNachricht;
     }
-
     public void setLetzteNachricht(String letzteNachricht) {
         this.letzteNachricht = letzteNachricht;
     }
@@ -110,7 +109,6 @@ public class Freunde {
     public String getDatumLetzteNachricht() {
         return datumLetzteNachricht;
     }
-
     public void setDatumLetzteNachricht(String datumLetzteNachricht) {
         this.datumLetzteNachricht = datumLetzteNachricht;
     }

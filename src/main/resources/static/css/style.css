@@ -146,6 +146,16 @@
 /* freundecell
 _______________*/
 
+.freundeCellCount
+{
+    -fx-background-color: red;
+    -fx-background-border: transparent;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-font-size: 0.8em;
+    -fx-font-fill: #FFFFFF;
+}
+
 /* zurzeit leer */
 
 
@@ -304,7 +314,7 @@ _______________*/
     /* Pop-up-Fenster, message bearbeiten(message: rechts oben die 3 blaue punkten '...') */
 .messagesBearbeiten
 {
-    -fx-background-color: #FFF;
+    -fx-background-color: #FFFFFF;
     -fx-background-radius: 6;
     -fx-border-color: transparent;
     -fx-border-radius: 6;
@@ -316,46 +326,67 @@ _______________*/
 {
     -fx-font-size: 1.0em;
     -fx-text-fill: #000000;
-    -fx-padding: 5;
+    -fx-padding: 7;
 }
 .hypersLink:hover
 {
-   -fx-background-color: #F2F2F2;
+   -fx-background-color: #E6E6E6;
 }
 
 
     /* Löschen Teil */
-.mesagesLoschPane
+
+.loschAktiv
 {
-    -fx-background-color: white;
-    -fx-border-color: red;
-}
-
-
-
-
-
-    /* Separate Fenster Loschen */
-.logoShadow
-{
-    -fx-effect: dropshadow(three-pass-box, rgb(26, 26, 26), 50, 0.6, 0, 0);
-}
-
-    /* Methode: löschenInfo */
-.loschInfo
-{
-    -fx-background-color: #858585;
-    -fx-border-color: #606060;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-padding: 10 20;
     -fx-font-size: 1.0em;
-    -fx-text-fill: #FFF;
-    -fx-alignment: center;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.7), 10, 0, 0, 0);
+    -fx-text-fill: red;
+    -fx-padding: 5;
 }
+.loschDisabled
+{
+    -fx-font-size: 1.0em;
+    -fx-text-fill: #858585;
+}
+.loschBlau
+{
+    -fx-font-size: 1.0em;
+    -fx-text-fill: #2b8cc4;
+}
+
+.loschHBox
+{
+    -fx-pref-height: 50;
+}
+.loschAnchorPane
+{
+    -fx-background-color: #FFF5F5;
+}
+
+    /* Pop-up-Fenster-Info */
+.popInfoLabel
+{
+    -fx-background-color: #505050;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-border-radius: 6;
+    -fx-text-fill: white;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 15, 0, 0, 0);
+}
+
+
+    /* Weiterleiten Teil */
+
+.weiterleitensHauptPane
+{
+    -fx-background-color: rgba(0,0,0, 0.4);
+}
+
 
     /* **************** Ende Message Controller ************************** */
+
+
+
 
  /* setting.fxml
   ----------------*/
@@ -368,28 +399,6 @@ _______________*/
     /*-fx-letter-spacing: 10;
     -fx-graphic-text-gap: 6;*/
 }
-
-
-
-
- /* showSystemMessage
- --------------------*/
-.showText
-{
-    -fx-background-color: #505050;
-    -fx-font-size: 1.0em;
-    -fx-text-fill: #FFF;
-    -fx-text-alignment: center;
-    -fx-padding: 15 0 ;
-    -fx-border-insets: 15 0;
-    -fx-background-insets: 15 0;
-    -fx-label-padding: 10 20;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.7), 10, 0, 0, 0);
-}
-
-
-
-
 
 /*@media only screen and (min-width: 650px)  { .leftPane { -fx-background-color: red; } }*/
 

@@ -10,7 +10,7 @@ public class ConfigService {
      */
 
     public static final String FILE_CSS         = "/static/css/style.css";
-    public static final String FILE_URL         = "/Users/paulrichter/ideaProject/BoteFX/";
+    public static final String FILE_URL         = "???";
     public static final String FILE_HTTP        = "http://localhost:8080/"; /* BOTE PROJECT */
     /* Bild Adresse BEI BOTE:  http://localhost:8080/profilbild/03052022103644.png */
     public static final double DEFAULT_WIDTH    = 480;

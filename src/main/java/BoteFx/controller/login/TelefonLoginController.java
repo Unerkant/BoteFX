@@ -86,6 +86,11 @@ public class TelefonLoginController implements Initializable {
          * String telefon: Telefonnummer ohne Plus(+) & Leerzeichen(" "), Internationale ausführung
          *                 491751234567( für SMS senden )
          */
+        if (telefonInput.getText().length() < 5){
+            telefonLoginFehlerAusgabe("nummerFalsch", "no");
+            telefonInput.requestFocus();
+            return;
+        }
         String tel = vorwahlInput.getText()+" "+telefonInput.getText().substring(0, 3)+" "+telefonInput.getText().substring(3);
         String telefon = tel.replace("+", "").replace(" ", "");
         String link = configService.FILE_HTTP+"telefonApi";
