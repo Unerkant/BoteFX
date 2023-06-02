@@ -20,10 +20,7 @@ public class LayoutService {
     @Autowired
     private LanguageService languageService;
 
-    /**
-     * layoutContext konfiguriert in BoteApp Zeile 37 (init)
-     */
-    private ConfigurableApplicationContext layoutContext;
+
 
     /**
      * Getter & Setter von AnchorPane
@@ -37,13 +34,19 @@ public class LayoutService {
         this.ausgabeLayout = ausgabeLayout1;
     }
 
+
+
     /**
      * QEULLE: BoteApp.java Zeile: 40
      * @param layoutContext1
      */
+    private ConfigurableApplicationContext layoutContext;
     public void setLayoutContext(ConfigurableApplicationContext layoutContext1){
         this.layoutContext = layoutContext1;
     }
+
+
+
     public Object switchLayout(GlobalView globalView){
 
         // vor dem Laden, zuerst in Element/Pane alles Löschen

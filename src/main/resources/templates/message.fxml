@@ -19,140 +19,144 @@
 
 <AnchorPane fx:id="messageAnchorPane" minWidth="350.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.MessageController">
    <children>
-      <BorderPane fx:id="messageBorderPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-   <!-- Header -->
-         <top>
-            <StackPane fx:id="messageTopStackPane" BorderPane.alignment="CENTER">
-               <children>
-                  <GridPane minHeight="50.0" prefHeight="50.0" style="-fx-background-color: #FAFAFF; -fx-border-color: #E6E6FF; -fx-border-style: none none solid none;">
-                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="45.0" minWidth="45.0" prefWidth="45.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
+      <StackPane fx:id="messageHauptStackPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <BorderPane fx:id="messageBorderPane">
+         <!-- Header -->
+               <top>
+                  <StackPane fx:id="messageTopStackPane" BorderPane.alignment="CENTER">
                      <children>
-                        <ImageView fitHeight="25.0" fitWidth="25.0" onMouseClicked="#messageSchliessen" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../static/img/linksblue.png" />
-                           </image>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                        </ImageView>
-                        <Label fx:id="messageProfilBild" alignment="CENTER" prefHeight="30.0" prefWidth="30.0" GridPane.columnIndex="1">
-                           <font>
-                              <Font name="System Bold" size="15.0" />
-                           </font>
-                        </Label>
-                        <VBox GridPane.columnIndex="2">
+                        <GridPane minHeight="50.0" prefHeight="50.0" style="-fx-background-color: #FAFAFF; -fx-border-color: #E6E6FF; -fx-border-style: none none solid none;">
+                           <columnConstraints>
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
+                           </rowConstraints>
                            <children>
-                              <Label fx:id="headFreundName" alignment="BOTTOM_LEFT" prefHeight="25.0" styleClass="headFreundsName" text="Name">
-                                 <font>
-                                    <Font name="System Bold" size="15.0" />
-                                 </font>
-                              </Label>
-                              <HBox>
-                                 <children>
-                                    <Label fx:id="headFreundInfo" alignment="TOP_LEFT" />
-                                    <Label fx:id="freundOnlineZeit" alignment="TOP_LEFT" styleClass="headFreundsInfo" textFill="#858585">
-                                       <font>
-                                          <Font size="12.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                           </children>
-                        </VBox>
-                        <StackPane GridPane.columnIndex="3">
-                           <children>
-                              <ImageView fx:id="onlinePhone" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#onlinePhone" pickOnBounds="true" preserveRatio="true" visible="false">
+                              <ImageView fitHeight="15.0" fitWidth="15.0" onMouseClicked="#messageSchliessen" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../static/img/phoneblue.png" />
+                                    <Image url="@../static/img/linksblue.png" />
                                  </image>
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </ImageView>
-                              <ImageView fx:id="noPhone" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                              <Label fx:id="messageProfilBild" alignment="CENTER" prefHeight="20.0" prefWidth="20.0" GridPane.columnIndex="1">
+                                 <font>
+                                    <Font name="System Bold" size="15.0" />
+                                 </font>
+                              </Label>
+                              <VBox GridPane.columnIndex="2">
+                                 <children>
+                                    <Label fx:id="headFreundName" alignment="BOTTOM_LEFT" prefHeight="25.0" styleClass="headFreundsName" text="Name">
+                                       <font>
+                                          <Font name="Serif Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <HBox>
+                                       <children>
+                                          <Label fx:id="headFreundInfo" alignment="TOP_LEFT" />
+                                          <Label fx:id="freundOnlineZeit" alignment="TOP_LEFT" styleClass="headFreundsInfo" textFill="#858585">
+                                             <font>
+                                                <Font size="12.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <StackPane GridPane.columnIndex="3">
+                                 <children>
+                                    <ImageView fx:id="onlinePhone" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#onlinePhone" pickOnBounds="true" preserveRatio="true" visible="false">
+                                       <image>
+                                          <Image url="@../static/img/phoneblue.png" />
+                                       </image>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </ImageView>
+                                    <ImageView fx:id="noPhone" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../static/img/phone.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </StackPane>
+                              <Label fx:id="headBearbeiten" onMouseClicked="#messageBearbeitenStart" textFill="NAVY" GridPane.columnIndex="4">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </StackPane>
+               </top>
+      
+         <!-- Body -->
+                <center>
+                  <StackPane fx:id="messageCenterStackPane" BorderPane.alignment="CENTER">
+                     <children>
+                          <ScrollPane fx:id="messageScrollPane" stylesheets="@../static/css/scrollpane.css">
+                           <content>
+                              <VBox fx:id="messageVBox" />
+                           </content>
+                          </ScrollPane>
+                     </children>
+                  </StackPane>
+                </center>
+      
+         <!-- Footer-->
+               <bottom>
+                  <StackPane fx:id="messageBottomStackPane" prefHeight="52.0" style="-fx-background-color: #FAFAFF; -fx-border-color: #E6E6FF; -fx-border-style: solid none none none;">
+                     <children>
+                        <GridPane>
+                           <columnConstraints>
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <ImageView fx:id="messageOther" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#otherZeigen" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../static/img/nophone.png" />
+                                    <Image url="@../static/img/klamern.png" />
                                  </image>
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                              </ImageView>
+                              <TextArea fx:id="textareaText" maxHeight="300.0" minHeight="20.0" onKeyReleased="#messageSenden" prefHeight="20.0" promptText="Schreibe eine Nachricht..." styleClass="textareatext" stylesheets="@../static/css/footer-textarea.css" wrapText="true" GridPane.columnIndex="1">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets top="10.0" />
+                                 </GridPane.margin>
+                              </TextArea>
+                              <ImageView fx:id="messageSmile" fitHeight="25.0" fitWidth="25.0" nodeOrientation="INHERIT" onMouseClicked="#smileZeigen" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                                 <image>
+                                    <Image url="@../static/img/smile.png" />
+                                 </image>
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
                               </ImageView>
                            </children>
-                        </StackPane>
-                        <Label fx:id="headBearbeiten" onMouseClicked="#messageBearbeitenStart" textFill="NAVY" GridPane.columnIndex="4">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Label>
+                        </GridPane>
                      </children>
-                  </GridPane>
-               </children>
-            </StackPane>
-         </top>
-
-   <!-- Body -->
-          <center>
-            <StackPane fx:id="messageCenterStackPane" BorderPane.alignment="CENTER">
-               <children>
-                    <ScrollPane fx:id="messageScrollPane" stylesheets="@../static/css/scrollpane.css">
-                     <content>
-                        <VBox fx:id="messageVBox" />
-                     </content>
-                    </ScrollPane>
-               </children>
-            </StackPane>
-          </center>
-
-   <!-- Footer-->
-         <bottom>
-            <StackPane fx:id="messageBottomStackPane" prefHeight="52.0" style="-fx-background-color: #FAFAFF; -fx-border-color: #E6E6FF; -fx-border-style: solid none none none;">
-               <children>
-                  <GridPane>
-                     <columnConstraints>
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints valignment="BOTTOM" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <ImageView fx:id="messageOther" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#otherZeigen" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../static/img/file.png" />
-                           </image>
-                           <GridPane.margin>
-                              <Insets bottom="10.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                        <TextArea fx:id="textareaText" maxHeight="300.0" minHeight="20.0" onKeyReleased="#messageSenden" prefHeight="20.0" promptText="Schreibe eine Nachricht..." styleClass="textareatext" stylesheets="@../static/css/footer-textarea.css" wrapText="true" GridPane.columnIndex="1">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <GridPane.margin>
-                              <Insets top="10.0" />
-                           </GridPane.margin>
-                        </TextArea>
-                        <ImageView fx:id="messageSmile" fitHeight="25.0" fitWidth="25.0" nodeOrientation="INHERIT" onMouseClicked="#smileZeigen" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
-                           <image>
-                              <Image url="@../static/img/smile.png" />
-                           </image>
-                           <GridPane.margin>
-                              <Insets bottom="10.0" />
-                           </GridPane.margin>
-                        </ImageView>
-                     </children>
-                  </GridPane>
-               </children>
-            </StackPane>
-         </bottom>
-
-      </BorderPane>
+                  </StackPane>
+               </bottom>
+      
+            </BorderPane>
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>

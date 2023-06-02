@@ -1,7 +1,7 @@
 package BoteFx.controller.login;
 
-import BoteFx.service.ConfigService;
 import BoteFx.Enums.GlobalView;
+import BoteFx.service.ConfigService;
 import BoteFx.service.MethodenService;
 import BoteFx.service.ViewService;
 

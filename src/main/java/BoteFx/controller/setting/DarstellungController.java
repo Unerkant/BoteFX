@@ -1,10 +1,6 @@
 package BoteFx.controller.setting;
 
-
-import BoteFx.controller.ChatBoxController;
-import BoteFx.service.ConfigService;
 import BoteFx.service.TranslateService;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
@@ -12,7 +8,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -28,8 +23,6 @@ public class DarstellungController implements Initializable {
 
     @Autowired
     private TranslateService translate;
-    @Autowired
-    ChatBoxController chatBoxController;
 
     @FXML private AnchorPane darstellungAnchorPane;
     @FXML private ScrollPane darstellungScroll;
@@ -66,7 +59,7 @@ public class DarstellungController implements Initializable {
      *
      *  3. der hover effect an die Positionen wird gelöscht
      */
-    public void darstellungZuruck(ActionEvent event) {
+    public void darstellungZuruck() {
         translate.closeStackPane();
         darstellunghover.getStyleClass().remove("settingAktiv");
     }

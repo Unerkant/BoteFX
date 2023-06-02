@@ -23,12 +23,6 @@ public class ViewService {
     private LanguageService languageService;
 
 
-    /**
-     * springContent konfiguriert in BoteApp Zeile 37 (init)
-     */
-    private ConfigurableApplicationContext springContext;
-
-
     private Scene scene;
     public Scene getScene() {
         return scene;
@@ -42,6 +36,7 @@ public class ViewService {
      * QUELLE: BoteApp.java Zeile: 38
      * @param springContext
      */
+    private ConfigurableApplicationContext springContext;
     public void setSpringContext(ConfigurableApplicationContext springContext) {
         this.springContext = springContext;
     }
@@ -80,6 +75,7 @@ public class ViewService {
         fxmlLoader.setControllerFactory(springContext::getBean);
 
         try {
+            //Parent root = fxmlLoader.load();
             Parent root = fxmlLoader.load();
             Object controller = fxmlLoader.getController();
 

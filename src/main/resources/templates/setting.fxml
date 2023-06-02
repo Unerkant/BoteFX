@@ -32,9 +32,9 @@
                         <Font size="10.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER" text="Einstellungen" textFill="NAVY" GridPane.columnIndex="1">
+                  <Label alignment="CENTER" text="Einstellungen" GridPane.columnIndex="1">
                      <font>
-                        <Font name="System Bold" size="18.0" />
+                        <Font size="16.0" />
                      </font>
                   </Label>
                   <Label GridPane.columnIndex="2">
@@ -66,7 +66,7 @@
                                     <Image url="@../static/img/online.png" />
                                  </image>
                               </ImageView>
-                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                  <image>
                                     <Image url="@../static/img/rechtsgrau.png" />
                                  </image>
@@ -78,7 +78,10 @@
                                           <Font size="15.0" />
                                        </font>
                                     </Label>
-                                    <Label style="-fx-border-color: #E6E6FF; -fx-border-width: 1 0 0 0;" text="Telefon oder  Mail" textFill="GREY" />
+                                    <Label style="-fx-border-color: #E6E6FF; -fx-border-width: 1 0 0 0;" text="Telefon oder  Mail" textFill="#858585">
+                                       <font>
+                                          <Font size="12.0" />
+                                       </font></Label>
                                  </children>
                               </VBox>
                               <Label GridPane.columnIndex="2">
@@ -109,17 +112,17 @@
                                  <children>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../static/img/settingblau.png" />
+                                          <Image url="@../static/img/settings/settingallgemeinblack.png" />
                                        </image>
                                     </ImageView>
-                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                        <image>
                                           <Image url="@../static/img/rechtsgrau.png" />
                                        </image>
                                     </ImageView>
                                     <Label text="Allgemein" GridPane.columnIndex="1">
                                        <font>
-                                          <Font name="System Bold" size="16.0" />
+                                          <Font size="15.0" />
                                        </font>
                                     </Label>
                                     <Label GridPane.columnIndex="2" />
@@ -144,17 +147,17 @@
                                  <children>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../static/img/settingDarstellung.png" />
+                                          <Image url="@../static/img/settings/settingdarstellungblack.png" />
                                        </image>
                                     </ImageView>
-                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                        <image>
                                           <Image url="@../static/img/rechtsgrau.png" />
                                        </image>
                                     </ImageView>
                                     <Label text="Darstellung" GridPane.columnIndex="1">
                                        <font>
-                                          <Font name="System Bold" size="16.0" />
+                                          <Font size="15.0" />
                                        </font>
                                     </Label>
                                     <Label GridPane.columnIndex="2" />
@@ -179,17 +182,17 @@
                                  <children>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../static/img/settingPrivatsphereBlau.png" />
+                                          <Image url="@../static/img/settings/settingprivatsphereblack.png" />
                                        </image>
                                     </ImageView>
-                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                        <image>
                                           <Image url="@../static/img/rechtsgrau.png" />
                                        </image>
                                     </ImageView>
                                     <Label text="Privatsphäre  &amp;  Sicherheit" GridPane.columnIndex="1">
                                        <font>
-                                          <Font name="System Bold" size="16.0" />
+                                          <Font size="15.0" />
                                        </font>
                                     </Label>
                                     <Label GridPane.columnIndex="2" />
@@ -218,17 +221,17 @@
                                  <children>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../static/img/settingTone.png" />
+                                          <Image url="@../static/img/settings/settingtonblack.png" />
                                        </image>
                                     </ImageView>
-                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                        <image>
                                           <Image url="@../static/img/rechtsgrau.png" />
                                        </image>
                                     </ImageView>
                                     <Label text="Mitteilungen &amp; Töne" GridPane.columnIndex="1">
                                        <font>
-                                          <Font name="System Bold" size="16.0" />
+                                          <Font size="15.0" />
                                        </font>
                                     </Label>
                                     <Label GridPane.columnIndex="2" />
@@ -253,17 +256,17 @@
                                  <children>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../static/img/settingSprache.png" />
+                                          <Image url="@../static/img/settings/settingspracheblack.png" />
                                        </image>
                                     </ImageView>
-                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                        <image>
                                           <Image url="@../static/img/rechtsgrau.png" />
                                        </image>
                                     </ImageView>
                                     <Label text="Sprache" GridPane.columnIndex="1">
                                        <font>
-                                          <Font name="System Bold" size="16.0" />
+                                          <Font size="15.0" />
                                        </font>
                                     </Label>
                                     <Label fx:id="settingSprache" textFill="GREY" GridPane.columnIndex="2" />
@@ -288,17 +291,17 @@
                                  <children>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../static/img/settingStiker.png" />
+                                          <Image url="@../static/img/settings/settingstickerblack.png" />
                                        </image>
                                     </ImageView>
-                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                        <image>
                                           <Image url="@../static/img/rechtsgrau.png" />
                                        </image>
                                     </ImageView>
                                     <Label text="Sticker" GridPane.columnIndex="1">
                                        <font>
-                                          <Font name="System Bold" size="16.0" />
+                                          <Font size="15.0" />
                                        </font>
                                     </Label>
                                     <Label GridPane.columnIndex="2" />
@@ -330,17 +333,17 @@
                                  <children>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../static/img/settingFaq.png" />
+                                          <Image url="@../static/img/settings/settingfaqblack.png" />
                                        </image>
                                     </ImageView>
-                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                        <image>
                                           <Image url="@../static/img/rechtsgrau.png" />
                                        </image>
                                     </ImageView>
                                     <Label text="Bote FAQ" GridPane.columnIndex="1">
                                        <font>
-                                          <Font name="System Bold" size="16.0" />
+                                          <Font size="15.0" />
                                        </font>
                                     </Label>
                                     <Label GridPane.columnIndex="2" />
@@ -365,17 +368,17 @@
                                  <children>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../static/img/settingSupport.png" />
+                                          <Image url="@../static/img/settings/settingfrageblack.png" />
                                        </image>
                                     </ImageView>
-                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                        <image>
                                           <Image url="@../static/img/rechtsgrau.png" />
                                        </image>
                                     </ImageView>
                                     <Label text="Frage &amp; Support" GridPane.columnIndex="1">
                                        <font>
-                                          <Font name="System Bold" size="16.0" />
+                                          <Font size="15.0" />
                                        </font>
                                     </Label>
                                     <Label GridPane.columnIndex="2" />
@@ -400,20 +403,20 @@
                                  <children>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../static/img/laptop.png" />
+                                          <Image url="@../static/img/settings/settingmacbookblack.png" />
                                        </image>
                                     </ImageView>
-                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                        <image>
                                           <Image url="@../static/img/rechtsgrau.png" />
                                        </image>
                                     </ImageView>
                                     <Label text="Aktive Sitzungen" GridPane.columnIndex="1">
                                        <font>
-                                          <Font name="System Bold" size="16.0" />
+                                          <Font size="15.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="settingHovereSitzung" textFill="GREY" GridPane.columnIndex="2" />
+                                    <Label fx:id="settingHovereSitzung" text="1" textFill="GREY" GridPane.columnIndex="2" />
                                  </children>
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -434,8 +437,8 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Label text="Ver." textFill="GREY" />
-                              <Label fx:id="settingVersion" text="1.0.0" textFill="GREY" GridPane.columnIndex="1" />
+                              <Label text="Ver." textFill="#858585" />
+                              <Label fx:id="settingVersion" text="1.0.0" textFill="#858585" GridPane.columnIndex="1" />
                            </children>
                            <VBox.margin>
                               <Insets />

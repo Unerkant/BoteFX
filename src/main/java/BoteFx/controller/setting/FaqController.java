@@ -1,17 +1,14 @@
 package BoteFx.controller.setting;
 
 import BoteFx.controller.ChatBoxController;
-import BoteFx.service.ConfigService;
 
 import BoteFx.service.TranslateService;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import java.net.URL;
@@ -71,7 +68,7 @@ public class FaqController implements Initializable {
   *
   *  3. der hover effect an die Positionen wird gelöscht
   */
- public void faqZuruck(ActionEvent event) {
+ public void faqZuruck() {
     translate.closeStackPane();
     faqhover.getStyleClass().remove("settingAktiv");
  }

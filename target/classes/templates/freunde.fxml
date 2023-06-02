@@ -50,7 +50,7 @@
                            <children>
                               <Label text="Chats" textAlignment="CENTER" textFill="NAVY">
                                  <font>
-                                    <Font name="System Bold" size="16.0" />
+                                    <Font name="Serif Bold" size="16.0" />
                                  </font>
                               </Label>
                            </children>

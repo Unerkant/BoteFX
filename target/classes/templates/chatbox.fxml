@@ -9,7 +9,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-<StackPane fx:id="hauptPane" alignment="TOP_LEFT" minHeight="550.0" minWidth="380.0" prefHeight="700.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.ChatBoxController">
+
+<StackPane fx:id="hauptPane" alignment="TOP_LEFT" minHeight="550.0" minWidth="380.0" prefHeight="700.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.ChatBoxController">
    <children>
       <AnchorPane>
          <children>
@@ -68,13 +69,13 @@
                <children>
                   <AnchorPane fx:id="tippPane">
                     <!-- /* include tipp.fxml.... */ -->
-                     <fx:include source="fragments/tipp.fxml" fx:id="tippHauptPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"></fx:include>
+                     <fx:include fx:id="tippHauptPane" source="fragments/tipp.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 
                   </AnchorPane>
                </children>
             </StackPane>
 
-         </children>
+               </children>
       </AnchorPane>
    </children>
 </StackPane>

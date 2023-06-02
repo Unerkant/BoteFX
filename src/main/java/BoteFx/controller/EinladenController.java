@@ -17,7 +17,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
@@ -384,7 +383,8 @@ public class EinladenController implements Initializable {
         alleUserCount.setText("Anzahl der Nutzer: " + totalCount);
 
         // TableView Autoresize + scroll ausblenden
-        einladenTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        //einladenTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); deprecated
+        einladenTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
         einladenCount.prefWidthProperty().bind(einladenTable.widthProperty().divide(4)); // w * 1/4
         einladenName.prefWidthProperty().bind(einladenTable.widthProperty().divide(4)); // w * 1/4
         einladenMail.prefWidthProperty().bind(einladenTable.widthProperty().divide(2)); // w * 1/2

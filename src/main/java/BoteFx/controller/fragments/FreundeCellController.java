@@ -148,7 +148,7 @@ public class FreundeCellController implements Initializable {
             freundCellBild.setText(freundPseu);
         } else {
             // Bild aus mysql(Bote) holen
-            Image freundImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+freundBild+".png", true);
+            Image freundImg = new Image(configService.FILE_HTTP+"profilbild/"+freundBild+".png", true);
             ImageView imageView = new ImageView(freundImg);
             imageView.setFitHeight(50);
             imageView.setFitWidth(50);

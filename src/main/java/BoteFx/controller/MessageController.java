@@ -19,19 +19,15 @@ import javafx.geometry.VPos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.awt.event.KeyListener;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.http.HttpResponse;
@@ -66,6 +62,7 @@ public class MessageController implements Initializable {
 
 
     @FXML private AnchorPane messageAnchorPane;
+    @FXML private StackPane messageHauptStackPane;
     @FXML private BorderPane messageBorderPane;
     @FXML private StackPane messageTopStackPane;
     @FXML private Label messageProfilBild;
@@ -84,12 +81,12 @@ public class MessageController implements Initializable {
     @FXML private VBox messageVBox;
 
 
-
     // Allgemein
     /**
      * Haupt Stage von ChatBoxController
      */
     @FXML private StackPane hauptStage;
+    @FXML private StackPane rightStage;
     @FXML private String myColor;
     private String meinerToken;
     Usern mineData = null;
@@ -100,6 +97,9 @@ public class MessageController implements Initializable {
 
         /* HauptPane ID holen, ChatBoxController */
         hauptStage = chatBoxController.getHauptStackPane();
+
+        /* rightPane ID holen, ChatBoxController */
+        rightStage = chatBoxController.getRightPane();
 
         // Bottom: TextArea in Focus setzen
         Platform.runLater(() -> textareaText.requestFocus());
@@ -172,15 +172,15 @@ public class MessageController implements Initializable {
      *
      * werde in Header der message Name + online-Zeit angezeigt
      */
-    private String chatFreundeDaten;
+    private Freunde chatFreundeDaten;
     private Image headPunkte;
     private ImageView blauPunkte;
     private String freundToken;
-    public String getChatFreundeDaten() { return chatFreundeDaten; }
-    public void setChatFreundeDaten(Freunde chatFreundeDaten) {
-        this.chatFreundeDaten = String.valueOf(chatFreundeDaten);
+    public Freunde getChatFreundeDaten() { return chatFreundeDaten; }
+    public void setChatFreundeDaten(Freunde chatfreundedaten) {
+        this.chatFreundeDaten = chatfreundedaten;
 
-        headPunkte = new Image(getClass().getResourceAsStream("/static/img/punkteblau.png"));
+        headPunkte = new Image(getClass().getResourceAsStream("/static/img/punktenblue.png"));
         blauPunkte = new ImageView(headPunkte);
         freundToken = chatFreundeDaten.getFreundetoken();
 
@@ -199,7 +199,7 @@ public class MessageController implements Initializable {
         String freundPseudonym = freundData.getFreundepseudonym();
 
         // Profil Bild von Bote holen
-        Image headFreundImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+freundBild+".png", true);
+        Image headFreundImg = new Image(configService.FILE_HTTP+"profilbild/"+freundBild+".png", true);
         if (headFreundImg.isError()){
             messageProfilBild.setText(freundPseudonym);
             messageProfilBild.setAlignment(Pos.CENTER);
@@ -207,22 +207,21 @@ public class MessageController implements Initializable {
                     "-fx-font-family: \"Sans-Serif\"; -fx-font-weight: 700; -fx-text-fill: white;");
         }else {
             ImageView imageView = new ImageView(headFreundImg);
-            imageView.setFitHeight(30);
-            imageView.setFitWidth(30);
+            imageView.setFitHeight(20);
+            imageView.setFitWidth(20);
             messageProfilBild.setGraphic(imageView);
         }
 
         // Name Anzeigen
         headFreundName.setText(freundData.getFreundename().isBlank() ? freundData.getFreundepseudonym() :
                 freundData.getFreundevorname() +" "+ freundData.getFreundename());
-        headFreundName.getStyleClass().add("headFreundsName");
 
         // Letzte Online Zeit(style direct in message.fxml)
         // freundOnlineZeit.setText("???...MessageControll..Zeile: 358");
 
         // Click auf die drei Punkten, onMouseClicked(messageBearbeitenStart)
-        blauPunkte.setFitWidth(30);
-        blauPunkte.setFitHeight(30);
+        blauPunkte.setFitWidth(20);
+        blauPunkte.setFitHeight(20);
         headBearbeiten.setGraphic(blauPunkte);
     }
 
@@ -291,7 +290,7 @@ public class MessageController implements Initializable {
             Label cellUserBildLabel = new Label(mess.getPseudonym());
             cellUserBildLabel.getStyleClass().add("cellBildsLabel");
             // Bild von Bote holen
-            Image cellProfilImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+mess.getMeintoken()+".png", true);
+            Image cellProfilImg = new Image(configService.FILE_HTTP+"profilbild/"+mess.getMeintoken()+".png", true);
             if (cellProfilImg.isError()){
                 cellUserBildLabel.setText(mess.getPseudonym());
                 cellUserBildLabel.setStyle( "-fx-background-color:" + (freundToken.equals(mess.getMeintoken()) ? freundColor : myColor) + "; " +
@@ -606,7 +605,7 @@ public class MessageController implements Initializable {
 
 
 
-    /* *************** Message Bearbeiten ********************** */
+    /* *************** Methoden von der Pop-up-Fenster(mit drei Punkten) ********************* */
 
 
     /**
@@ -683,30 +682,39 @@ public class MessageController implements Initializable {
 
         AnchorPane spiegelungHaupStage = new AnchorPane();
         spiegelungHaupStage.setStyle("-fx-background-color: transparent;");
-        //spiegelungHaupStage.prefWidthProperty().bind(hauptStage.widthProperty());
-        //spiegelungHaupStage.prefHeightProperty().bind(hauptStage.heightProperty());
 
         VBox popUpBearbeiten = new VBox();
         popUpBearbeiten.getStyleClass().add("messagesBearbeiten");
-        //popUpBearbeiten.setEffect(new DropShadow(5, Color.GRAY));
         AnchorPane.setTopAnchor(popUpBearbeiten, 25.0);
         AnchorPane.setRightAnchor(popUpBearbeiten, 20.0);
 
         // der Pop-up-Fenster in Schleife erstellen
         final String[] imageFiles = new String[]{
-                "/static/img/bearbeiten.png",
-                "/static/img/info.png",
-                "/static/img/close.png"
+                "/static/img/icons/bearbeiten-36.png",
+                "/static/img/icons/info-36.png",
+                "/static/img/icons/benutzergruppe-36.png",
+                "",
+                "/static/img/icons/stopuhr-36.png",
+                "/static/img/icons/close-36.png",
+                "/static/img/icons/deletered-36.png"
         };
         final String[] captions = new String[]{
                 "Bearbeiten",
                 "Info",
-                "Verlauf leeren"
+                "Gruppe erstellen",
+                "",
+                "Auto-Löschung von Nachrichten",
+                "Verlauf leeren",
+                "Chat Löschen"
         };
         final String[] urls = new String[]{
                 "bearbeiten",
                 "userinfo",
-                "verlaufleeren"
+                "gruppeerstellen",
+                "",
+                "autoleoschen",
+                "verlaufleeren",
+                "chatleoschen"
         };
         final Hyperlink[] hpls  = new Hyperlink[captions.length];
         final Image[] images    = new Image[imageFiles.length];
@@ -716,13 +724,19 @@ public class MessageController implements Initializable {
             // Bilder Laden
             final Image image = images[i] = new Image(getClass().getResourceAsStream(imageFiles[i]));
             ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(15);
-            imageView.setFitWidth(15);
+            imageView.setFitHeight(16);
+            imageView.setFitWidth(16);
 
-            // image ins hyperlink integrieren
+            // text + image ins hyperlink integrieren
             final Hyperlink hpl = hpls[i] = new Hyperlink(captions[i], imageView);
             hpl.getStyleClass().add("hypersLink");
             hpl.prefWidthProperty().bind(popUpBearbeiten.widthProperty());
+
+            // Trennlinie, aus dem Leeren Hyperlink, nur mit css
+            if (i == 3){
+                hpl.getStyleClass().add("hypersLinkHR");
+                hpl.setDisable(true);
+            }
 
             // Methoden abruffen
             final String url = urls[i];
@@ -730,10 +744,13 @@ public class MessageController implements Initializable {
                 switch (url){
                     case "bearbeiten":              cellCheckBoxZeigen();   break;
                     case "userinfo":                userInfo();             break;
+                    case "gruppeerstellen":         gruppeErstellen();      break;
+                    case "autoleoschen":            autoLoschen();          break;
                     case "verlaufleeren":           verlaufLeeren();        break;
+                    case "chatleoschen":            chatLeoschen();         break;
                     default: break;
                 }
-                //Pop-Up-Fester ausblenden
+                //Pop-Up-Fester ausblende
                 methodenService. popUpFensterClose(spiegelungHaupStage);
             });
         }
@@ -742,6 +759,19 @@ public class MessageController implements Initializable {
         popUpBearbeiten.getChildren().addAll(hpls);
         spiegelungHaupStage.getChildren().add(popUpBearbeiten);
         hauptStage.getChildren().add(spiegelungHaupStage);
+
+
+        // Leer, keine message vorhanden, link-bearbeiten:disabled
+        Hyperlink linkDisabled = hpls[0];
+        if (allMessages.size() == 0) {
+            linkDisabled.setDisable(true);
+        }
+
+        // RED-Links, Letzte eintrag....  chat löschen style-class: hypersLinkRed
+        Hyperlink letzteLinks = hpls[hpls.length -1];
+        if (letzteLinks != null) {
+            letzteLinks.getStyleClass().add("hypersLinkRed");
+        }
 
         //Pop-Up-Fester ausblenden
         spiegelungHaupStage.setOnMouseClicked(mouseEvent -> {
@@ -1012,7 +1042,7 @@ public class MessageController implements Initializable {
 
 
     /**
-     * Message Löschen Bloch unten in Textarea: visible: true setzen
+     * Message Löschen, unten in Textarea: visible: true setzen
      */
     private void loschenAktiv(){
 
@@ -1087,14 +1117,38 @@ public class MessageController implements Initializable {
     }
 
 
-    /* ***************  Weitere Methoden ********************* */
+    /* *************** Weitere Methoden von den Pop-up-Fenster(mit drei Punkten) ********************* */
 
 
     /**
      * gestartet in Pop-up-Fenster(mit 3 Punkten)
      */
     private void userInfo(){
-        System.out.println("User Info");
+
+        layoutService.setausgabeLayout(rightStage);
+        FreundeInfoController freundeInfoController = (FreundeInfoController) layoutService.switchLayout(GlobalView.FREUNDEINFO);
+        freundeInfoController.setInfoFreundData(chatFreundeDaten);
+        freundeInfoController.setInfoFreundMessage(allMessages);
+        translate.slidePane(rightStage.getChildren());
+
+
+        System.out.println("Message Controller, User Info: " + chatFreundeDaten);
+
+    }
+
+    private void gruppeErstellen(){
+        System.out.println("Gruppe Erstellen");
+    }
+
+
+    /**
+     * Auto-Löschen von Nachrichten
+     * 1 Tag
+     * 1 Woche
+     * 1 Monat
+     */
+    private void autoLoschen(){
+        System.out.println("Auto Löschen von Nachrichten");
     }
 
 
@@ -1104,6 +1158,15 @@ public class MessageController implements Initializable {
     private void verlaufLeeren(){
         System.out.println("Verlauf Leeren");
     }
+
+
+    /**
+     * Chat Löschen, das gleiche wie Freund Löschen
+     */
+    private void chatLeoschen(){ System.out.println("Chat Löschen"); }
+
+
+    /* ******************** Weitere Methoden **************************** */
 
     public void smileZeigen() {
         System.out.println("Smile Zeigen");
@@ -1161,4 +1224,7 @@ public class MessageController implements Initializable {
         //messageCenterStackPane.getChildren().remove(popInfo);
     }
 
+    /* ********************* Bilder, Drag -and-Drop Feature ***********************  */
+
+    // in Arbeit
 }

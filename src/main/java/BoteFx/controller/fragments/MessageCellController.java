@@ -33,6 +33,8 @@ public class MessageCellController implements Initializable {
 
     @Autowired
     private TokenService tokenService;
+    @Autowired
+    private ConfigService configService;
 
     @FXML private StackPane mesageBox;
     @FXML private Label mesageUserBild;
@@ -92,7 +94,7 @@ public class MessageCellController implements Initializable {
         mesageVBoxCheckBox.setId(String.valueOf(mesages.getId()));
 
     // 3. mesageUserBild.setText(cellMessage.getPseudonym());
-        Image altImg = new Image(ConfigService.FILE_HTTP+"profilbild/"+mesages.getMeintoken()+".png", false);
+        Image altImg = new Image(configService.FILE_HTTP+"profilbild/"+mesages.getMeintoken()+".png", false);
         if (altImg.isError()){
             mesageUserBild.setText(mesages.getPseudonym());
             mesageUserBild.setStyle( "-fx-background-color:" +

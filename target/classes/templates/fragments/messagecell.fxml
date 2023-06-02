@@ -18,7 +18,7 @@
 
 <StackPane fx:id="mesageBox" prefWidth="350.0"
            stylesheets="@../../static/css/style.css"
-           xmlns="http://javafx.com/javafx/18"
+           xmlns="http://javafx.com/javafx/20"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="BoteFx.controller.fragments.MessageCellController">
    <children>

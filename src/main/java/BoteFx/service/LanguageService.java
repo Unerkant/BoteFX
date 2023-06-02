@@ -83,7 +83,8 @@ public class LanguageService {
     }
 
     /**
-     * start in ViewService Zeile: 72
+     * start in ViewService Zeile: 79
+     *          LayoutService Zeile: 68
      * @return
      */
     public ResourceBundle getCurrentUsedResourceBundle() {

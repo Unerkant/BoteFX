@@ -1,16 +1,12 @@
 package BoteFx.controller.setting;
 
-import BoteFx.controller.ChatBoxController;
-import BoteFx.service.ConfigService;
 import BoteFx.service.TranslateService;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -26,8 +22,6 @@ public class SitzungController implements Initializable {
 
     @Autowired
     private TranslateService translate;
-    @Autowired
-    ChatBoxController chatBoxController;
 
     @FXML private AnchorPane sitzungAnchorPane;
     @FXML private ScrollPane sitzungScroll;
@@ -73,7 +67,7 @@ public class SitzungController implements Initializable {
      *
      *  3. der hover effect an die Positionen wird gelöscht
      */
-    public void sitzungZuruck(ActionEvent event) {
+    public void sitzungZuruck() {
         translate.closeStackPane();
         sitzunghover.getStyleClass().remove("settingAktiv");
     }

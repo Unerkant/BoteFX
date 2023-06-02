@@ -11,7 +11,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="freundeCellAnchorPane" minWidth="300.0" prefHeight="70.0" prefWidth="300.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #E6E6FF; -fx-border-style: solid; -fx-border-width: 0 0 1 0;" stylesheets="@../../static/css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.fragments.FreundeCellController">
+<AnchorPane fx:id="freundeCellAnchorPane"
+            minWidth="300.0"
+            prefHeight="70.0"
+            prefWidth="300.0"
+            style="-fx-background-color: #FFFFFF; -fx-border-color: #E6E6FF; -fx-border-style: solid; -fx-border-width: 0 0 1 0;"
+            stylesheets="@../../static/css/style.css"
+            xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="BoteFx.controller.fragments.FreundeCellController">
    <children>
       <Pane fx:id="deleteCellPane" layoutX="5.0" layoutY="25.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="-25.0" AnchorPane.topAnchor="25.0">
          <children>

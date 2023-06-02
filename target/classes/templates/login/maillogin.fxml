@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mailLoginHauptVBox" style="-fx-background-color: transparent; -fx-border-color: silver;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.login.MailLoginController">
+<VBox fx:id="mailLoginHauptVBox" style="-fx-background-color: transparent; -fx-border-color: silver;" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.login.MailLoginController">
    <children>
       <AnchorPane fx:id="mailLoginAnchorPane" maxHeight="1.7976931348623157E308" onMouseDragged="#mailloginDragged" onMousePressed="#mailloginPressed" prefHeight="620.0" prefWidth="480.0">
          <children>

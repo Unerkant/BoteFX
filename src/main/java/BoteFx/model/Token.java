@@ -1,10 +1,8 @@
 package BoteFx.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
 /**
  * Den 17.09.2022

@@ -28,11 +28,6 @@
                         <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label text="Mitteilungen" textFill="NAVY" GridPane.columnIndex="1">
-                            <font>
-                                <Font name="System Bold" size="16.0" />
-                            </font>
-                        </Label>
                         <GridPane prefHeight="40.0" prefWidth="100.0">
                             <columnConstraints>
                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
@@ -42,18 +37,28 @@
                                 <RowConstraints minHeight="25.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fitHeight="15.0" fitWidth="15.0" onMouseClicked="#toeneZuruck" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../static/img/links.png" />
+                                        <Image url="@../../static/img/linksblue.png" />
                                     </image>
                                 </ImageView>
-                                <Hyperlink onAction="#toeneZuruck" text="Zurück" textFill="BLUE" GridPane.columnIndex="1">
-                                    <font>
-                                        <Font name="System Bold" size="14.0" />
-                                    </font>
+                                <Hyperlink onMouseClicked="#toeneZuruck" text="Zurück" textFill="#2b8cc4" GridPane.columnIndex="1">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
                                 </Hyperlink>
                             </children>
                         </GridPane>
+                        <Label text="Mitteilungen" GridPane.columnIndex="1">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                        </Label>
+                  <Label GridPane.columnIndex="2">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
                     </children>
                 </GridPane>
             </top>

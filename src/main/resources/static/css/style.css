@@ -70,6 +70,7 @@
 }
 
 
+
  /* home.fxml
  --------------*/
 .homeFrom
@@ -216,15 +217,6 @@ _______________*/
  /* MessageController
  --------------------*/
 
-        /* Header */
-.headFreundsName
-{
-    -fx-font-family: "Courier New";
-    -fx-font-size: 1.0em;
-    -fx-font-weight: 700;
-    -fx-text-fill: #000080;
-}
-
 
       /* Alt Message + new Message*/
 
@@ -333,6 +325,23 @@ _______________*/
    -fx-background-color: #E6E6E6;
 }
 
+.hypersLinkHR
+{
+    /* border-color muss das gleiche sein wie background der Fenster(.messageBearbeiten) */
+    -fx-border-color: #FFFFFF;
+    -fx-border-style: solid;
+    -fx-border-width: 2;
+    -fx-background-color: #858585;
+    -fx-font-size: 1;
+    -fx-min-height: 5;
+    -fx-pref-height: 5;
+    -fx-max-height: 5;
+}
+.hypersLinkRed
+{
+    -fx-text-fill: #FF0000;
+}
+
 
     /* Löschen Teil */
 
@@ -382,6 +391,16 @@ _______________*/
     -fx-background-color: rgba(0,0,0, 0.4);
 }
 
+    /* noch MessageController/ Bilder Upload(Drag&Drop Zeile: ab 1240) */
+.dragDropBox
+{
+    -fx-background-color: #505050;
+    -fx-background-radius: 6;
+    -fx-border-color: transparent;
+    -fx-border-radius: 6;
+    -fx-pref-width: 300;
+    -fx-pref-height: 300;
+}
 
     /* **************** Ende Message Controller ************************** */
 

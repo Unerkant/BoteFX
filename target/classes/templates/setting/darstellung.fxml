@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -22,17 +23,12 @@
                     <columnConstraints>
                         <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="80.0" minWidth="80.0" prefWidth="80.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label text="Erscheinungsbild" textFill="NAVY" GridPane.columnIndex="1">
-                            <font>
-                                <Font name="System Bold" size="16.0" />
-                            </font>
-                        </Label>
                         <GridPane prefHeight="40.0" prefWidth="100.0">
                             <columnConstraints>
                                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
@@ -42,26 +38,34 @@
                                 <RowConstraints minHeight="25.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fitHeight="15.0" fitWidth="15.0" onMouseClicked="#darstellungZuruck" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../static/img/linksblau.png" />
+                                        <Image url="@../../static/img/linksblue.png" />
                                     </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                                 </ImageView>
-                                <Hyperlink onAction="#darstellungZuruck" text="Zurück" textFill="BLUE" GridPane.columnIndex="1">
+                                <Hyperlink onAction="#darstellungZuruck" text="Zurück" textFill="#2b8cc4" GridPane.columnIndex="1">
                                     <font>
-                                        <Font name="System Bold" size="14.0" />
+                                        <Font size="14.0" />
                                     </font>
                                 </Hyperlink>
                             </children>
                         </GridPane>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" onMouseClicked="#erscheinungsbildMenu" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
-                     <image>
-                        <Image url="@../../static/img/punkteblau.png" />
-                     </image>
-                     <GridPane.margin>
-                        <Insets right="20.0" />
-                     </GridPane.margin>
-                  </ImageView>
+                        <Label text="Erscheinungsbild" GridPane.columnIndex="1">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                        </Label>
+                  <Label GridPane.columnIndex="2">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </Label>
                     </children>
                 </GridPane>
             </top>

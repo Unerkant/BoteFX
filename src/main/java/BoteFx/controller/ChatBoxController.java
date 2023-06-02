@@ -83,6 +83,10 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
         this.hauptPane = hauptstackpane;
     }
 
+    public StackPane getRightPane() { return rightPane; }
+    public void setRightPane(StackPane rightPane) { this.rightPane = rightPane; }
+
+
 
 
     /**
@@ -97,7 +101,6 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
         translate.setHauptsPane(hauptPane);
         translate.setLinksPane(leftPane);
         translate.setRechtsPane(rightPane);
-
         // Auto resize Starten
         translate.layoutResize();
 
@@ -127,7 +130,7 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
     @FXML
     public void kontakte() {
 
-        freundePane.getChildren().clear();
+        //freundePane.getChildren().clear();
         layoutService.setausgabeLayout(freundePane);
         KontakteController kontakteController = (KontakteController) layoutService.switchLayout(GlobalView.KONTAKTE);
 
@@ -142,7 +145,7 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
      */
     @FXML
     public void telefonate() {
-        freundePane.getChildren().clear();
+        //freundePane.getChildren().clear();
         layoutService.setausgabeLayout(freundePane);
         TelefonController telefonController = (TelefonController) layoutService.switchLayout(GlobalView.TELEFON);
 
@@ -163,7 +166,7 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
      */
     @FXML
     public void chatten() {
-        freundePane.getChildren().clear();
+        //freundePane.getChildren().clear();
         layoutService.setausgabeLayout(freundePane);
         freundeController = (FreundeController) layoutService.switchLayout(GlobalView.FREUNDE);
         freundeController.setRechtsPane(rightPane);
@@ -190,7 +193,7 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
      */
     @FXML
     public void setting() {
-        freundePane.getChildren().clear();
+        //freundePane.getChildren().clear();
         layoutService.setausgabeLayout(freundePane);
         SettingController settingController = (SettingController) layoutService.switchLayout(GlobalView.SETTING);
         settingController.setRightPane(rightPane);
@@ -208,13 +211,13 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
     public void changedImg(String id){
         //System.out.println("changedIMG ID: " + id);
         Image kontakt       = new Image(getClass().getResourceAsStream("/static/img/user.png"));
-        Image kontaktBlau   = new Image(getClass().getResourceAsStream("/static/img/userblau.png"));
-        Image phone         = new Image(getClass().getResourceAsStream("/static/img/phone.png"));
-        Image phoneBlau     = new Image(getClass().getResourceAsStream("/static/img/phoneblau.png"));
+        Image kontaktBlau   = new Image(getClass().getResourceAsStream("/static/img/userblue.png"));
+        Image phone         = new Image(getClass().getResourceAsStream("/static/img/telefon.png"));
+        Image phoneBlau     = new Image(getClass().getResourceAsStream("/static/img/telefonblue.png"));
         Image chat          = new Image(getClass().getResourceAsStream("/static/img/chat.png"));
-        Image chatBlau      = new Image(getClass().getResourceAsStream("/static/img/chatblau.png"));
+        Image chatBlau      = new Image(getClass().getResourceAsStream("/static/img/chatblue.png"));
         Image setting       = new Image(getClass().getResourceAsStream("/static/img/setting.png"));
-        Image settingBlau   = new Image(getClass().getResourceAsStream("/static/img/settingblau.png"));
+        Image settingBlau   = new Image(getClass().getResourceAsStream("/static/img/settingblue.png"));
 
         switch (id){
             case "kontakteImg":                 kontakteImg.setImage(kontaktBlau);

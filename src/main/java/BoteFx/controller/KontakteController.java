@@ -1,12 +1,10 @@
 package BoteFx.controller;
 
-import BoteFx.service.ConfigService;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;
 
 import java.net.URL;

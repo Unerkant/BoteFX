@@ -38,30 +38,33 @@
                                 <RowConstraints minHeight="25.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fitHeight="15.0" fitWidth="15.0" onMouseClicked="#allgemeinZuruck" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../static/img/links.png" />
+                                        <Image url="@../../static/img/linksblue.png" />
                                     </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
                                 </ImageView>
-                        <Hyperlink onAction="#allgemeinZuruck" text="Zurück" textFill="BLUE" GridPane.columnIndex="1">
+                        <Hyperlink onAction="#allgemeinZuruck" text="Zurück" textFill="#2b8cc4" GridPane.columnIndex="1">
                            <font>
-                              <Font name="System Bold" size="14.0" />
+                              <Font size="14.0" />
                            </font>
                         </Hyperlink>
                             </children>
                         </GridPane>
-                        <Label text="Allgemene Einstellungen" textFill="NAVY" GridPane.columnIndex="1">
+                        <Label text="Allgemene Einstellungen" GridPane.columnIndex="1">
                             <font>
-                                <Font name="System Bold" size="16.0" />
+                                <Font size="16.0" />
                             </font>
                         </Label>
-                        <Label textFill="BLUE" GridPane.columnIndex="2">
-                            <font>
-                                <Font name="System Bold" size="15.0" />
-                            </font>
+                        <Label GridPane.columnIndex="2">
                             <cursor>
-                                <Cursor fx:constant="HAND" />
+                                <Cursor fx:constant="DEFAULT" />
                             </cursor>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
                         </Label>
                     </children>
                 </GridPane>

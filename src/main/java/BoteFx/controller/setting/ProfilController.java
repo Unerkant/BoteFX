@@ -1,8 +1,6 @@
 package BoteFx.controller.setting;
 
-import BoteFx.BoteApp;
 import BoteFx.controller.ChatBoxController;
-import BoteFx.service.ConfigService;
 
 import BoteFx.service.MethodenService;
 import BoteFx.service.TokenService;
@@ -16,7 +14,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import java.net.URL;

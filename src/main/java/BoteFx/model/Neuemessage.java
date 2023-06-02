@@ -1,7 +1,8 @@
 package BoteFx.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 
 /**
  * Den 1.05.2023
