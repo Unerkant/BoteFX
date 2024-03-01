@@ -11,6 +11,7 @@
 .text-area
 {
 	-fx-background-color: #FAFAFF;
+	/*-fx-font-size: 1.0em; */
 }
 .text-area .content
 {

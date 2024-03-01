@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="messageAnchorPane" minWidth="350.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.MessageController">
+<AnchorPane fx:id="messageAnchorPane" minWidth="350.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.MessageController">
    <children>
       <StackPane fx:id="messageHauptStackPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -26,7 +26,7 @@
                <top>
                   <StackPane fx:id="messageTopStackPane" BorderPane.alignment="CENTER">
                      <children>
-                        <GridPane minHeight="50.0" prefHeight="50.0" style="-fx-background-color: #FAFAFF; -fx-border-color: #E6E6FF; -fx-border-style: none none solid none;">
+                        <GridPane minHeight="50.0" prefHeight="50.0" style="-fx-background-color: #FAFAFA; -fx-border-color: #EAEAEA; -fx-border-style: none none solid none;">
                            <columnConstraints>
                               <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
                               <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
@@ -38,9 +38,9 @@
                               <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ImageView fitHeight="15.0" fitWidth="15.0" onMouseClicked="#messageSchliessen" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="20.0" fitWidth="20.0" onMouseClicked="#messageSchliessen" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../static/img/linksblue.png" />
+                                    <Image url="@../static/img/linksBlau.png" />
                                  </image>
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
@@ -72,17 +72,17 @@
                               </VBox>
                               <StackPane GridPane.columnIndex="3">
                                  <children>
-                                    <ImageView fx:id="onlinePhone" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#onlinePhone" pickOnBounds="true" preserveRatio="true" visible="false">
+                                    <ImageView fx:id="onlinePhone" fitHeight="24.0" fitWidth="24.0" onMouseClicked="#onlinePhone" pickOnBounds="true" preserveRatio="true" visible="false">
                                        <image>
-                                          <Image url="@../static/img/phoneblue.png" />
+                                          <Image url="@../static/img/anrufenKlingeltBlau.png" />
                                        </image>
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
                                     </ImageView>
-                                    <ImageView fx:id="noPhone" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fx:id="noPhone" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../static/img/phone.png" />
+                                          <Image url="@../static/img/anrufenBlau.png" />
                                        </image>
                                     </ImageView>
                                  </children>
@@ -113,40 +113,41 @@
       
          <!-- Footer-->
                <bottom>
-                  <StackPane fx:id="messageBottomStackPane" prefHeight="52.0" style="-fx-background-color: #FAFAFF; -fx-border-color: #E6E6FF; -fx-border-style: solid none none none;">
+                  <StackPane fx:id="messageBottomStackPane" prefHeight="51.0" style="-fx-background-color: #FAFAFA; -fx-border-color: #EAEAEA; -fx-border-style: solid none none none;">
                      <children>
-                        <GridPane>
+                        <GridPane fx:id="messageBottomGridPane" style="-fx-background-color: #FAFAFF;">
                            <columnConstraints>
                               <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
                               <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
                            </columnConstraints>
                            <rowConstraints>
-                              <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+                              <RowConstraints valignment="BOTTOM" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
                               <ImageView fx:id="messageOther" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#otherZeigen" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../static/img/klamern.png" />
+                                    <Image url="@../static/img/paperClipGrau.png" />
                                  </image>
                                  <GridPane.margin>
-                                    <Insets />
+                                    <Insets bottom="10.0" />
                                  </GridPane.margin>
                               </ImageView>
-                              <TextArea fx:id="textareaText" maxHeight="300.0" minHeight="20.0" onKeyReleased="#messageSenden" prefHeight="20.0" promptText="Schreibe eine Nachricht..." styleClass="textareatext" stylesheets="@../static/css/footer-textarea.css" wrapText="true" GridPane.columnIndex="1">
+                              <!--<TextArea fx:id="textArea" maxHeight="300.0" minHeight="30.0" onKeyPressed="#messageSenden" onKeyReleased="#messageLenge" onKeyTyped="#autoRow" prefHeight="30.0" stylesheets="@../static/css/textarea.css" wrapText="true">-->
+                              <TextArea fx:id="textareaText" maxHeight="300.0" onKeyPressed="#messageSenden" onKeyReleased="#messageLenge" onKeyTyped="#autoRow" stylesheets="@../static/css/footer-textarea.css" wrapText="true" GridPane.columnIndex="1" GridPane.valignment="CENTER">
                                  <font>
-                                    <Font size="14.0" />
+                                    <Font size="16.0" />
                                  </font>
                                  <GridPane.margin>
-                                    <Insets top="10.0" />
+                                    <Insets bottom="8.0" top="6.0" />
                                  </GridPane.margin>
                               </TextArea>
                               <ImageView fx:id="messageSmile" fitHeight="25.0" fitWidth="25.0" nodeOrientation="INHERIT" onMouseClicked="#smileZeigen" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
                                  <image>
-                                    <Image url="@../static/img/smile.png" />
+                                    <Image url="@../static/img/smileGluglichGrau.png" />
                                  </image>
                                  <GridPane.margin>
-                                    <Insets />
+                                    <Insets bottom="13.0" />
                                  </GridPane.margin>
                               </ImageView>
                            </children>

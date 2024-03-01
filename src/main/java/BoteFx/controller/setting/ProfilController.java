@@ -79,7 +79,7 @@ public class ProfilController implements Initializable {
      *  3. der hover effect an die Positionen wird gelöscht
      */
     public void profilZuruck() {
-        translate.closeStackPane();
+        translate.hideHauptPane();
         profilhover.getStyleClass().remove("settingAktiv");
     }
 

@@ -53,7 +53,7 @@ public class WeiterleitenController implements Initializable {
 
 
     // StackPane von ChatBoxController
-    @FXML private StackPane hauptsStages;
+    @FXML private StackPane hauptsStackPane;
 
     /**
      * Getter & Setter
@@ -70,7 +70,7 @@ public class WeiterleitenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        hauptsStages = chatBoxController.getHauptStackPane();
+        hauptsStackPane = chatBoxController.getHauptPane();
 
         // Textarea in Focus Setzen
         Platform.runLater(() -> weiterleitenTextarea.requestFocus());

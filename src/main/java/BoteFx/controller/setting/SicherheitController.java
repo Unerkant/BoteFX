@@ -68,7 +68,7 @@ public class SicherheitController implements Initializable {
      *  3. der hover effect an die Positionen wird gelöscht
      */
     public void sicherheitZuruck() {
-        translate.closeStackPane();
+        translate.hideHauptPane();
         sicherheithover.getStyleClass().remove("settingAktiv");
     }
 

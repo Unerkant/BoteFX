@@ -69,8 +69,8 @@ public class AllgemeinController implements Initializable {
      * 3. der hover effect an die Positionen wird gelöscht
      */
     @FXML
-    void allgemeinZuruck() {
-        translate.closeStackPane();
+    public void allgemeinZuruck() {
+        translate.hideHauptPane();
         allgemeinhover.getStyleClass().remove("settingAktiv");
     }
 

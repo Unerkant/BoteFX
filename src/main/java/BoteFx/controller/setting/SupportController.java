@@ -65,7 +65,7 @@ public class SupportController implements Initializable {
      *  3. der hover effect an die Positionen wird gelöscht
      */
     public void supportZuruck() {
-        translate.closeStackPane();
+        translate.hideHauptPane();
         supporthover.getStyleClass().remove("settingAktiv");
     }
 }

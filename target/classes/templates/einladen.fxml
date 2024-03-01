@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="einladenAnchorPane" prefHeight="770.0" stylesheets="@../static/css/style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.EinladenController">
+<AnchorPane fx:id="einladenAnchorPane" prefHeight="770.0" stylesheets="@../static/css/style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.EinladenController">
     <children>
         <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <top>
@@ -42,22 +42,22 @@
                                 <RowConstraints minHeight="25.0" prefHeight="25.0" valignment="CENTER" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../static/img/links.png" />
+                                        <Image url="@../static/img/linksBlau.png" />
                                     </image>
                                 </ImageView>
-                                <Hyperlink onAction="#einladenClose" text="Zurück" textFill="BLUE" GridPane.columnIndex="1">
+                                <Hyperlink onAction="#einladenClose" text="Zurück" textFill="#0080ff" GridPane.columnIndex="1">
                                     <font>
-                                        <Font name="System Bold" size="14.0" />
+                                        <Font name="SansSerif Regular" size="16.0" />
                                     </font>
                                 </Hyperlink>
                             </children>
                         </GridPane>
-                        <Label text="Bekante Einladen" textFill="NAVY" GridPane.columnIndex="1">
-                            <font>
-                                <Font name="System Bold" size="16.0" />
-                            </font>
+                        <Label text="Bekante Einladen" GridPane.columnIndex="1">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
                         </Label>
                         <Label textFill="BLUE" GridPane.columnIndex="2">
                             <font>
@@ -89,7 +89,7 @@
                                      <children>
                                          <ImageView fx:id="einladenBildClose" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#einladenClose" pickOnBounds="true" preserveRatio="true">
                                              <image>
-                                                 <Image url="@../static/img/closeblau.png" />
+                                                 <Image url="@../static/img/closered.png" />
                                              </image>
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
@@ -129,9 +129,9 @@
                            <bottom>
                               <HBox alignment="CENTER" prefHeight="50.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0 0 10 10; -fx-border-radius: 0 0 10 10;" BorderPane.alignment="CENTER">
                                  <children>
-                                    <Hyperlink fx:id="einladungOk" alignment="CENTER" onAction="#inhaltValidate" text="OK" textFill="BLUE">
+                                    <Hyperlink fx:id="einladungOk" alignment="CENTER" onAction="#inhaltValidate" text="OK" textFill="#0050ff">
                                        <font>
-                                          <Font name="System Bold" size="16.0" />
+                                          <Font size="16.0" />
                                        </font>
                                     </Hyperlink>
                                     <Hyperlink fx:id="einladungSenden" alignment="CENTER" onAction="#einladungPerMail" textFill="#0000ee" visible="false">
@@ -187,10 +187,10 @@
                             <bottom>
                                 <HBox alignment="CENTER" prefHeight="50.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 0 0 10 10; -fx-border-radius: 0 0 10 10;" BorderPane.alignment="CENTER">
                                     <children>
-                                        <Hyperlink onAction="#einladenClose" text="Abbrechen" textFill="BLUE">
-                                            <font>
-                                                <Font name="System Bold" size="16.0" />
-                                            </font>
+                                        <Hyperlink onAction="#einladenClose" text="Abbrechen" textFill="#0050ff">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
                                         </Hyperlink>
                                     </children>
                                 </HBox>

@@ -416,7 +416,7 @@ public class EinladenController implements Initializable {
         // selber Element Löschen
         //((Pane) einladenAnchorPane.getParent()).getChildren().remove(einladenAnchorPane);
         // nur, wenn App unter width 650px verkleinert wird
-        translate.closeStackPane();
+        translate.hideHauptPane();
     }
 
 
@@ -465,7 +465,7 @@ public class EinladenController implements Initializable {
                                         break;
             case "nofund":              einladenFehler.setText("ERROR: falsches key(Bote/ApiUserController/125)");
                                         break;
-            case "allerror":            einladenFehler.setText("Allgemein Fehler: EiladenController Zeile: 190");
+            case "allerror":            einladenFehler.setText("response status 500:  EinladenController Zeile: 201");
                                         break;
             case "freundplus":          einladenFehler.setText("Bekannten ist eingeladen");
                                         break;

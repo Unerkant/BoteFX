@@ -49,7 +49,7 @@ public class MessageLeerController implements Initializable {
      * 3. der hover effect an die Positionen wird gelöscht
      */
     public void messageLeerZuruck() {
-        translate.closeStackPane();
+        translate.hideHauptPane();
         System.out.println("Message Leer Zuruck");
         //((Pane) messageLeerAnchorPane.getParent()).getChildren().remove(messageLeerAnchorPane);
     }

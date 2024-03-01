@@ -342,8 +342,6 @@ public class FreundeCellController implements Initializable {
     /**
      * CHAT LADEN
      * messagesToken, wird als Button-ID in setProperties() gesetzt Zeile: 153(hier)
-     * "openmessage" = functioniert, wenn Stage unter 650px verkleinert wird,
-     * ChatBoxController/changedPane()  Zeile: 330
      *
      * //@param event
      */
@@ -365,13 +363,15 @@ public class FreundeCellController implements Initializable {
             messageController.setMessageToken(messagesToken);
             messageController.setCelleArchorPane(cellAnchorPane);
 
+            // Controller an chatBox + translate senden
             chatBoxController.setMessageController(messageController);
+            translate.setMessagesController(messageController);
 
             //System.out.println("Freunde Cell Controller Zeile: 320 " + messagesToken);
         }
 
         // Translate Starten (functioniert nur unter 650px)
-        translate.offenStackPane();
+        translate.showHauptPane();
     }
 
 

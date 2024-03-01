@@ -6,12 +6,15 @@
   * -fx-font-family:
   *"Rockwell", "Microsoft Sans Serif", "Courier", "Times", "Tahoma", "Sans-Serif", "Helvetica" "Courier New" = *schmall*
   *
-  * windows-blau:   #2b8cc4
+  * windows-blau:   #2B8CC4
   * transparent:    #FFFFFF00
 
   * :link { color: #0000EE; }
   * :visited { color: #551A8B; }
   * Label: -fx-wrap-text: true;
+  *
+  * System.out.printf("Mouse clicked at [%.1f, %.1f]%n", e.getX(), e.getY()));
+  * -fx-word-wrap: break-word;
   */
 
 /* Allgemein*/
@@ -27,24 +30,6 @@
     -fx-underline: false;
 }
 
-/* hover effekt für den Setting */
-.settingAktiv
-{
-    -fx-background-color: #CCE0FF;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
-}
-.settingHover:hover
-{
-    -fx-background-color: #CCE0FF;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
-}
-/* hover effekt für den Button (Freunde-Chat click) */
-.freundeAktiv
-{
-    -fx-background-color: #CCE0FF;
-}
 
 /* Input Feld border & background transparent */
 .inputStyle
@@ -144,7 +129,14 @@
     -fx-cursor: none;
 }
 
-/* freundecell
+/* hover effekt für den Button (Freunde-Chat click) */
+.freundeAktiv
+{
+    -fx-background-color: #CCEEFF;
+
+}
+
+/* freundecell.fxml
 _______________*/
 
 .freundeCellCount
@@ -191,7 +183,7 @@ _______________*/
     -fx-border-insets: 5;
     -fx-background-insets: 5;
 
-    -fx-text-fill: #fff;
+    -fx-text-fill: #FFFFFF;
     -fx-font-size: 1.3em;
 }
 .cellJa
@@ -205,9 +197,10 @@ _______________*/
     -fx-border-insets: 5;
     -fx-background-insets: 5;
 
-    -fx-text-fill: #fff;
+    -fx-text-fill: #FFFFFF;
     -fx-font-size: 1.3em;
 }
+
 
  /* message.fxml
  ----------------*/
@@ -217,9 +210,7 @@ _______________*/
  /* MessageController
  --------------------*/
 
-
       /* Alt Message + new Message*/
-
 
 .cellBildsLabel
 {
@@ -254,13 +245,13 @@ _______________*/
 .cellMesagesZeit
 {
     -fx-font-size: 0.9em;
-    -fx-text-fill: #999;
+    -fx-text-fill: #999999;
 }
 
 .cellMesagesBilder
 {
     -fx-font-size: 0.7em;
-    -fx-text-fill: #999;
+    -fx-text-fill: #999999;
   /*  -fx-border-color: #E6FFE6;
     -fx-border-width: 5;
     -fx-padding: 5;*/
@@ -297,7 +288,7 @@ _______________*/
 }
 
 .cellChecksBox:selected .box {
-    -fx-background-color: #28a3f4;
+    -fx-background-color: #28A3F4;
 }
 
 
@@ -310,15 +301,14 @@ _______________*/
     -fx-background-radius: 6;
     -fx-border-color: transparent;
     -fx-border-radius: 6;
-    -fx-padding: 10;
-    -fx-pref-width: 250;
+    -fx-padding: 5;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 15, 0, 0, 0);
 }
 .hypersLink
 {
     -fx-font-size: 1.0em;
     -fx-text-fill: #000000;
-    -fx-padding: 7;
+    -fx-padding: 5 10;
 }
 .hypersLink:hover
 {
@@ -359,7 +349,7 @@ _______________*/
 .loschBlau
 {
     -fx-font-size: 1.0em;
-    -fx-text-fill: #2b8cc4;
+    -fx-text-fill: #2B8CC4;
 }
 
 .loschHBox
@@ -410,6 +400,19 @@ _______________*/
  /* setting.fxml
   ----------------*/
 
+.settingAktiv
+{
+    -fx-background-color: #CCEEFF;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+}
+.settingHover:hover
+{
+    -fx-background-color: #E5F5FF;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+}
+
 
  /* Kontakte.fxml
   ----------------*/
@@ -417,6 +420,31 @@ _______________*/
 {
     /*-fx-letter-spacing: 10;
     -fx-graphic-text-gap: 6;*/
+}
+
+
+    /* stickerbox.fxml
+    ___________________*/
+.stickerLink
+{
+    -fx-background-color: #E6E6E6;
+    -fx-text-fill: black;
+}
+
+
+    /* smile.fxml
+    ---------------*/
+.smileVBox
+{
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-border-radius: 8;
+}
+.gridBorder
+{
+    -fx-border-color: #F2F2F2;
+    -fx-border-width: 0 0 1 0;
 }
 
 /*@media only screen and (min-width: 650px)  { .leftPane { -fx-background-color: red; } }*/

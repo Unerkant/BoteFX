@@ -68,7 +68,7 @@ public class SitzungController implements Initializable {
      *  3. der hover effect an die Positionen wird gelöscht
      */
     public void sitzungZuruck() {
-        translate.closeStackPane();
+        translate.hideHauptPane();
         sitzunghover.getStyleClass().remove("settingAktiv");
     }
 }

@@ -12,10 +12,12 @@ import com.google.gson.reflect.TypeToken;
 
 import javafx.animation.*;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -85,24 +87,27 @@ public class MessageController implements Initializable {
     /**
      * Haupt Stage von ChatBoxController
      */
-    @FXML private StackPane hauptStage;
-    @FXML private StackPane rightStage;
+    @FXML private StackPane hauptStackPane;
+    @FXML private StackPane rechteStackPane;
     @FXML private String myColor;
+
     private String meinerToken;
     Usern mineData = null;
+
+    /* TextArea, autoRow methode */
+    private double insets;
+    private Node textLookup;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         /* Message VBox auf 100% ziehen*/
         messageVBox.prefWidthProperty().bind(messageAnchorPane.widthProperty());
 
         /* HauptPane ID holen, ChatBoxController */
-        hauptStage = chatBoxController.getHauptStackPane();
+        hauptStackPane = chatBoxController.getHauptPane();
 
         /* rightPane ID holen, ChatBoxController */
-        rightStage = chatBoxController.getRightPane();
-
-        // Bottom: TextArea in Focus setzen
-        Platform.runLater(() -> textareaText.requestFocus());
+        rechteStackPane = chatBoxController.getRightPane();
 
         // Methode: altMessage, rundes bild-hintergrund, Zeile: ab 415
         myColor = methodenService.zufallColor();
@@ -112,6 +117,12 @@ public class MessageController implements Initializable {
 
         // Meine Daten
         mineData = userdataService.meineDaten();
+
+        // Bottom: TextArea in Focus setzen
+        Platform.runLater(() -> textareaText.requestFocus());
+        // Bottom: TextArea, warum nullen: beschreibung in die autoRow Methode Zeile: ~620
+        textLookup = null;
+
     }
 
 
@@ -149,6 +160,7 @@ public class MessageController implements Initializable {
     private ArrayList<Message> allMessages;
     public String getMessageToken() { return messageToken;}
     public void setMessageToken(String mesagetoken) {
+
         this.messageToken = mesagetoken;
 
         // Alte Message von MySql(Tabelle: messages) Holen
@@ -161,9 +173,8 @@ public class MessageController implements Initializable {
         Type listType = new TypeToken<ArrayList<Message>>(){}.getType();
         allMessages  = gson.fromJson(response.body(), listType);
 
-        //Collections.reverse(allMessages);
+        //Alte Message von Datenbank ausgeben (hier unten Zeile: 285)
         messagesAusgeben(allMessages);
-
     }
 
 
@@ -180,7 +191,7 @@ public class MessageController implements Initializable {
     public void setChatFreundeDaten(Freunde chatfreundedaten) {
         this.chatFreundeDaten = chatfreundedaten;
 
-        headPunkte = new Image(getClass().getResourceAsStream("/static/img/punktenblue.png"));
+        headPunkte = new Image(getClass().getResourceAsStream("/static/img/punktenBlau.png"));
         blauPunkte = new ImageView(headPunkte);
         freundToken = chatFreundeDaten.getFreundetoken();
 
@@ -242,12 +253,16 @@ public class MessageController implements Initializable {
 
 
     /**
-     * Neue Message Anzeigen, gestartet von ChatBoxController/ Zeile: 275
+     * Neue Message Anzeigen,
+     * gestartet von ChatBoxController/ Zeile: 275
      * die einzelne(Letzte/Live) zugesendete neuMessage wird in einem
      * ArrayList<> umgewandelt, weil die Alte Message von der Datenbank
      * sind in einem List-Array gespeichert...
      *
      * die Methode messagesAusgeben akzeptiert als Parameter einen ArrayList
+     *
+     * ACHTUNG: die letzte(einzelne) message wir von Socket über den ChatBoxController
+     *  hier zugesendet als array message... wird einfach an alten messages ganz unten angehängt/ausgegeben
      *
      * @param neuMessage
      */
@@ -257,12 +272,22 @@ public class MessageController implements Initializable {
         ArrayList<Message> newMessage = new ArrayList<Message>(Collections.singleton(neuMessage));
 
         messagesAusgeben(newMessage);
-        scrollBottom(messageScrollPane);
+        Platform.runLater(() -> scrollBottom(messageScrollPane));
+
     }
 
 
     /**
-     * Alte Message Ausgeben, gestartet Zeile: 160
+     * Ausgabe von alte + neue Messages
+     *
+     * Alte Message Ausgeben, gestartet Zeile: 160  (hier oben)
+     * neue Messsage Ausgeben, gestartet Zeile: 274 (gleich hier oben)
+     *
+     * FAZIT: die messages werden als Array-List zugesendet/von MySql abgerufen
+     * jeder einzelne message wird als einzelnen block ausgegeben, gepackt in einer StackPane,
+     * ausgegeben von for schleife in einem VBox (message.fxml) ID: messageVBox
+     *
+     *
      * @param allmesage
      */
     private void messagesAusgeben(ArrayList<Message> allmesage){
@@ -327,8 +352,8 @@ public class MessageController implements Initializable {
 
             // b. Hacken Grau + Grün
             StackPane cellDonePane = new StackPane();
-            ImageView imgHakenGrau = new ImageView(new Image(getClass().getResourceAsStream("/static/img/hacken.png")));
-            ImageView imgHakenGrun = new ImageView(new Image(getClass().getResourceAsStream("/static/img/donegreen.png")));
+            ImageView imgHakenGrau = new ImageView(new Image(getClass().getResourceAsStream("/static/img/icons/hackenGrau36.png")));
+            ImageView imgHakenGrun = new ImageView(new Image(getClass().getResourceAsStream("/static/img/icons/doppeltHackenGrun36.png")));
             imgHakenGrau.setFitWidth(15);
             imgHakenGrau.setFitHeight(15);
             imgHakenGrun.setFitWidth(15);
@@ -422,10 +447,10 @@ public class MessageController implements Initializable {
                 }
 
 
-                // Message Löschen Teil
+                // Message Löschen
                 if (checkBoxSelected.size() == 0 && stackPaneSelected.size() == 0){
 
-                    // keine checkBox aus gewellt, alles schliessen
+                    // keine checkBox gewellt, alles schliessen
                     messageLoschenHide();
                     cellCheckBoxHide();
 
@@ -467,7 +492,44 @@ public class MessageController implements Initializable {
                 }
             });
 
+
+         /**
+          *  7. 2-finger-click auf eine Message(cellHauptStackPane)
+          *
+          *  eine einzelne message bearbeiten, abrufen mit dem 2-Finger click
+          *  oder Maus: rechte taste
+          *  oder Tastatur: control + touchpad-tippen
+          *
+          *  Weiter mit Methode: eineMessageBearbeiten... Zeile: 1140
+          *  mitgesendet geklickte StackPane (mit ID)
+          */
+          cellHauptStackPane.setOnMouseClicked(new EventHandler<MouseEvent>()
+            {
+                @Override
+                public void handle(MouseEvent event)
+                {
+                    /**
+                     *  1. 2-Finger Click (2 finger-tippen auf das touchpad)
+                     *  2. Maus Rechte-Taste (rechte taste-click auf dem Maus)
+                     *  3. mit dem Tastatur  (control-taste + touchpad-tippen(mit 1-finger) )
+                     */
+                    if(event.getButton() == MouseButton.SECONDARY || event.isControlDown())
+                    {
+                        Double x = event.getSceneX();
+                        Double y = event.getSceneY();
+                        // Zeile: 1225
+                        eineMessageBearbeiten(cellHauptStackPane, str, x, y);
+
+                    } else {
+                        System.out.println("Click auf Message: " +event.getY());
+                        // nicht machen
+                    }
+                }
+            });
+
+
         } // Ende for schleife
+
     }
 
 
@@ -502,7 +564,7 @@ public class MessageController implements Initializable {
      *
      * @param keyEvent
      */
-    private  Double messageHeightMerken = 20.0;
+    private  Double messageHeightMerken = 30.0;
     @FXML
     private void messageSenden(KeyEvent keyEvent) {
 
@@ -511,7 +573,7 @@ public class MessageController implements Initializable {
         // Text Field auf Leer Prüfen
         if (messagesText == null || messagesText.trim().length() == 0) {
             textareaMinHoch();
-            messageHeightMerken = 20.0;
+            messageHeightMerken = 30.0;
             textareaText.clear();
             textareaText.positionCaret(messagesText.length());
             return;
@@ -546,20 +608,19 @@ public class MessageController implements Initializable {
             }
 
         } else {
-            textareaAutoRow(messagesText);
+            // nichts machen
         }
-        // Text auf Länge prüfen + Textarea Auto height
-        messageLenge();
+
     }
 
 
     /**
-     * TEXTAREA MAX. LÄNGE 500 ZEICHEN
+     * TEXTAREA MAX. LÄNGE 1000 ZEICHEN
      *
-     * Max Länge von Messenger-Text sind auf 500 Zeichen begrenzt
-     * die Methode wird von messageSende gesteuert
-     * änderung in ConfigService vornehmen
+     * Max Länge von Messenger-Text sind auf 1000 Zeichen begrenzt, änderung in ConfigService vornehmen
+     * gesteuert von message.fxml Zeile: 137, TextArea, ID: textareaText
      */
+    @FXML
     private void messageLenge() {
         int maxMesageLenge    = configService.MESSAGE_LENGTH;
         int mesageLenge       = textareaText.getText().length();
@@ -578,31 +639,96 @@ public class MessageController implements Initializable {
     /**
      * TEXTAREA AUTO ROW
      *
-     * Funktioniert nicht richtig, aufgegeben....
+     * Funktioniert sehr gut, max. height 300px
      *
-     * Textarea max. height: 350px
-     * benutzt von der Methode: messageSenden (hier oben)
+     * ACHTUNG: kein Prompt Text in Scene Builder angeben + die variable textLockup immer
+     * bei start im Init auf null setzen ansonsten wächst die Textarea nicht
      *
-     * @param mesagetext
+     * FAZIT: wenn sie wollen von textArea dynamisch text-height auslesen, müssen sie jedes Mal
+     * einem neuen Layout(textLookup) erstellen, das bedeutet: bei jedem start von dem
+     * MessageController immer die variable textLookup nullen... am besten gleich wie hier in
+     * public void initialize... Zeile: 125
+     *
      */
-    private void textareaAutoRow(String mesagetext){
-        int textareaMaxHoch = configService.TEXTAREA_HEIGHT;
-        Text text = new Text();
-        text.setWrappingWidth(textareaText.getWidth() - 40);
-        text.setText(mesagetext);
-        double height = text.getLayoutBounds().getHeight() + 5;
-        double pading = 20;
-        if (height > textareaMaxHoch) {
-            textareaText.setMinHeight(textareaMaxHoch);
-        } else {
-            textareaText.setMinHeight(height + pading);
+    @FXML
+    private void autoRow(){
+
+        if (textLookup == null) {
+
+            Region scrollpane   = (Region) textareaText.lookup(".scroll-pane");
+            Region content      = (Region) textareaText.lookup(".content");
+            double areaInsets   = textareaText.getInsets().getTop() + textareaText.getInsets().getBottom();
+            double scrollInsets = scrollpane.getInsets().getTop() + scrollpane.getInsets().getBottom();
+            double contentInsets= content.getInsets().getTop() + content.getInsets().getBottom();
+            insets = areaInsets + scrollInsets + contentInsets;
+            textLookup = textareaText.lookup(".text");
+
         }
-        textareaText.setScrollTop(height + 20);
+
+        // textarea total height
+        double totalHeight = insets + Math.ceil(textLookup.getLayoutBounds().getHeight());
+        areaHeight(totalHeight);
 
         // für die Methode messageBearbeiten
-        messageHeightMerken = height;
+        messageHeightMerken = totalHeight;
     }
 
+    /**
+     * gestartet in autoRow, lässt selber Textarea wachsen und schrumpfen
+     *
+     * @param height
+     * double height: 30.0
+     */
+    private void areaHeight(double height) {
+
+        int areaMaxHeight = 300;
+        if (height > areaMaxHeight){
+            textareaText.setMinHeight(areaMaxHeight);
+        } else {
+            textareaText.setMinHeight(height);
+            textareaText.setPrefHeight(height);
+            textareaText.setMaxHeight(height);
+        }
+    }
+
+
+    /**
+     * Textarea Height merken, für die bearbeiten methoden
+     */
+    private void textareaHochMerken(){
+        double textareaHoch = textareaText.getHeight();
+        if (textareaHoch > 40.0){
+            // Message Height Merken
+            messageHeightMerken = textareaHoch;
+        }
+    }
+
+
+    /**
+     * Bottom, textarea height auf 20px schrumpfen, für die anzeige
+     * der Löschen-Fenster
+     */
+    private void textareaMinHoch(){
+
+        textareaText.setMinHeight(30.0);
+
+    }
+
+
+    /**
+     * TEXTAREA WIEDERHERSTELLEN
+     *
+     * Bottom, textarea wiederherstellen nach dem Klick auf 'fertig'
+     * ursprüngliches Text wieder anzeigen, wenn werde welches verfasst...
+     *
+     */
+    private void textareaWiederHerstellen(){
+
+        textareaText.setMinHeight(messageHeightMerken);
+        textareaText.requestFocus();
+        textareaText.positionCaret(textareaText.getText().length());
+
+    }
 
 
     /* *************** Methoden von der Pop-up-Fenster(mit drei Punkten) ********************* */
@@ -730,7 +856,8 @@ public class MessageController implements Initializable {
             // text + image ins hyperlink integrieren
             final Hyperlink hpl = hpls[i] = new Hyperlink(captions[i], imageView);
             hpl.getStyleClass().add("hypersLink");
-            hpl.prefWidthProperty().bind(popUpBearbeiten.widthProperty());
+            hpl.setMaxWidth(1f * Integer.MAX_VALUE);
+
 
             // Trennlinie, aus dem Leeren Hyperlink, nur mit css
             if (i == 3){
@@ -751,14 +878,14 @@ public class MessageController implements Initializable {
                     default: break;
                 }
                 //Pop-Up-Fester ausblende
-                methodenService. popUpFensterClose(spiegelungHaupStage);
+                methodenService.popUpFensterClose(spiegelungHaupStage);
             });
         }
 
         // VBox mit hyperlink oben Rechts in Haupt-AnchorPane anzeigen
         popUpBearbeiten.getChildren().addAll(hpls);
         spiegelungHaupStage.getChildren().add(popUpBearbeiten);
-        hauptStage.getChildren().add(spiegelungHaupStage);
+        hauptStackPane.getChildren().add(spiegelungHaupStage);
 
 
         // Leer, keine message vorhanden, link-bearbeiten:disabled
@@ -831,43 +958,6 @@ public class MessageController implements Initializable {
     }
 
 
-
-    private void textareaHochMerken(){
-        double textareaHoch = textareaText.getHeight();
-        if (textareaHoch > 40.0){
-            // Message Height Merken
-            messageHeightMerken = textareaHoch;
-        }
-    }
-
-    
-    /**
-     * Bottom, textarea height auf 20px schrumpfen, für die anzeige
-     * der Löschen-Fenster
-     */
-    private void textareaMinHoch(){
-        
-        textareaText.setMinHeight(20.0);
-        
-    }
-
-
-    /**
-     * TEXTAREA WIEDERHERSTELLEN
-     *
-     * Bottom, textarea wiederherstellen nach dem Klick auf 'fertig'
-     * ursprüngliches Text wieder anzeigen, wenn werde welches verfasst...
-     *
-     */
-    private void textareaWiederHerstellen(){
-        
-        textareaText.setMinHeight(messageHeightMerken);
-        textareaText.requestFocus();
-        textareaText.positionCaret(textareaText.getText().length());
-        
-    }
-
-
     /* *************** Message Löschen *********************** */
 
     /**
@@ -901,9 +991,10 @@ public class MessageController implements Initializable {
         checkCount = checkGruppe.size();
 
 
+        //
         loschenAktiv();
 
-        /* Message Löschen, Zeile: 980*/
+        /* Message Löschen, Zeile: 1110 */
         loschHyperlinkAktiv.setOnAction((event) -> {
             
             messageLoschen(checkGruppe, stackGruppe);
@@ -928,15 +1019,15 @@ public class MessageController implements Initializable {
      *  a. links column: StackPane mit Label(Text + Bild), Disabled + Hyperlink(Text + Bild), Aktiv(Red)
      *  b. Center column: HBox mit Label(Count) + Label(Text)
      *  c. Right column: StackPane mit Label(Text + Bild), Disabled + Hyperlink(Text + Bild), Aktiv(Red)
-     * schliesslich wird die Haup-Löschen-Block, AnchorPane in einer StackPane angezeigt( show/hide )
+     * schliesslich wird die Haup-Löschen-Blocks, AnchorPane in einer StackPane angezeigt( show/hide )
      */
     private void messageLoschenShow(){
 
         /**
          * StackPane( Label(Image + Text),   Hyperlink(Bild + Text) ), wird ins GridPane/Left integriert
          */
-        ImageView loschImg = new ImageView(new Image(getClass().getResourceAsStream("/static/img/delete.png")));
-        ImageView loschImgRed = new ImageView(new Image(getClass().getResourceAsStream("/static/img/deletered.png")));
+        ImageView loschImg = new ImageView(new Image(getClass().getResourceAsStream("/static/img/abfallGrau.png")));
+        ImageView loschImgRed = new ImageView(new Image(getClass().getResourceAsStream("/static/img/abfallRot.png")));
         loschImg.setFitWidth(25);
         loschImg.setFitHeight(25);
         loschImgRed.setFitWidth(25);
@@ -963,8 +1054,8 @@ public class MessageController implements Initializable {
         /**
          * StackPane(Label(Text + Bild), Hyperlink(Text + Bild), wird in GridPane/Right integriert
          */
-        ImageView weiterImg = new ImageView(new Image(getClass().getResourceAsStream("/static/img/forwardblack.png")));
-        ImageView weiterImgBlau = new ImageView(new Image(getClass().getResourceAsStream("/static/img/forwardblue.png")));
+        ImageView weiterImg = new ImageView(new Image(getClass().getResourceAsStream("/static/img/weiterRechts.png")));
+        ImageView weiterImgBlau = new ImageView(new Image(getClass().getResourceAsStream("/static/img/weiterRechtsBlau.png")));
         weiterImg.setFitWidth(30);
         weiterImg.setFitHeight(30);
         weiterImgBlau.setFitWidth(30);
@@ -1025,7 +1116,7 @@ public class MessageController implements Initializable {
 
 
     /**
-     * Message Löschen Bloch unten in Textarea: visible: false setzen
+     * Message Löschen, unten in Textarea: visible: false setzen
      */
     private void loschenDisabled(){
 
@@ -1100,6 +1191,7 @@ public class MessageController implements Initializable {
     }
 
 
+
     /* ******************* Message Weiterleiten **************** */
 
     /**
@@ -1108,12 +1200,12 @@ public class MessageController implements Initializable {
     private void messageWeiterleitenHandle(List<String> mesageText){
 
 
-        layoutService.setausgabeLayout(hauptStage);
+        layoutService.setausgabeLayout(hauptStackPane);
         // fxml laden mit switchLayout oder switchView
         WeiterleitenController weiterleitenController = (WeiterleitenController) layoutService.switchLayout(GlobalView.MESSAGEWEITERLEITEN);
         weiterleitenController.setWeiterleitenText(mesageText.toString());
 
-        System.out.println("Message Weiterleiten Handle: " + hauptStage );
+        System.out.println("Message Weiterleiten Handle: " + hauptStackPane );
     }
 
 
@@ -1122,17 +1214,15 @@ public class MessageController implements Initializable {
 
     /**
      * gestartet in Pop-up-Fenster(mit 3 Punkten)
+     * 
+     * ACHTUNG: translate funktion wird in 
      */
     private void userInfo(){
 
-        layoutService.setausgabeLayout(rightStage);
+        layoutService.setausgabeLayout(rechteStackPane);
         FreundeInfoController freundeInfoController = (FreundeInfoController) layoutService.switchLayout(GlobalView.FREUNDEINFO);
         freundeInfoController.setInfoFreundData(chatFreundeDaten);
         freundeInfoController.setInfoFreundMessage(allMessages);
-        translate.slidePane(rightStage.getChildren());
-
-
-        System.out.println("Message Controller, User Info: " + chatFreundeDaten);
 
     }
 
@@ -1166,6 +1256,219 @@ public class MessageController implements Initializable {
     private void chatLeoschen(){ System.out.println("Chat Löschen"); }
 
 
+
+
+    /* ******************* nur eine Message Bearbeiten (2-Finger click auf die message) **************** */
+
+    /**
+     * Start: hier oben in message ausgabe, Zeile: 480
+     * Double x + y = mausklick koordinate
+     * pane =
+     *
+     * @param eineNachrichtPane
+     * @param x
+     * @param y
+     */
+    private void eineMessageBearbeiten(StackPane eineNachrichtPane, String nachrichtText, Double x, Double y){
+        final String messageId = eineNachrichtPane.getId();
+
+        // 1. Haupt Fenster width + height 100%
+        AnchorPane spiegelungHauptPane = new AnchorPane();
+        spiegelungHauptPane.setStyle("-fx-border-color: red");
+
+        // 2. pop-up-fenster width + height auto
+        VBox popUpBearbeiten = new VBox();
+        popUpBearbeiten.getStyleClass().add("messagesBearbeiten");
+
+        if(x > 500 && y > 260){
+            AnchorPane.setLeftAnchor(popUpBearbeiten, x - 150);
+            AnchorPane.setTopAnchor(popUpBearbeiten, y - 260);
+        } else if( x > 500) {
+            AnchorPane.setLeftAnchor(popUpBearbeiten, x - 150);
+            AnchorPane.setTopAnchor(popUpBearbeiten, y);
+        } else if( y > 260) {
+            AnchorPane.setLeftAnchor(popUpBearbeiten, x );
+            AnchorPane.setTopAnchor(popUpBearbeiten, y -260);
+        } else {
+            AnchorPane.setLeftAnchor(popUpBearbeiten, x);
+            AnchorPane.setTopAnchor(popUpBearbeiten, y);
+        }
+
+
+        // 3. Image Array
+        final String[] einzelImgs = new String[]{
+                "/static/img/icons/back-36.png",
+                "",
+                "/static/img/icons/bearbeiten-36.png",
+                "/static/img/icons/ok-36.png",
+                "/static/img/icons/stecknadel-36.png",
+                "/static/img/icons/forward-36.png",
+                "",
+                "/static/img/icons/link-36.png",
+                "/static/img/icons/herunterladen-36.png",
+                "/static/img/icons/kopieren-36.png",
+                "",
+                "/static/img/icons/achtung-36.png",
+                "/static/img/icons/deletered-36.png"
+        };
+        final String[] einzelCaptions = new String[]{
+                " Antworten",
+                "",
+                " Korrigieren",
+                " Auswählen",
+                " Anheften",
+                " Weiterleiten",
+                "",
+                " Link kopieren",
+                " Sichern unter...",
+                " Text kopieren",
+                "",
+                " Melden",
+                " Löschen"
+        };
+        final String[] einzelnUrls = new String[]{
+                "antwort",
+                "",
+                "korrektur",
+                "ausgewelt",
+                "anheften",
+                "weitersenden",
+                "",
+                "linkkopieren",
+                "sichern",
+                "textkopieren",
+                "",
+                "verstossmelden",
+                "nachrichtloschen"
+        };
+        final Hyperlink[] links = new Hyperlink[einzelnUrls.length];
+        final Image[] imgs = new Image[einzelImgs.length];
+        // Links Ausgabe
+        for (int i = 0; i < einzelCaptions.length; i++){
+
+            // Bilder Laden
+            final Image img = imgs[i] = new Image(getClass().getResourceAsStream(einzelImgs[i]));
+            ImageView imgView = new ImageView(img);
+            imgView.setFitWidth(15);
+            imgView.setFitHeight(15);
+
+            // Text + Bilder ins Hyperlinks integrieren
+            final Hyperlink link = links[i] = new Hyperlink(einzelCaptions[i],  imgView);
+            link.getStyleClass().add("hypersLink");
+            link.setMaxWidth(1f * Integer.MAX_VALUE);
+
+            // Trennlinie(hr), aus dem Leeren Hyperlink, nur mit css
+            if (i == 1 || i == 6 || i == 10 ){
+                link.getStyleClass().add("hypersLinkHR");
+                link.setDisable(true);
+            }
+
+            final String einzelnURL = einzelnUrls[i];
+            link.setOnAction((event) ->{
+                switch (einzelnURL){
+                    case "antwort":                 antworten(nachrichtText);
+                                                    break;
+                    case "korrektur":               nachrichtKorrigieren();     break;
+                    case "ausgewelt":               nachrichtAuswellen();       break;
+                    case "anheften":                nachrichtAnheften();        break;
+                    case "weitersenden":            weiterSenden();             break;
+                    case "linkkopieren":            linkKopieren();             break;
+                    case "sichern":                 dateiSichern();             break;
+                    case "textkopieren":            textKopieren(spiegelungHauptPane, eineNachrichtPane, nachrichtText);
+                                                    break;
+                    case "verstossmelden":          verstossMelden();           break;
+                    case "nachrichtloschen":        eineNachrichtLoschen();     break;
+                    default:    break;
+                }
+            });
+
+        }
+
+        // Pop-up-Fenster ausgabe
+        popUpBearbeiten.getChildren().addAll(links);
+        spiegelungHauptPane.getChildren().add(popUpBearbeiten);
+        hauptStackPane.getChildren().add(spiegelungHauptPane);
+
+        //System.out.println("Zwei Finger Click: "  + x +"/"+  y );
+
+        eineNachrichtPane.getStyleClass().add("cellMessagesHover");
+        // spiegelung eineNachrichtPane mit inhalt ausblenden
+        spiegelungHauptPane.setOnMouseClicked(mouseEvent -> {
+            methodenService.popUpFensterClose(spiegelungHauptPane);
+            eineNachrichtPane.getStyleClass().remove("cellMessagesHover");
+        });
+
+    }
+
+    private void antworten(String textZumAntworten){
+
+        System.out.println("auf Nachricht antworten..." + textZumAntworten);
+    }
+
+    /**
+     * Antworten Abbrechen...
+     * INFO: verbunden nur mit der Methode antworten.
+     *
+     * @param event
+     */
+    public void antwortenClosed(MouseEvent event) {
+        System.out.println("Antworten Abbrechen");
+    }
+
+
+    private void nachrichtKorrigieren(){
+        System.out.println("Nachricht Bearbeiten/korrigieren...");
+    }
+    private void nachrichtAuswellen(){
+        System.out.println("Nachricht Auswellen...");
+    }
+    private void nachrichtAnheften(){
+        System.out.println("Nachricht anheften...");
+    }
+    private void weiterSenden(){
+        System.out.println("Weiterleiten...");
+    }
+    private void linkKopieren(){
+        System.out.println("Link kopieren...");
+    }
+    private void  dateiSichern(){
+        System.out.println("Sichern unter...");
+    }
+
+    /**
+     * Nachrichten-text in zwischenablage kopieren
+     *
+     * @param spiegelteHaupPane
+     * @param textZumKopieren
+     */
+    private void textKopieren(AnchorPane spiegelteHaupPane, StackPane eineNachrichtenPane, String textZumKopieren){
+
+        // Nachricht in die Zwischenablage kopieren
+        Clipboard cb = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(textZumKopieren);
+        cb.setContent(content);
+        cb.hasString();
+
+        //Pop-up-fester schliessen
+        methodenService.popUpFensterClose(spiegelteHaupPane);
+
+        // Hover effect von angewllte Nachrich aussetzen
+        eineNachrichtenPane.getStyleClass().remove("cellMessagesHover");
+
+        //  kurze nachricht 3 Sek. anzeigen
+        String kopierText = "in die Zwischenablage kopiert";
+        messagesPopUpFensterInfo(messageCenterStackPane, kopierText);
+
+    }
+    private void verstossMelden(){
+        System.out.println("Verstoß melden...");
+    }
+    private void eineNachrichtLoschen(){
+        System.out.println("Eine Nachricht Löschen...");
+    }
+
+
     /* ******************** Weitere Methoden **************************** */
 
     public void smileZeigen() {
@@ -1189,12 +1492,12 @@ public class MessageController implements Initializable {
     /**
      * Click auf dem Pfeil 'ZURÜCK'(< blau), oben in header Bereich
      *
-     * celleAnchorPane = ist eine complete Freunde-Pane mit allen Daten von FreundeCellController...
+     * celleAnchorPane = ist eine complete Freunde-Pane mit allen Daten von FreundeCellController...(links)
      *  a. translate:       message schliessen
      *  b. celleAnchorPane: hover effekt ausgeblendet
      */
     public void messageSchliessen() {
-        translate.closeStackPane();
+        translate.hideHauptPane();
         celleArchorPane.getStyleClass().remove("freundeAktiv");
     }
 
@@ -1204,8 +1507,11 @@ public class MessageController implements Initializable {
     /**
      * Pop-up-Fenster Information kürzlich anzeigen und nach 3 Sekunden ausblenden(Fade)
      *
-     * Parameter StackPane: sind insgesamt 4 StackPane
-     *      1. hauptStage: liegt unten komplette BoteFx-App, zugesendet von ChatBoxController
+     * der Pop-up-Fenster könnte in verschiedene bereiche angezeigt werden, zum auswahl
+     * sind insgesamt 4 StackPane...
+     *
+     * Parameter StackPane:
+     *      1. hauptStackPane: liegt unten komplette BoteFx-App, zugesendet von ChatBoxController
      *      2. messageTopStackPane: liegt in Header bereich
      *      3. messageCenterStackPane: liegt in Center, message Bereich
      *      4. messageBottomStackPane: liegt in Bottom bereich, textarea, senden
@@ -1213,7 +1519,7 @@ public class MessageController implements Initializable {
      *
      * @param textInfo
      */
-    private void messagesPopUpFensterInfo(StackPane pane, String textInfo){
+    public void messagesPopUpFensterInfo(StackPane pane, String textInfo){
 
         Label popInfo = new Label(textInfo);
         popInfo.getStyleClass().add("popInfoLabel");
@@ -1223,6 +1529,7 @@ public class MessageController implements Initializable {
         methodenService.fadeIn(popInfo, 3);
         //messageCenterStackPane.getChildren().remove(popInfo);
     }
+
 
     /* ********************* Bilder, Drag -and-Drop Feature ***********************  */
 

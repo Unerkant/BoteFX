@@ -69,7 +69,7 @@ public class FaqController implements Initializable {
   *  3. der hover effect an die Positionen wird gelöscht
   */
  public void faqZuruck() {
-    translate.closeStackPane();
+    translate.hideHauptPane();
     faqhover.getStyleClass().remove("settingAktiv");
  }
 

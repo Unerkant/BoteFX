@@ -18,6 +18,8 @@
 
     ***************************** ALLGEMEIN *********************************************
 
+    background-bottom:      #FAFFFA
+
     1. *** Allgemein zur fxml Load
         a. login fxml + chatbox.fxml werden nur von ViewService abgerufen,
            ViewService = zuerst wird auf vorhandenen token* geprüft, wenn nicht vorhanden
@@ -448,7 +450,7 @@
     *********************** neue Nachrichten, count anzeige ****************************************
 
     1. eine neue eingehende Nachricht wird mit dem Socket empfangen: SoketService Zeile: 123
-    2. weiter die neue nachricht wird zum ChatBoxController umgeleitet(durch interface: SocketResponseHandler)
+    2. weiter die neue nachricht wird zum ChatBoxController(289) umgeleitet(durch interface: SocketResponseHandler)
         an die Methode: public void handleNewMessage(Message message), in der Methode wird geprüft, wer ist Online
         User Online: IF
         'messageController!= null' dann message live ausgeben an MessageController/ Methode
@@ -460,7 +462,7 @@
         freundeCellController.nachrichtEmpfangen()); Zeile: 467
         in den FreundeCellController:
             bei abruffen die methode: nachrichtEmpfangen, wird einfach die variable count hoch gezählt count++
-            und so erchoht sich die variable bei jeder neue nachricht...
+            und so erhöht sich die variable bei jeder neue nachricht...
             gleichzeitig wird in der Freunde-Box die count-anzeige angezeigt mit dem Zahl die eingehenden
             nachrichten, einen rundes roten Label mit der Zahl die nachrichten..
             zusätzlich wird der count  noch ins H2 Datenbank gespeichert, weil bei nächsten start wird in datenbank

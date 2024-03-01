@@ -73,8 +73,8 @@ public class ToeneController implements Initializable {
      *  3. der hover effect an die Positionen wird gelöscht
      */
     @FXML
-    public void toeneZuruck(ActionEvent event) {
-        translate.closeStackPane();
+    public void toeneZuruck() {
+        translate.hideHauptPane();
         toenehover.getStyleClass().remove("settingAktiv");
     }
 }

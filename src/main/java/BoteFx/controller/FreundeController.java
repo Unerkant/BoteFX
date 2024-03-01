@@ -190,6 +190,7 @@ public class FreundeController implements Initializable {
                 cellController.setProperties(fried);
 
                 freundeCellControllerHashMap.put(fried.getMessagetoken(), cellController);
+
             }
 
         } else {
@@ -377,7 +378,7 @@ public class FreundeController implements Initializable {
         einladenController.setUserdaten(response.body());
 
         // Translate Starten(nur unter 650px)
-        translate.offenStackPane();
+        translate.showHauptPane();
     }
 
 }

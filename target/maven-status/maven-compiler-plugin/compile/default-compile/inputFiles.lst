@@ -1,4 +1,3 @@
-/Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/setting/StickerController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/service/SocketService.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/fragments/MessageLeerController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/setting/SitzungController.java
@@ -8,6 +7,7 @@
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/setting/SpracheController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/model/Usern.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/fragments/TippController.java
+/Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/setting/SmileController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/repository/EntryRepository.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/model/Token.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/login/TelefonLoginController.java
@@ -17,9 +17,11 @@
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/service/ConfigService.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/repository/TokenRepository.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/service/LanguageService.java
+/Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/setting/SpeicherController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/setting/SicherheitController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/utilities/SocketResponseHandler.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/EntryPoint.java
+/Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/service/SwitchButton.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/ChatBoxController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/service/EntryService.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/login/HomeController.java
@@ -30,8 +32,9 @@
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/fragments/WeiterleitenController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/setting/DarstellungController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/setting/ProfilController.java
+/Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/configuration/BoteConfig.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/FreundeController.java
-/Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/model/Neuemessage.java
+/Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/FreundeInfoController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/fragments/MessageCellController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/login/TelefonSuccessController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/model/Message.java
@@ -44,7 +47,10 @@
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/login/TelefonRegisterController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/model/Entry.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/service/ViewService.java
+/Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/SmileBoxController.java
+/Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/model/Neuemessagecounter.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/Enums/GlobalView.java
+/Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/setting/OrdnerController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/EinladenController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/controller/TelefonController.java
 /Users/paulrichter/ideaProject/BoteFX/src/main/java/BoteFx/service/ApiService.java

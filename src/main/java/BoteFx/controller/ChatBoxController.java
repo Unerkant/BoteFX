@@ -1,6 +1,7 @@
 package BoteFx.controller;
 
 import BoteFx.Enums.GlobalView;
+import BoteFx.configuration.BoteConfig;
 import BoteFx.controller.fragments.FreundeCellController;
 import BoteFx.model.Message;
 import BoteFx.service.LayoutService;
@@ -39,9 +40,9 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
     private TokenService tokenService;
     @Autowired
     private SocketService socketService;
+    @Autowired
+    private BoteConfig boteConfig;
 
-    private MessageController messageController;
-    private FreundeController freundeController;
 
     /**
      * die 3 StackPane hauptPane, leftPane & rightPane nicht Löschen oder ändern
@@ -49,6 +50,7 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
     @FXML private StackPane hauptPane;
     @FXML private StackPane leftPane;
     @FXML private StackPane rightPane;
+    @FXML private StackPane smilePane;
 
     @FXML private AnchorPane freundePane;
     @FXML private ImageView kontakteImg;
@@ -57,11 +59,9 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
     @FXML private ImageView settingImg;
     @FXML private AnchorPane tippPane;
 
-
-
     /**
      *  Getter & Setter von StackPane für den globalen Zugriff...
-     *  z.b.s von die MessageController
+     *  z.b.s von dem MessageController
      *
      *  wird benutzt:
      *  1. MessageController/messageBearbeiten() Zeile: 725
@@ -76,47 +76,54 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
      *
      * @return
      */
-    public StackPane getHauptStackPane() {
-        return hauptPane;
-    }
-    public void setHauptStackPane(StackPane hauptstackpane) {
-        this.hauptPane = hauptstackpane;
-    }
 
+    private MessageController messageController;
+    private FreundeController freundeController;
+
+    public StackPane getHauptPane() { return hauptPane;}
+    public void setHauptPane(StackPane hauptPane) { this.hauptPane = hauptPane; }
     public StackPane getRightPane() { return rightPane; }
     public void setRightPane(StackPane rightPane) { this.rightPane = rightPane; }
 
 
+    /* ********************** Globale Variable ********************** */
+    private String smileBooleans;
 
-
-    /**
-     * responseHandler:this - ist einen array, von einer neuen gesendeten Nachricht, zugesendet von
-     * SocketService, Zeile: 138, responseHandler.handleNewMessage(message);
-     *
-     * alle wird gesteuert über SocketResponseHandler(als interface geerbt)
-     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // StackPane an Translate Übergeben
+
+    /* ********************** Translate Starten ********************* */
+
         translate.setHauptsPane(hauptPane);
         translate.setLinksPane(leftPane);
         translate.setRechtsPane(rightPane);
-        // Auto resize Starten
+        translate.setSmilesPane(smilePane);
+
         translate.layoutResize();
 
 
-    /* ************************************ SOCKET STARTEN ********************* */
+    /* ********************** SOCKET STARTEN ************************ */
 
         String meinToken = tokenService.meinToken();
         socketService.connect(meinToken, this);
 
-        // Freunde Laden, bei erstem Start automatisch Freunde Laden
+
+    /* ********************** Freunde Laden ************************* */
         chatten();
+
+    /* ********************** Sticker true/false Prüfen ************* */
+
+        smileBooleans = boteConfig.getProperties("smileAnzeigen");
+
+        if (smileBooleans != null && smileBooleans.trim().equals("true")){
+            smileAnzeigen();
+        }
+
     }
 
 
 
-    /* ***************************** 4 Haupt Methoden *********************************  */
+    /* :::::::::::::::::::::::::::::::::::: 4 Haupt Methoden ::::::::::::::::::::::::::::::::::::::  */
 
 
     /**
@@ -130,12 +137,17 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
     @FXML
     public void kontakte() {
 
+        // Rechte Pane Leeren
+        clearRechtsPane();
+
         //freundePane.getChildren().clear();
         layoutService.setausgabeLayout(freundePane);
         KontakteController kontakteController = (KontakteController) layoutService.switchLayout(GlobalView.KONTAKTE);
 
+        // Kontakt-Bild(blau) hover setzen
         final String kontaktID = kontakteImg.getId();
         changedImg(kontaktID);
+
     }
 
 
@@ -145,12 +157,18 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
      */
     @FXML
     public void telefonate() {
+
+        // Rechte Pane Leeren
+        clearRechtsPane();
+
         //freundePane.getChildren().clear();
         layoutService.setausgabeLayout(freundePane);
         TelefonController telefonController = (TelefonController) layoutService.switchLayout(GlobalView.TELEFON);
 
+        // Telefon-Bild(blau) hover setzen
         final String telefonId = telefonateImg.getId();
         changedImg(telefonId);
+
     }
 
 
@@ -166,6 +184,10 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
      */
     @FXML
     public void chatten() {
+
+        // Rechte Pane Leeren
+        clearRechtsPane();
+
         //freundePane.getChildren().clear();
         layoutService.setausgabeLayout(freundePane);
         freundeController = (FreundeController) layoutService.switchLayout(GlobalView.FREUNDE);
@@ -173,14 +195,8 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
         freundeController.setFreundenPane(freundePane);
         freundeController.setMeineToken(tokenService.meinToken());
 
-       /* if (event != null) {
-            String id = ((Node) event.getSource()).getId();
-            // Bild hover setzen
-            changedImg(id);
-        }else {
-            Image chatImage = new Image(getClass().getResourceAsStream("/static/img/chatblau.png"));
-            chattenImg.setImage(chatImage);
-        }*/
+
+        // Chat Bild(blau) hover setzen
         final String chattenId = chattenImg.getId();
         changedImg(chattenId);
 
@@ -193,6 +209,10 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
      */
     @FXML
     public void setting() {
+
+        // Rechte Pane Leeren
+        clearRechtsPane();
+
         //freundePane.getChildren().clear();
         layoutService.setausgabeLayout(freundePane);
         SettingController settingController = (SettingController) layoutService.switchLayout(GlobalView.SETTING);
@@ -200,6 +220,7 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
 
         final String settingId = settingImg.getId();
         changedImg(settingId);
+
     }
 
 
@@ -210,14 +231,14 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
      */
     public void changedImg(String id){
         //System.out.println("changedIMG ID: " + id);
-        Image kontakt       = new Image(getClass().getResourceAsStream("/static/img/user.png"));
-        Image kontaktBlau   = new Image(getClass().getResourceAsStream("/static/img/userblue.png"));
-        Image phone         = new Image(getClass().getResourceAsStream("/static/img/telefon.png"));
-        Image phoneBlau     = new Image(getClass().getResourceAsStream("/static/img/telefonblue.png"));
-        Image chat          = new Image(getClass().getResourceAsStream("/static/img/chat.png"));
-        Image chatBlau      = new Image(getClass().getResourceAsStream("/static/img/chatblue.png"));
-        Image setting       = new Image(getClass().getResourceAsStream("/static/img/setting.png"));
-        Image settingBlau   = new Image(getClass().getResourceAsStream("/static/img/settingblue.png"));
+        Image kontakt       = new Image(getClass().getResourceAsStream("/static/img/userGrau.png"));
+        Image kontaktBlau   = new Image(getClass().getResourceAsStream("/static/img/userBlau.png"));
+        Image phone         = new Image(getClass().getResourceAsStream("/static/img/telefonGrau.png"));
+        Image phoneBlau     = new Image(getClass().getResourceAsStream("/static/img/telefonBlau.png"));
+        Image chat          = new Image(getClass().getResourceAsStream("/static/img/chatGrau.png"));
+        Image chatBlau      = new Image(getClass().getResourceAsStream("/static/img/chatBlau.png"));
+        Image setting       = new Image(getClass().getResourceAsStream("/static/img/settingGrau.png"));
+        Image settingBlau   = new Image(getClass().getResourceAsStream("/static/img/settingBlau.png"));
 
         switch (id){
             case "kontakteImg":                 kontakteImg.setImage(kontaktBlau);
@@ -247,8 +268,21 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
     }
 
 
+    /**
+     * Rechte Pane Leeren, wenn zwischen Haupt Methoden wechseln wird
+     */
+    private void clearRechtsPane(){
+        final StackPane rechtePane = getRightPane();
+        if(rechtePane.getChildren().size() > 1){
 
-    /* ***************** von SocketService Fehler + Live Message Ausgabe ****************** */
+            translate.deleteAllPane(rechtePane.getChildren());
+        }
+    }
+
+
+
+    /* :::::::::::::::::::: von SocketService Fehler + Live Message Ausgabe ::::::::::::::::::::::: */
+
 
     public void setMessageController(MessageController messageController) {
         this.messageController = messageController;
@@ -272,10 +306,10 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
      * gestartet in SocketService Zeile: 123
      * ============================================================
      * der 'message' Array wird von SocketService Zeile: 137 zugesendet und weiter an
-     * MessageController gesendet, Zeile:
-     * an die Methode:  public void neueNachrichtAnzeigen(Message message)....
+     * MessageController gesendet, Zeile: 270
+     * an die Methode:  public void neueMessage(Message neuMessage)....
      *
-     * alles wird über 'public interface SocketResponseHandler(SocketResponseHandler.java)' gesteuert,
+     * alles wird über 'public interface SocketResponseHandler(SocketResponseHandler.java)', (utilities) gesteuert,
      * als interface geerbt
      *
      * IF: wenn User Online ist, wird die Nachrichten angezeigt
@@ -305,5 +339,17 @@ public class ChatBoxController implements Initializable, SocketResponseHandler {
     @Override
     public void afterConnectionEstablished(StompSession session) {
         System.out.println("Session ok: " + session.getSessionId());
+    }
+
+
+    /* :::::::::::::::::::::::::::::::: Smile Anzeigen :::::::::::::::::::::::::::::::: */
+
+    /**
+     * Automatische Smile Laden Zeile: 120 (init)
+     * einen smilebox.fxml wird ins <StackPane fx:id="smilePane" /> geladen
+     */
+    private void smileAnzeigen(){
+        layoutService.setausgabeLayout(smilePane);
+        SmileBoxController stickerBoxController = (SmileBoxController) layoutService.switchLayout(GlobalView.SMILEBOX);
     }
 }

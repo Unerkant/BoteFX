@@ -60,7 +60,7 @@ public class DarstellungController implements Initializable {
      *  3. der hover effect an die Positionen wird gelöscht
      */
     public void darstellungZuruck() {
-        translate.closeStackPane();
+        translate.hideHauptPane();
         darstellunghover.getStyleClass().remove("settingAktiv");
     }
 

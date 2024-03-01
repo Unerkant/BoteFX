@@ -46,6 +46,9 @@ public class FreundeInfoController implements Initializable {
         this.infoFreundData = infofreunddata;
 
         freundHeaderInfo(infoFreundData);
+
+        // Slide function Starten in translateService
+        translateService.showNebenPane(freundeInfoHauptPane);
     }
 
     @FXML private ArrayList<Message> infoFreundMessage;
@@ -96,7 +99,7 @@ public class FreundeInfoController implements Initializable {
      */
     public void freundeInfoZuruck(MouseEvent event) {
 
-        translateService.schliessenPane(freundeInfoHauptPane);
+        translateService.hideNebenPane(freundeInfoHauptPane);
 
     }
 

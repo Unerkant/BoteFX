@@ -40,7 +40,7 @@
                             <children>
                                 <ImageView fitHeight="15.0" fitWidth="15.0" onMouseClicked="#allgemeinZuruck" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@../../static/img/linksblue.png" />
+                                        <Image url="@../../static/img/linksBlau.png" />
                                     </image>
                            <cursor>
                               <Cursor fx:constant="HAND" />

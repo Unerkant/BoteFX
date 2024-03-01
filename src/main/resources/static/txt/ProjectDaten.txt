@@ -1,0 +1,412 @@
+    PROJECT DATEN
+
+    Icons herunterladen
+    https://icons8.de/icons/set/zahnrad
+    Color
+    https://brandcolors.net/
+    https://colorhunt.co/
+
+    1. Allgemein
+
+        Haupt Fenster:              minHeight: 550
+                                    minWidth:  380
+                                    linke Pane(Freunde)     minWidht: 300,  maxWidht: 650
+                                    Center Pane (Message)   minWidht: 380,  maxWidht: ~
+                                    Rechte Pane (smile)     minWidht: 350,  prefWidht: 350
+                                    Border-color:           #F2F2F2
+
+    2. BILDER EIGENSCHAFTEN
+
+        ab 10.02.2024 wird nur 2 Maß & 3 Color benutzt, Name auf Deutsch, text klein/Groß(aaaBbbCcc)
+                                    Maß: 36x36 für die pop-up-fenster
+                                    Maß: 72x72 für alle anderer
+                                    Setting Bilder mit dem Corner(20%) background(verschiedene color)
+
+
+        Bild Adresse:               Image = new Image("/static/img/archiv.png");
+        Bilder: Maß                 72px72, 36x36px
+                                    72x72 Quadrat, corner radius 30% (Filled, Size 100%)
+
+        Bilder Color:               Hintergrund     #FFFFFF00, Transparent
+                                    Black           #000000, rgb(0, 0, 0),  hsl(0, 0%, 0%)
+                                    Gray            #808080, rgb(128, 128, 128), hsl(0, 0%, 50%)
+                                    Blau (50%)      #0080FF, rgb(0, 128, 255), hsl(210, 100%, 50%)
+        Abfall                      Red  (50%)      #FF0000
+        Uhr + Done(hacken)          Grün            #00F700 rgb(0, 247, 0) hsl(120, 100%, 48%)
+
+        Bilder Innenabstand:        30%(Setting) anderer 10%
+        Bilder Corner(Quadrat)      30%
+
+        Pfeil Links oder Rechts     Color: #0080FF, Maß: 20x20
+
+        ACHTUNG: #0080FF ist heller als #0050FF, die 0080FF wird für die Bilder + Pfeil + Zurück genutzt und
+                 die dunklere #0050FF wird für den links benutzt (OK oder Abbrechen Buttons)
+
+
+    3. SETTING BILDER               Setting Haupt Bilder:
+                                    Setting Einstellung Bilder:         26x26
+                                    Setting Einstellung Pfeil rechts:   15x15
+
+
+    4. TEXT EIGENSCHAFTEN
+
+        font-family allgemein       16px (System Standard) Black
+        font-family (dün):          Monospaced, Times New Roman
+        font-header (Setting)       #000080 (NAVY, dunkler Blau) sansSerif (bold)
+        font-family (Zurück)        #0050FF (Blau) rgb(0, 80, 255) hsl(221, 100%, 50%)
+
+
+    5. HEADER + BOTTOM EIGENSCHAFTEN
+        Header + Bottom             height:         50px
+                                    background:     #FAFAFA
+                                    border:         #EAEAEA
+
+    6. HOVER EFFECT
+        Freunde-Visited                 -fx-background-color: #CCEEFF; // blau 90%
+        Setting-Hover-effect            -fx-background-color: #E5F5FF; // blau 95%
+
+
+    7. SMILE
+        Smile: emoji + sticker & GIFs   128x128px
+
+    8. LINKS:
+        File von TXT-Dateien
+         String file = "src/main/resources/static/txt/leander.txt";
+                        "src/main/resources/static/json/leander.json"
+
+    /* :::::::::::::::::::::::::::::::::::: Bote Config ::::::::::::::::::::::::::::::::::::::::::: */
+
+    boteconfig.properties                                                               (resources)
+    BoteConfig.java                                                                     (configuration)
+
+    in boteconfig.properties werden alle einstellungen von Setting hier gespeichert und an
+    beliebigen Stelle abgefragt und benutzt. z.b.s wie smile anzeige: smile=true, smile=false
+
+         *      ACHTUNG: nur 3 ausführbare Methoden
+         *   <code>
+         *      1. getProperties(String key)                // boolean wert von element holen
+         *      2. setProperties(String key, String value)  // element neu anlegen oder alte update
+         *      3. deleteProperties(String element)         // Löschen von element
+         *  </code>
+
+              *      Z.B.S.
+              *          @Autowired
+                         private BoteConfig boteConfig;
+
+              * 1.   abruf von andere Class, einfach key eingeben:
+              *      String wert = boteConfig.getProperties("smile");
+              *      // output wert: true/false
+              *
+              * 2.   neue wert speichern, neuen key + neues value eingeben:
+              *      boteConfig.setProperties("sticker", "false");
+
+
+    /* :::::::::::::::::::::::::::::::::::: Translate Service ::::::::::::::::::::::::::::::::::::: */
+
+    ACHTUNG: die TranslateService funktioniert voll automatisch bei verkleinerung oder Vergrößerung von
+            complete stage(App), die Linke Seite wird ausgeblendet bei einem width unter 650px und die
+            Smile werden angezeigt nur bei einer große über 1030px
+            kleinste stage maß: 380x550px, größte stge maß: 3456x2234px
+
+            START: in ChatBoxController.java / Init + gesendete Haupt StackPanen an TranslateService
+
+                 @Override
+                 public void initialize(URL url, ResourceBundle resourceBundle) {
+                    translate.setHauptsPane(hauptPane);
+                    translate.setLinksPane(leftPane);
+                    translate.setRechtsPane(rightPane);
+                    translate.setSmilesPane(smilePane);
+
+                    translate.layoutResize();
+                }
+
+    1. Methode: @FXML
+                public void layoutResize(){...}, hier wird bei verkleinerung oder Vergrößerung die anzeige von
+        Linke oder Rechte oder Smile Pane gesteuert:
+        a. verkleinerung unter 650px: zuerst wird geprüft, ob in rechtePane wird eine message angezeigt dann
+            wird die Rechte Pane angezeigt, wenn die rechtePane leer ist(außer TippPane) dann wird die Linke
+            Pane mit der Freude angezeigt
+        b. Vergrößerung über 1030px: nach dem prüfung in boteconfig.properties ob smile erlaubt sind oder nicht
+            bei true: anzeigen
+            bei false: verbergen
+        c.  eine große über 650px wird als Standard angesehen
+
+    2.  Methode:
+            private void smilePaneAusblenden(){...}
+            private EventHandler<ActionEvent> smilePaneEinblenden(){...}
+       wenn bei anzeige eine message wird information Fenster abgerufen dann smile Pane wird verdeckt
+       bei schliessen die Informatins Fenster werden smile wieder angezeigt
+
+    3.  Methode:
+            public void showHauptPane(){...}
+        die methode funktioniere nur unter 650px und ist nur für die rechtePane, mit dem for Schleife
+        werde die aktuelle width die Haupt-Stage genommen und bis NULL zu linke seite die AnchorPane
+        durchlaufen, einfach gesagt: Die rechtePane wird von rechts nach links gezogen bis zum Linken
+        rand die AnchorPane
+        setLeftAnchor(rechtsPane, Double.valueOf(z)); Zeile 380
+        ACHTUNG: die methode ist NUR für die RechtePane
+
+    4.  Methode:
+             public void hideHauptPane(){...}
+        die methode funktioniert nur unter 650px und nur für die schliessung von den Haupt Panen.
+        mit dem for Schleife wird die rechtePane von den Linken Rand die AnchorPnae entfernt
+
+        ACHTUNG: die Methode ist nur für RechtePane, nach dem schliessung werden alle children
+        aus dem rechtePane entfernt außer die TippPane
+
+    5.  Methode:
+            public void showNebenPane(Pane pane){...}
+        einfache Pane anzeige von 2 Reihe, z.b.s info oder was anderes, wird einfach über die
+        StackPane(rechtePane) drauf gezogen, die smile Fenster wird dabei verdeckt
+        ACHTUNG: die angezeigte Pane muss zugesendet sein
+
+    6.  Methode:
+            public void hideNebenPane(Pane pane){...}
+        Schließung alle Pane von 2 Reihe, danach Pane wird Gelöscht
+
+    7.  Methode:
+            private void deletePane(Pane pane){
+                    rechtsPane.getChildren().remove(pane);
+            }
+            Löschen von geschlossenen Panen aus dem 2 Reihe
+
+    8.  Methode:
+              public void deleteAllPane(ObservableList<Node> auserTippPane){
+                    auserTippPane.remove(1, auserTippPane.size());
+                }
+        nach dem message schliessung werden aus dem RechtePane alle children gelöscht außer die
+        TippPane, die offene Fenster aus dem 2 Reihe werden hier auch entfernt
+
+    9.  Methode:
+            public static void removeDuplicate(List list) {...}
+        bei jedem geöffnete message, geladen per FXMLLoader in FreundeCellController: Zeile: 360,
+        bildet sich in rechtePane eine observableList mit doppelte einträgen z.b.s
+        rechtesPane.getChindren()...
+        * children: [AnchorPane[id=tippPane], AnchorPane[id=messageAnchorPane], AnchorPane[id=messageAnchorPane],
+        *  AnchorPane[id=messageAnchorPane], AnchorPane[id=freundeInfoHauptPane], AnchorPane[id=messageAnchorPane]]
+
+        so sieht es aus nach der Löschung doppelten einträgen, nur eine von jedem...
+        * children: [AnchorPane[id=tippPane], AnchorPane[id=freundeInfoHauptPane], AnchorPane[id=messageAnchorPane]]
+
+    FAZIT: Allgemein die Resize + slider + translate funktionieren gut,
+
+
+
+    /* :::::::::::::::::::::::::::::::::::: Smile (emoji + sticker + gif) ::::::::::::::::::::::::: */
+
+    ACHTUNG: die Smile kann man anzeigen oder ausblenden lasen in boteconfig.properties,
+             selbe einstellung wird in setting/smileSettingController vorgenommen mit knopf/schalter
+
+             START: TranslateService
+
+             Zeile: ca 150
+             else if (aktuelleWidth > 1029) {
+
+                                 if (messagesController != null && smilesBoolean.trim().equals("true")) {
+                                     smileShow();
+                                 }
+
+                             } else {...}
+
+    1.  chatbox.fxml                ID: <StackPane fx:id="smilePane">                   (templates)
+
+    2.  ChatBoxController.java      @FXML private StackPane smilePane;                  (controller)
+            a. einmal an translate senden   translate.setSmilesPane(smilePane);         (Init)
+            b. smile automatisch in init starten, zuerst in boteconfig.properties
+                auf true prüfen (weitere information in smile setting)                  Zeile: 120
+            c. smile Laden mit Methode: private void smileAnzeigen()                    Zeile: 350
+
+    3. smilebox.fxml                emoji, sticker + gif sind in 3 BorderPane geladen   (templates)
+            a.  <BorderPane fx:id="emojiBorder" />
+            b.  <BorderPane fx:id="stickerBorder" />
+            b.  <BorderPane fx:id="gifBorder" />
+
+    4. SmileBoxController.java                                                          (controller)
+
+        hier werden alle emopji + stickers in FlowPane angezeigt
+        a.  private void emojisAnzeigen(){...}
+        b.  private void stickersAnzeigen(){...}
+        a.  private void gifsAnzeigen(){...}
+
+        smile aus der Datei werden nur mit einer Methode geladen, mit onClick function
+        d. private ImageView smileLaden(final File imgFile){...
+            ...imageView.setOnMouseClicked()....
+        }
+
+    5.  boteconfig.properties           smile=true oder false                           (resources)
+
+    6.  TranslateService.java                                                           (service)
+        zuerst wird geprüft in boteconfig.properties ob smile anzeige auf true
+        gesetzt ist:
+            a.     @Autowired
+                   private BoteConfig boteConfig;
+                   private String smilesBoolean;
+                   public String getSmileProperties(){
+                       return boteConfig.getProperties("smile");
+                   }
+
+            b.  variable 'smileBoolean' ist false: nicht machen/ keine anzeige von smile
+            c.  variable 'smileBoolean' ist true:
+
+                // smile anzeige bei geladene message + true in boteconfig.properties
+                else if (aktuelleWidth > 1029) {
+                    if (messagesController != null && smilesBoolean.trim().equals("true")) {
+                        smileShow();
+                    }
+
+                } else { }   // ausschnitt aus TranslateService Zeile: ca. 150
+
+                Methoden:   funktioniert nur bei einem width großer als 1030px (haupt Stage)
+                        private void smileShow(){...}           // smile anzeigen
+                        private void smileHide(){...}           // smile ausblenden
+                        private void smilePaneAusblenden(){...} //ausblenden bie info. fxml anzeige
+                        private EventHandler<ActionEvent> smilePaneEinblenden(){..} // einblenden
+
+    7.  Fazit:  bei boteconfig.properties: prüfen auf true oder false
+                bei TranslateService: einblende oder ausblenden von smile Fenster(<StackPane fx:id="smilePane" />)
+                bei ChatBoxController: FXLoader von smilebox.fxml ins chatbox.fxml/<StackPane fx:id="smilePane" />
+                bei SmileBoxCotroller: Laden von static Datei emoji + sticker + gif und schliesslich anzeigen
+                                       + click function in bottom + scroll mit der Zwei finger
+                bei SmileSettingController: einstelllung von smile anzeigen oder ausblenden, die speicherung
+                                            wird in boteconfig.properties vorgenommen: smile=true  (oder false)
+
+
+
+    /* :::::::::::::::::::::::::::::: chatbox.fxml + ChatBoxController :::::::::::::::::::::::::::: */
+
+
+
+
+
+
+    /* :::::::::::::::::::::::::::::: chatbox.fxml + ChatBoxController :::::::::::::::::::::::::::: */
+
+    chatbox ist einen Haupt Pane(Fenster) von chat App, ohne Registrieren teil
+    Haupt Pane = ist eine StackPane, da befinden sich ein AnchorPane mit 3 StackPane
+
+        1. StackPane: ID leftPane
+                a.  angelegt an linke, oben und untere rand die AnchorPane
+                b.  width: 300 bis 650px
+                c.  mit feste angelegte BorderPane/ Benutzt wird Center und Bottom
+                d.  Center: da befindet sich eine AnchorPane ID freundePane, da werden alle Chat-Freunde ausgegeben
+                e.  Bottom: da befindet sich eine GridPane mit 4 Haupt Menü kontakt, telefon, chat & setting
+
+        2. StackPane: ID rightPane
+                a.  in der rightPane ist eine AnchorPane includet, ID tippPane
+                b   die TippPane wird niemals gelöscht, da werden verschieden tipps angezeight
+                c.  alle Haupt-Fenster z.b.s message oder einstellungen werden in rightPane angezeigt
+                    wenn App ist unter 650px klein werde slider-function in translate ausgeführt,
+                    ansonsten werden alle Pane sofort angezeigt und gelöscht
+
+        3. StachPane: ID smilePane
+                a.  die smile StackPane wird an rechtes rand die AnchorPane gebunden, keine
+                    breite angegeben.
+                b.  in der smilePane wird eine smilebox.fxml mit dem allen emoji + sticker geladen,
+                    laden wird Automatich, wenn in boteconfig.properies die smile auf true gesetzt sind
+                    selbs lade prozess ist in ChatBoxController.java Zeile: 120 + 350(am Ende)
+
+
+    /* :::::::::::::::::::::::: setting.fxml + SettingController :::::::::::::::::::::::::::::::::: */
+
+    setting.fxml                                                                            (resources)
+    SettingController                                                                       (controller)
+
+    Allgemein zu setting.fxml
+
+    /* ::::::::::::::: Setting: Alle von Setting einstellung fxml + controller ::::::::::::::::::::: */
+
+     z.b.s wie allgemein.fxml, darstellung.fxml, faq.fxml, ordner.fxml, profil.fxml, sicherheit.fxml
+                sitzung.fxml, smile.fxml, speicher.fxml, sprache.fxml, support.fxml & toene.fxml
+
+     Kurze aufbau-schema fxml-datei
+        AnchorPane
+            StackPane
+                BorderPane
+                    <top>
+                        <GridPane style="-fx-background-color: #FAFAFA; -fx-border-color: #EAEAEA; -fx-border-width: 0 0 1 0;"
+                            BorderPane.alignment="CENTER">
+                        Row: Height: 50 Center
+                        Column: 1: 30px 2: 60px 3: Always 4: 60px, 5: 30px
+
+                    <center>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" stylesheets="@../../static/css/scrollpane.css">
+                        <content>
+                            <StackPane>
+                            <children>
+
+                            <!-- Haupt VBox, hier alles ausgeben -->
+
+                            <VBox maxWidth="650.0" minWidth="300.0">
+                            <padding>
+                                    <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                           </padding>
+
+                            //in ausgabe VBox
+                                 <!-- Erste VBox Kasten + 3 HBox mit wißen hintergrund + runde ecken -->
+                                  <VBox styleClass="smileVBox">
+                                    <HBox>
+                                    <HBox>
+                                    <HBox>
+                                  </VBox>
+
+     ACHTUNG: bei scrollPane nicht vergessen fitToHeight + fitToWidth auf true einschalten, zieht innere Pane
+     auf volle Breite & Höche
+     ScrollPane: scroll balken ausblenden mit scrollpane.css
+
+     veränderungen sind möglich,
+
+
+     /* :::::::::::::::::::::::::::: sprache.fxml + SpracheController ::::::::::::::::::::::::::::: */
+
+
+    /* ::::::::::::::::::::::::::::: Pop-up-Fenster erstellen ::::::::::::::::::::::::::::::::::::: */
+
+    1. einem Pop-up-Fenster zu erstellen brauchen sie eine StackPane wo wird der pop-up angezeigt
+    2. erstellen sie eine AnchorPane mit integrierte VBox wo wird alle ausgegeben
+    3. die AnchorPane mit VBox wird in die StackPane integriert
+    4. koordinate setzen, wo soll den pop-up-fenster angezeigt sein
+        a. variante 1 mit AnchoPane
+            AnchorPane.setTopAnchor(popUpBearbeiten, 25.0);
+            AnchorPane.setRightAnchor(popUpBearbeiten, 20.0);
+        b. variante 2. von seiten zentriert + von oben feste maß(px),
+
+            // VBox Zentrieren an AnchorPane von dem seite,
+            // das Gleiche kann für Hoche auch benutzen(translateYProperty)
+
+                    nichtUbersetzenVBox.translateXProperty()
+                            .bind(spiegelungSpracheAnchor.widthProperty()
+                            .subtract(nichtUbersetzenVBox.widthProperty())
+                            .divide(2));
+                    // VBox von oben 140px
+                    AnchorPane.setTopAnchor(nichtUbersetzenVBox, 140.0);
+
+        c. CSS anbinden, gibst schon vordefiniert, vBox.getStyleClass().add("messagesBearbeiten");
+
+    5. Complete Simple pop-up-Fenster
+
+                Label label = new Label("Test Text in pop-up-Fester"); // Label nur für Versuch
+                VBox vBox = new VBox(label);
+                vBox.getStyleClass().add("messagesBearbeiten");
+
+                AnchorPane anchorPane = new AnchorPane(vBox);
+                anchorPane.setStyle("-fx-background-color: transparent;");
+
+                // VBox seitlich Zentrieren in AnchorPane, mit translateYProperty kann in Höche zentrieren
+                    vBox.translateXProperty()
+                        .bind(anchorPane.widthProperty()
+                        .subtract(vBox.widthProperty())
+                        .divide(2));
+
+                // VBox von oben 140px
+                AnchorPane.setTopAnchor(vBox, 140.0);
+
+
+                // pop-up-fenster ins StackPane integrieren
+                HauptStackPane.getChildren().add(anchorPane);
+
+                // Spiegelung Pop-up-Fenster schliessen
+                anchorPane.setOnMouseClicked(e -> {
+
+                    methodenService.popUpFensterClose(anchorPane);
+                });
+    /* :::::::::::::::::::::::::::::::: Ende Pop-up-Fenster ::::::::::::::::::::::::::::::::::::::: */

@@ -48,19 +48,22 @@ public class Freunde {
 
 
     public Freunde(long id, String datum, String meinentoken, String messagetoken, String freundetoken, String freundebild,
-                   String freundepseudonym, String freundename, String freundevorname, String freundemail, String freundetelefon, String role ){
-        this.id                 = id;
-        this.datum              = datum;
-        this.meinentoken        = meinentoken;
-        this.messagetoken       = messagetoken;
-        this.freundetoken       = freundetoken;
-        this.freundebild        = freundebild;
-        this.freundepseudonym   = freundepseudonym;
-        this.freundename        = freundename;
-        this.freundevorname     = freundevorname;
-        this.freundemail        = freundemail;
-        this.freundetelefon     = freundetelefon;
-        this.role               = role;
+                   String freundepseudonym, String freundename, String freundevorname, String freundemail,
+                   String freundetelefon, String role, String letzteNachricht, String datumLetzteNachricht ){
+        this.id                     = id;
+        this.datum                  = datum;
+        this.meinentoken            = meinentoken;
+        this.messagetoken           = messagetoken;
+        this.freundetoken           = freundetoken;
+        this.freundebild            = freundebild;
+        this.freundepseudonym       = freundepseudonym;
+        this.freundename            = freundename;
+        this.freundevorname         = freundevorname;
+        this.freundemail            = freundemail;
+        this.freundetelefon         = freundetelefon;
+        this.role                   = role;
+        this.letzteNachricht        = letzteNachricht;
+        this.datumLetzteNachricht   = datumLetzteNachricht;
     }
 
     public long getId() { return id; }

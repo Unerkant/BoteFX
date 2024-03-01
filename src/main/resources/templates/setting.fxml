@@ -13,451 +13,582 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="settingAnchorPane" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.SettingController">
-   <children>
-      <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <top>
-            <GridPane style="-fx-border-color: #E6E6FF; -fx-border-width: 0 0 1 0; -fx-background-color: #FAFAFF;" BorderPane.alignment="CENTER">
-              <columnConstraints>
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="40.0" prefHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label>
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Label>
-                  <Label alignment="CENTER" text="Einstellungen" GridPane.columnIndex="1">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-                  <Label GridPane.columnIndex="2">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Label>
-               </children>
-            </GridPane>
-         </top>
-         <center>
-            <ScrollPane fx:id="settingScroll" stylesheets="@../static/css/scrollpane.css" BorderPane.alignment="CENTER">
-               <content>
-                  <VBox fx:id="settingVBox" minWidth="300.0" prefWidth="300.0">
-                     <children>
-                        <GridPane fx:id="profil" onMouseClicked="#settingBearbeiten" styleClass="settingHover">
-                          <columnConstraints>
-                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="191.0" />
-                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="50.0" />
-                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <ImageView fx:id="settingBild" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../static/img/online.png" />
-                                 </image>
-                              </ImageView>
-                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                                 <image>
-                                    <Image url="@../static/img/rechtsgrau.png" />
-                                 </image>
-                              </ImageView>
-                              <VBox GridPane.columnIndex="1">
-                                 <children>
-                                    <Label text="Name">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                    <Label style="-fx-border-color: #E6E6FF; -fx-border-width: 1 0 0 0;" text="Telefon oder  Mail" textFill="#858585">
-                                       <font>
-                                          <Font size="12.0" />
-                                       </font></Label>
-                                 </children>
-                              </VBox>
-                              <Label GridPane.columnIndex="2">
-                                 <font>
-                                    <Font size="10.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </GridPane>
-                        <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-radius: 6;">
-                           <VBox.margin>
-                              <Insets bottom="20.0" top="50.0" />
-                           </VBox.margin>
-                           <children>
-                              <GridPane fx:id="allgemein" onMouseClicked="#settingBearbeiten" styleClass="settingHover">
-                                <columnConstraints>
-                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                  <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="100.0" prefWidth="180.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../static/img/settings/settingallgemeinblack.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                                       <image>
-                                          <Image url="@../static/img/rechtsgrau.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label text="Allgemein" GridPane.columnIndex="1">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                    <Label GridPane.columnIndex="2" />
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
+<AnchorPane fx:id="settingAnchorPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BoteFx.controller.SettingController">
+    <children>
+        <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+            <top>
+                <GridPane style="-fx-border-color: #EAEAEA; -fx-border-width: 0 0 1 0; -fx-background-color: #FAFAFA;" BorderPane.alignment="CENTER">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <Label textFill="GREY">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" text="Einstellungen" textFill="NAVY" GridPane.columnIndex="1">
+                            <font>
+                                <Font size="16.0" />
+                            </font>
+                        </Label>
+                        <Label textFill="GREY" GridPane.columnIndex="2">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </GridPane>
+            </top>
+
+    <!-- Center alles Ausgeben -->
+            
+            <center>
+                <ScrollPane fx:id="settingScroll" fitToHeight="true" fitToWidth="true" stylesheets="@../static/css/scrollpane.css">
+                    <content>
+
+           <!-- Haupt VBox -->
+                        <VBox>
+                            <children>
+
+                <!-- Profil GridPane -->
+
+                                <GridPane fx:id="profil" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                    <columnConstraints>
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="50.0" minWidth="50.0" prefWidth="50.0" />
+                                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <ImageView fx:id="profilUserBild" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../static/img/online.png" />
+                                            </image>
+                                        </ImageView>
+                                        <ImageView fx:id="profilUserInfo" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                            <image>
+                                                <Image url="@../static/img/rechtsGrau.png" />
+                                            </image>
+                                        </ImageView>
+                                        <VBox GridPane.columnIndex="1" GridPane.valignment="CENTER">
+                                            <children>
+                                                <Label fx:id="profilUserName" prefHeight="25.0" text="Name">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label fx:id="profilUserMail" prefHeight="20.0" style="-fx-border-color: #E6E6FF; -fx-border-width: 1 0 0 0;" text="Telefon oder  Mail" textFill="GREY">
+                                                    <font>
+                                                        <Font size="12.0" />
+                                                    </font></Label>
+                                            </children>
+                                        </VBox>
+                                        <Label GridPane.columnIndex="2">
+                                            <font>
+                                                <Font size="10.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                    <padding>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                    </padding>
+                                </GridPane>
+
+                <!-- Erste VBox, allgemein, Darstellung + Sicherheits -->
+
+                                <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-radius: 6;">
+                                    <VBox.margin>
+                                        <Insets bottom="20.0" top="50.0" />
+                                    </VBox.margin>
+                                    <children>
+                                        <GridPane fx:id="allgemein" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../static/img/settings/settingCorner.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                                    <image>
+                                                        <Image url="@../static/img/rechtsGrau.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label text="Allgemein" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label GridPane.columnIndex="2" />
+                                                <Label fx:id="allgemeinInfo" text="?" textFill="GREY" GridPane.columnIndex="2">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </GridPane>
+
+                                        <GridPane fx:id="darstellung" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="26.0" minHeight="26.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../static/img/settings/darstellungCorner.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                                    <image>
+                                                        <Image url="@../static/img/rechtsGrau.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label text="Darstellung" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label fx:id="darstellungInfo" text="?" textFill="GREY" GridPane.columnIndex="2">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font></Label>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </GridPane>
+                                        <GridPane fx:id="sicherheit" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../static/img/settings/sicherheitsCorner.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                                    <image>
+                                                        <Image url="@../static/img/rechtsGrau.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label text="Privatsphäre  &amp;  Sicherheit" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label fx:id="sicherheitInfo" text="?" textFill="GREY" GridPane.columnIndex="2">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font></Label>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </GridPane>
+                                    </children>
+                                </VBox>
+
+                <!-- Zweite VBox, Tone, Sprache + Smile -->
+
+                                <VBox layoutX="15.0" layoutY="100.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-radius: 6;">
+                                    <children>
+                                        <GridPane fx:id="toene" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../static/img/settings/toneCorner.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                                    <image>
+                                                        <Image url="@../static/img/rechtsGrau.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label text="Mitteilungen &amp; Töne" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label text="?" textFill="GREY" GridPane.columnIndex="2">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font></Label>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </GridPane>
+                                        <GridPane fx:id="sprache" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../static/img/settings/spracheCorner.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                                    <image>
+                                                        <Image url="@../static/img/rechtsGrau.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label text="Sprache" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label fx:id="spracheInfo" text="?" textFill="GREY" GridPane.columnIndex="2">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </GridPane>
+                                        <GridPane fx:id="smile" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../static/img/settings/emojisCorner.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                                    <image>
+                                                        <Image url="@../static/img/rechtsGrau.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label text="Emoji und Sticker" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label text="?" textFill="GREY" GridPane.columnIndex="2">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font></Label>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </GridPane>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="20.0" top="20.0" />
+                                    </VBox.margin>
+                                </VBox>
+
+                <!-- Zweite VBox, Speicher, Order -->
+
+                                <VBox style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-radius: 6;">
+                                    <children>
+                                        <GridPane fx:id="speicher" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../static/img/settings/datenCorner.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label text="Daten und Speicher" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label fx:id="speicherInfo" text="?" textFill="GREY" GridPane.columnIndex="2">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                                    <image>
+                                                        <Image url="@../static/img/rechtsGrau.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </children>
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
-                              </GridPane>
-                              <GridPane fx:id="darstellung" layoutX="10.0" layoutY="10.0" onMouseClicked="#settingBearbeiten" styleClass="settingHover">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="100.0" prefWidth="180.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../static/img/settings/settingdarstellungblack.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                                       <image>
-                                          <Image url="@../static/img/rechtsgrau.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label text="Darstellung" GridPane.columnIndex="1">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                    <Label GridPane.columnIndex="2" />
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
+                                        </GridPane>
+                                        <GridPane fx:id="ordner" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../static/img/settings/ordnerCorner.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                                    <image>
+                                                        <Image url="@../static/img/rechtsGrau.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label text="Ordner" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label fx:id="ordnerInfo" text="?" textFill="GREY" GridPane.columnIndex="2">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                            </children>
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
-                              </GridPane>
-                              <GridPane fx:id="sicherheit" layoutX="10.0" layoutY="40.0" onMouseClicked="#settingBearbeiten" styleClass="settingHover">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="100.0" prefWidth="180.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../static/img/settings/settingprivatsphereblack.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                                       <image>
-                                          <Image url="@../static/img/rechtsgrau.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label text="Privatsphäre  &amp;  Sicherheit" GridPane.columnIndex="1">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                    <Label GridPane.columnIndex="2" />
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </padding>
-                              </GridPane>
-                           </children>
+                                        </GridPane>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets bottom="20.0" top="20.0" />
+                                    </VBox.margin>
+                                </VBox>
+                                <VBox layoutX="15.0" layoutY="210.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-radius: 6;">
+                                    <children>
+                                        <GridPane fx:id="faq" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../static/img/settings/faqCorner.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                                    <image>
+                                                        <Image url="@../static/img/rechtsGrau.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label text="Bote FAQ" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label text="?" textFill="GREY" GridPane.columnIndex="2">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font></Label>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </GridPane>
+                                        <GridPane fx:id="support" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../static/img/settings/frageCorner.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                                    <image>
+                                                        <Image url="@../static/img/rechtsGrau.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label text="Frage &amp; Support" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label fx:id="supportInfo" text="?" textFill="GREY" GridPane.columnIndex="2">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font></Label>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets />
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </GridPane>
+                                        <GridPane fx:id="sitzung" onMouseClicked="#settingHandle" styleClass="settingHover">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" />
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                            <children>
+                                                <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@../static/img/settings/geretCorner.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                                    <image>
+                                                        <Image url="@../static/img/rechtsGrau.png" />
+                                                    </image>
+                                                </ImageView>
+                                                <Label text="Aktive Sitzungen" GridPane.columnIndex="1">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font>
+                                                </Label>
+                                                <Label fx:id="settingHovereSitzung" text="3" textFill="GREY" GridPane.columnIndex="2">
+                                                    <font>
+                                                        <Font size="15.0" />
+                                                    </font></Label>
+                                            </children>
+                                            <padding>
+                                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                            </padding>
+                                        </GridPane>
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets top="20.0" />
+                                    </VBox.margin>
+                                </VBox>
+
+                <!-- GrigPane, Version ausgabe -->
+
+                                <GridPane>
+                                    <columnConstraints>
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
+                                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="30.0" minWidth="30.0" prefWidth="30.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                    </rowConstraints>
+                                    <children>
+                                        <Label text="Ver." textFill="#858585" />
+                                        <Label fx:id="settingVersion" textFill="#858585" GridPane.columnIndex="1" />
+                                    </children>
+                                    <VBox.margin>
+                                        <Insets />
+                                    </VBox.margin>
+                                    <padding>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                    </padding>
+                                </GridPane>
+                            </children>
+                            <padding>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                            </padding>
                         </VBox>
-                        <VBox layoutX="15.0" layoutY="100.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-radius: 6;">
-                           <children>
-                              <GridPane fx:id="toene" onMouseClicked="#settingBearbeiten" styleClass="settingHover">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="100.0" prefWidth="180.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../static/img/settings/settingtonblack.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                                       <image>
-                                          <Image url="@../static/img/rechtsgrau.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label text="Mitteilungen &amp; Töne" GridPane.columnIndex="1">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                    <Label GridPane.columnIndex="2" />
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </padding>
-                              </GridPane>
-                              <GridPane fx:id="sprache" layoutX="10.0" layoutY="10.0" onMouseClicked="#settingBearbeiten" styleClass="settingHover">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="100.0" prefWidth="100.0" />
-                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="100.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../static/img/settings/settingspracheblack.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                                       <image>
-                                          <Image url="@../static/img/rechtsgrau.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label text="Sprache" GridPane.columnIndex="1">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="settingSprache" textFill="GREY" GridPane.columnIndex="2" />
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </padding>
-                              </GridPane>
-                              <GridPane fx:id="sticker" layoutX="10.0" layoutY="40.0" onMouseClicked="#settingBearbeiten" styleClass="settingHover">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="100.0" prefWidth="180.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../static/img/settings/settingstickerblack.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                                       <image>
-                                          <Image url="@../static/img/rechtsgrau.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label text="Sticker" GridPane.columnIndex="1">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                    <Label GridPane.columnIndex="2" />
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </padding>
-                              </GridPane>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="20.0" top="20.0" />
-                           </VBox.margin>
-                        </VBox>
-                        <VBox layoutX="15.0" layoutY="210.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-radius: 6;">
-                           <children>
-                              <GridPane fx:id="faq" onMouseClicked="#settingBearbeiten" styleClass="settingHover">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="100.0" prefWidth="180.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../static/img/settings/settingfaqblack.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                                       <image>
-                                          <Image url="@../static/img/rechtsgrau.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label text="Bote FAQ" GridPane.columnIndex="1">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                    <Label GridPane.columnIndex="2" />
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </padding>
-                              </GridPane>
-                              <GridPane fx:id="support" layoutX="10.0" layoutY="10.0" onMouseClicked="#settingBearbeiten" styleClass="settingHover">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="100.0" prefWidth="180.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../static/img/settings/settingfrageblack.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                                       <image>
-                                          <Image url="@../static/img/rechtsgrau.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label text="Frage &amp; Support" GridPane.columnIndex="1">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                    <Label GridPane.columnIndex="2" />
-                                 </children>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </padding>
-                              </GridPane>
-                              <GridPane fx:id="sitzung" layoutX="10.0" layoutY="60.0" onMouseClicked="#settingBearbeiten" styleClass="settingHover">
-                                 <columnConstraints>
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                                    <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="100.0" prefWidth="180.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                                 <children>
-                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../static/img/settings/settingmacbookblack.png" />
-                                       </image>
-                                    </ImageView>
-                                    <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                                       <image>
-                                          <Image url="@../static/img/rechtsgrau.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label text="Aktive Sitzungen" GridPane.columnIndex="1">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                    <Label fx:id="settingHovereSitzung" text="1" textFill="GREY" GridPane.columnIndex="2" />
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </padding>
-                              </GridPane>
-                           </children>
-                           <VBox.margin>
-                              <Insets top="20.0" />
-                           </VBox.margin>
-                        </VBox>
-                        <GridPane>
-                          <columnConstraints>
-                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
-                            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="180.0" prefWidth="180.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label text="Ver." textFill="#858585" />
-                              <Label fx:id="settingVersion" text="1.0.0" textFill="#858585" GridPane.columnIndex="1" />
-                           </children>
-                           <VBox.margin>
-                              <Insets />
-                           </VBox.margin>
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </GridPane>
-                     </children>
-                     <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                     </padding>
-                  </VBox>
-               </content>
-               <BorderPane.margin>
-                  <Insets />
-               </BorderPane.margin>
-            </ScrollPane>
-         </center>
-      </BorderPane>
-   </children>
+                    </content>
+                    <BorderPane.margin>
+                        <Insets />
+                    </BorderPane.margin>
+                </ScrollPane>
+            </center>
+        </BorderPane>
+    </children>
 </AnchorPane>

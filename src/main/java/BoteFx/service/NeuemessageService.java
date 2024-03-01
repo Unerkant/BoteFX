@@ -1,6 +1,6 @@
 package BoteFx.service;
 
-import BoteFx.model.Neuemessage;
+import BoteFx.model.Neuemessagecounter;
 import BoteFx.repository.NeuemessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,10 +28,10 @@ public class NeuemessageService {
      */
     public void saveCountNeueMessage(String token, String count){
 
-        Neuemessage countmessage = neuemessageRepository.findById(token).orElse(null);
+        Neuemessagecounter countmessage = neuemessageRepository.findById(token).orElse(null);
 
         if (countmessage == null){
-            countmessage = new Neuemessage();
+            countmessage = new Neuemessagecounter();
             countmessage.setToken(token);
         }
 
@@ -52,7 +52,7 @@ public class NeuemessageService {
      */
     public  String loadCountNeueMessage(String token){
 
-        Neuemessage countmessage = neuemessageRepository.findById(token).orElse(null);
+        Neuemessagecounter countmessage = neuemessageRepository.findById(token).orElse(null);
 
         if (countmessage == null){
             return null;
@@ -72,7 +72,7 @@ public class NeuemessageService {
      */
     public boolean deleteCountNeueMessage(String token){
 
-        Neuemessage countmessage = neuemessageRepository.findById(token).orElse(null);
+        Neuemessagecounter countmessage = neuemessageRepository.findById(token).orElse(null);
 
         if (countmessage !=null){
             neuemessageRepository.delete(countmessage);

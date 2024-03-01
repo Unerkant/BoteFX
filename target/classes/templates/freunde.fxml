@@ -18,7 +18,7 @@
    <children>
       <BorderPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <GridPane minHeight="50.0" prefHeight="50.0" style="-fx-background-color: #FAFAFF; -fx-border-color: #E6E6FF; -fx-border-style: none none solid none;" BorderPane.alignment="CENTER">
+            <GridPane minHeight="50.0" prefHeight="50.0" style="-fx-background-color: #FAFAFA; -fx-border-color: #EAEAEA; -fx-border-style: none none solid none;" BorderPane.alignment="CENTER">
               <columnConstraints>
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="40.0" minWidth="40.0" prefWidth="40.0" />
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -30,7 +30,7 @@
                <children>
                   <ImageView fx:id="imgFreundRemove" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#freundRemoveClick" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../static/img/personloschen.png" />
+                        <Image url="@../static/img/userMinus.png" />
                      </image>
                      <cursor>
                         <Cursor fx:constant="HAND" />
@@ -64,7 +64,7 @@
                   </VBox>
                   <ImageView fx:id="imgBekanntenEinladen" fitHeight="30.0" fitWidth="30.0" onMouseClicked="#bekanntenEinladenClick" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
                      <image>
-                        <Image url="@../static/img/personplus.png" />
+                        <Image url="@../static/img/userPlus.png" />
                      </image>
                      <cursor>
                         <Cursor fx:constant="HAND" />

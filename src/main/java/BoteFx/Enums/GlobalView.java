@@ -2,6 +2,8 @@ package BoteFx.Enums;
 
 /**
  * Den 15.05.2022
+ *
+ *    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z, Ä, Ö, Ü, ß
  */
 public enum GlobalView {
 
@@ -21,12 +23,15 @@ public enum GlobalView {
     MESSAGE("/templates/message.fxml"),
     MESSAGELEER("/templates/fragments/messageleer.fxml"),
     MESSAGEWEITERLEITEN("/templates/fragments/messageweiterleiten.fxml"),
+    ORDNER("/templates/setting/ordner.fxml"),
     PROFIL("/templates/setting/profil.fxml"),
     SETTING("/templates/setting.fxml"),
     SITZUNG("/templates/setting/sitzung.fxml"),
     SICHERHEIT("/templates/setting/sicherheit.fxml"),
+    SPEICHER("/templates/setting/speicher.fxml"),
     SPRACHE("/templates/setting/sprache.fxml"),
-    STICKER("/templates/setting/sticker.fxml"),
+    SMILE("/templates/setting/smile.fxml"),
+    SMILEBOX("/templates/smilebox.fxml"),
     SUPPORT("/templates/setting/support.fxml"),
     TELEFON("/templates/telefon.fxml"),
     TELEFONLOGIN("/templates/login/telefonlogin.fxml"),

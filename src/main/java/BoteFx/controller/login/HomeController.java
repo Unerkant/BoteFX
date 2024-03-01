@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,7 @@ public class HomeController implements Initializable {
     private MethodenService methodenService;
 
     @FXML private Label homeDatum;
+
     @Value("${homeagbtext}")
     private String homeAgbText;
     @FXML private Label homeAgb;
@@ -58,6 +60,7 @@ public class HomeController implements Initializable {
 
         /* AGB Text anzeigen Quelle: application.properties  */
         homeAgb.setText(homeAgbText);
+        homeAgb.setTextFill(Color.GOLD);
 
         /* Copyright anzeigen Quelle: application.properties */
         homeCopyright.setText(homeCopyrightText);
